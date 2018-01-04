@@ -11,8 +11,8 @@ import java.util.List;
 // client template: ("user", string name)
 // room template: ("room", string name, string owner)
 // createRoom template: ("createRoom", string name, string owner)
-// ack template: (string user, "response", 1)
-// nack template: (string user, "response", -1)
+// ack template: (string user, "response", bool true)
+// nack template: (string user, "response", bool false)
 
 
 public class Server {
@@ -121,12 +121,12 @@ public class Server {
 
     private static void ack(String user) throws Exception
     {
-        lounge.put(user, "response", 1);
+        lounge.put(user, "response", true);
     }
 
     private static void nack(String user) throws Exception
     {
-        lounge.put(user, "response", -1);
+        lounge.put(user, "response", false);
     }
 
 
