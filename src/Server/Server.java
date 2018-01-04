@@ -9,16 +9,16 @@ public class Server {
         Space lounge = new SequentialSpace();
 
         SpaceRepository repository = new SpaceRepository();
-        repository.addGate("tcp://127.0.0.1:9002/?keep");
+        repository.addGate("tcp://130.225.93.172:9002/?keep");
         repository.add("lounge", lounge);
 
-        while (true) {
-            try {
+        try {
+            while (true) {
                 Object[] t = lounge.query(new FormalField(String.class), new FormalField(String.class));
                 System.out.println(t[0] + ":" + t[1]);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+                e.printStackTrace();
         }
     }
 }
