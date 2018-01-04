@@ -11,11 +11,15 @@ import java.util.List;
 // client template: ("user", string name)
 // room template: ("room", string name, string owner)
 // createRoom template: ("createRoom", string name, string owner)
+// ack template: (string user, "response", 1)
+// nack template: (string user, "response", -1)
 
 
 public class Server {
     static Space lounge = new SequentialSpace();
     static ArrayList<Room> rooms = new ArrayList<Room>();
+    static  SpaceRepository repository = new SpaceRepository();
+
 
     public static void main(String[] args)
     {
@@ -28,7 +32,7 @@ public class Server {
             e.printStackTrace();
         }
         System.out.println(localhostAddress);
-        SpaceRepository repository = new SpaceRepository();
+
         repository.addGate("tcp://"+localhostAddress+":9002/?keep");
         repository.add("lounge", lounge);
 
@@ -61,14 +65,14 @@ public class Server {
 
             for (Object[] o : requests)
             {
-                createRoom((String) o[1], (String) o[2]);
+              createRoom((String) o[1], (String) o[2]);
             }
 
         } catch (Exception e) {e.printStackTrace();}
     }
 
 
-    private static boolean createRoom(String name, String owner)
+    private static void createRoom(String name, String owner) throws Exception
     {
         // room template: ("room", string name, string owner)
         // createRoom template: ("createRoom", string name, string owner)
@@ -78,16 +82,18 @@ public class Server {
         {
             if (name.equals(r.getName()))
             {
-                return false;
+                nack(owner);
+                return;
             }
         }
-        rooms.add(new Room(name, owner));
 
-        try {
-            lounge.put("room", name, owner);
-        } catch (Exception e) {}
+        Room newRoom = new Room(name, owner);
+        rooms.add(newRoom);
+        repository.add(name, newRoom);
 
-        return true;
+        lounge.put("room", name, owner);
+
+        ack(owner);
     }
 
     private static void displayUsers()
@@ -112,6 +118,17 @@ public class Server {
         }
         System.out.println();
     }
+
+    private static void ack(String user) throws Exception
+    {
+        lounge.put(user, "response", 1);
+    }
+
+    private static void nack(String user) throws Exception
+    {
+        lounge.put(user, "response", -1);
+    }
+
 
 
 }
