@@ -2,13 +2,18 @@ package Client;
 
 import org.jspace.*;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Client {
 
     public static void main(String[] args)
     {
-        RemoteSpace room = new RemoteSpace("tcp://CHANGE ME");
+        try {
+            RemoteSpace room = new RemoteSpace("tcp://130.225.93.172:9002/lounge?keep");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Connected to server!");
 

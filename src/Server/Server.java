@@ -2,23 +2,26 @@ package Server;
 
 import org.jspace.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class Server {
 
     public static void main(String[] args)
     {
         Space lounge = new SequentialSpace();
 
+        String localhostAddress = null;
+        try {
+            localhostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        System.out.println(localhostAddress);
         SpaceRepository repository = new SpaceRepository();
-        repository.addGate("tcp://130.225.93.172:9002/?keep");
+        repository.addGate("tcp://"+localhostAddress+":9002/?keep");
         repository.add("lounge", lounge);
 
-        try {
-            while (true) {
-                Object[] t = lounge.query(new FormalField(String.class), new FormalField(String.class));
-                System.out.println(t[0] + ":" + t[1]);
-            }
-        } catch (InterruptedException e) {
-                e.printStackTrace();
-        }
+
     }
 }
