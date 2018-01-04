@@ -4,16 +4,22 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.jspace.RemoteSpace;
 
 public class Display extends Application {
 
+    static RemoteSpace lobby;
+    static String tcp = "tcp://192.168.0.100:9002/lounge?keep";
+
     private static Stage _stage;
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception{
+
+        lobby = new RemoteSpace(tcp);
+
         _stage = stage;
         BorderPane root = new BorderPane();
-//        Scene scene = new Scene(root, 600, 400);
-        WelcomeMenu menu = new WelcomeMenu(root);
+        WelcomeMenu menu = new WelcomeMenu(root, lobby);
         _stage.setScene(menu);
 
         _stage.setTitle("Welcome");
