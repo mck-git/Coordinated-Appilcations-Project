@@ -38,11 +38,10 @@ public class Server {
 
             while (true)
             {
-                List<Object[]> users = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
-                for (Object[] o : users)
-                {
-                    System.out.println(o[1]);
-                }
+                handleRequests();
+
+                displayUsers();
+                displayRooms();
 
                 Thread.sleep(1000);
             }
@@ -51,14 +50,67 @@ public class Server {
 
     }
 
+    private static void handleRequests()
+    {
+        try {
+            // Check for createRoom requests
+            List<Object[]> requests = lounge.getAll(
+                    new ActualField("createRoom"),
+                    new FormalField(String.class),
+                    new FormalField(String.class));
+
+            for (Object[] o : requests)
+            {
+                createRoom((String) o[1], (String) o[2]);
+            }
+
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+
     private static boolean createRoom(String name, String owner)
     {
+        // room template: ("room", string name, string owner)
+        // createRoom template: ("createRoom", string name, string owner)
+
         // Check unique
-        boolean taken = false;
+        for (Room r : rooms)
+        {
+            if (name.equals(r.getName()))
+            {
+                return false;
+            }
+        }
+        rooms.add(new Room(name, owner));
 
+        try {
+            lounge.put("room", name, owner);
+        } catch (Exception e) {}
 
+        return true;
+    }
 
+    private static void displayUsers()
+    {
+        System.out.print("Displaying users: ");
+        try {
+            List<Object[]> users = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
+            for (Object[] o : users)
+            {
+                System.out.print(" " + o[1]);
+            }
+            System.out.println();
+        } catch (Exception e) {}
+    }
 
+    private static void displayRooms()
+    {
+        System.out.print("Displaying rooms: ");
+        for (Room r : rooms)
+        {
+            System.out.print(" " + r.getName());
+        }
+        System.out.println();
     }
 
 

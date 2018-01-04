@@ -15,4 +15,7 @@ public class Room extends SequentialSpace
         this.owner = owner;
     }
 
+    public String getName() {
+        return name;
+    }
 }
