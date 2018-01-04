@@ -2,15 +2,33 @@ package Client;
 
 import org.jspace.*;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Client {
 
     public static void main(String[] args)
     {
-        RemoteSpace room = new RemoteSpace("tcp://CHANGE ME");
 
-        System.out.println("Connected to server!");
+        String tcp = "tcp://10.16.174." + "236" + ":9002/lounge?keep";
+
+        try
+        {
+            RemoteSpace room = new RemoteSpace(tcp);
+            System.out.println("Connected to server!");
+
+            while( true )
+            {
+
+                room.put("message","#hacked");
+                try
+                {
+                    room.get(new ActualField("keyHacked"));
+                } catch (InterruptedException e) {}
+            }
+
+        } catch (IOException e ){System.out.println("Host not found");}
+
 
 //        Scanner sc = new Scanner(System.in);
 //
