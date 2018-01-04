@@ -10,6 +10,8 @@ public class Client {
     {
         RemoteSpace room = new RemoteSpace("tcp://CHANGE ME");
 
+        System.out.println("Connected to server!");
+
 //        Scanner sc = new Scanner(System.in);
 //
 //        System.out.print("Please type your username: ");
