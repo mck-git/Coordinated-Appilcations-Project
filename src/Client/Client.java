@@ -14,6 +14,8 @@ public class Client {
     public static void main(String[] args)
     {
         sc = new Scanner(System.in);
+
+        System.out.println("Welcome! Please wait while connecting to the server.");
         initialize();
 
         while (true)
