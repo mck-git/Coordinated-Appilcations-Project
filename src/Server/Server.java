@@ -14,7 +14,7 @@ import java.util.List;
 // joinRoom template: ("joinRoom", string name, string user)
 // ack template: ("response", string user, , bool true)
 // nack template: ( "response", string user, bool false)
-
+// message template: ("message", string user, string msg);
 
 public class Server {
     static Space lounge = new SequentialSpace();
