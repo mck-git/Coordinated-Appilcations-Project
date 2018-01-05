@@ -7,13 +7,13 @@ import org.jspace.Space;
 
 import java.util.List;
 
-enum Status {OPEN, CLOSED}
+enum Status {OPEN, LOCKED}
 
 public class Room extends SequentialSpace implements Runnable
 {
     private String name;
     private String owner;
-    private Status  status;
+    private Status status;
 
 
     public Room (String name, String owner)
@@ -21,7 +21,6 @@ public class Room extends SequentialSpace implements Runnable
         this.name = name;
         this.owner = owner;
         this.status = Status.OPEN;
-        this.run();
     }
 
     public String[] getMessages()
@@ -33,13 +32,31 @@ public class Room extends SequentialSpace implements Runnable
         );
         String[] messages_string = new String[messages.size()];
         int i = 0;
-
         for (Object[] o : messages)
         {
-            messages_string[i] = "" + o[1] + ": " + o[2];
+            messages_string[i] = "[" + name + "]" + o[1] + ": " + o[2];
+            i++;
         }
 
         return messages_string;
+    }
+
+    public String[] getUsers()
+    {
+        List<Object[]> users = this.queryAll(
+                new ActualField("user"),
+                new FormalField(String.class)
+        );
+        String[] users_string = new String[users.size()];
+        int i =0;
+
+        for (Object[] o : users)
+        {
+            users_string[i] = (String) o[1];
+            i++;
+        }
+
+        return users_string;
     }
 
     private void displayMessages(String[] messages)
@@ -62,20 +79,31 @@ public class Room extends SequentialSpace implements Runnable
         }
     }
 
+    public void lock(String name, String user)
+    {
+        boolean ack = false;
+        if (this.name.equals(name))
+        {
+            if (this.owner.equals(user))
+            {
+                this.status = Status.LOCKED;
+            }
+        }
+    }
+
     public boolean isOpen()
     {
         return (status == Status.OPEN);
     }
 
 
-    public void close()
+    public String getName()
     {
-        status = Status.CLOSED;
-    }
-
-
-    public String getName() {
         return name;
     }
 
+    public String getOwner()
+    {
+        return owner;
+    }
 }
