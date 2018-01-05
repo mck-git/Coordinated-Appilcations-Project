@@ -114,7 +114,9 @@ public class Client {
             lobby.get(new ActualField("__registration_lock"));
 
             // Read all existing users in the lounge touplespace
-            List<Object[]> userList = lobby.queryAll(new ActualField("user"), new FormalField(String.class));
+            List<Object[]> userList = lobby.queryAll(
+                    new ActualField("user"),
+                    new FormalField(String.class));
 
             System.out.println("Checking if your username is taken...");
 
@@ -164,7 +166,10 @@ public class Client {
         {
             System.out.println("Trying to create room...");
             // Get the response
-            Object[] response = lobby.get(new ActualField("response"), new ActualField(userName), new FormalField(Boolean.class));
+            Object[] response = lobby.get(
+                    new ActualField("response"),
+                    new ActualField(userName),
+                    new FormalField(Boolean.class));
 
             // If the response was an ACK - join room
             if ((boolean) response[2])
@@ -178,7 +183,7 @@ public class Client {
             {
                 throw new ServerNACKException("createRoom");
             }
-        } catch (Exception e) {System.out.println("Request failed, please try again"); return false;}
+        } catch (Exception e) {System.out.println("Request failed, please try again");}
     }
 
     // Join a room with a specific room name
@@ -193,7 +198,10 @@ public class Client {
             lobby.put("joinRoom",roomName,userName);
 
             // Get response from server
-            Object[] response = lobby.get(new ActualField("response"), new ActualField(userName), new FormalField(Boolean.class));
+            Object[] response = lobby.get(
+                    new ActualField("response"),
+                    new ActualField(userName),
+                    new FormalField(Boolean.class));
 
             // If NACK was recieved, throw error
             if (!(boolean) response[2])
@@ -205,7 +213,6 @@ public class Client {
             currentRoom = new RemoteSpace(createURI(roomName));
 
             // Put the username into the joined room, and set new room as currentRoomName
-            currentRoom.put(userName);
             currentRoomName = roomName;
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
@@ -224,8 +231,17 @@ public class Client {
             // If you are in a room other than the lobby
             if (!currentRoomName.equals("lobby"))
             {
+                currentRoom.put("leaveRoom",userName);
+
+                Object[] response = currentRoom.get(
+                        new ActualField("response"),
+                        new ActualField(userName),
+                        new FormalField(Boolean.class));
+
+                if (!(boolean) response[2])
+                    throw new ServerNACKException("leaveRoom");
+
                 // Remove yourself from the room and set currentRoom to be the lounge
-                currentRoom.get(new ActualField(userName));
                 currentRoom = new RemoteSpace(createURI("lounge"));
                 currentRoomName = "lobby";
             }
@@ -275,7 +291,10 @@ public class Client {
     public static String[] getUsers()
     {
         try {
-            List<Object[]> users = currentRoom.queryAll(new ActualField("user"), new FormalField(String.class));
+            List<Object[]> users = currentRoom.queryAll(
+                    new ActualField("user"),
+                    new FormalField(String.class));
+
             String[] users_string = new String[users.size()];
             int i = 0;
 
@@ -295,7 +314,11 @@ public class Client {
     public static String[] getRooms()
     {
         try {
-            List<Object[]> rooms = lobby.queryAll(new ActualField("room"), new FormalField(String.class), new FormalField(String.class));
+            List<Object[]> rooms = lobby.queryAll(
+                    new ActualField("room"),
+                    new FormalField(String.class),
+                    new FormalField(String.class));
+
             String[] rooms_string = new String[rooms.size()];
             int i = 0;
 
