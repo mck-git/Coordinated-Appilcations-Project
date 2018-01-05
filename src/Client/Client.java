@@ -186,6 +186,9 @@ public class Client {
     {
         try
         {
+            if (!currentRoomName.equals("lobby"))
+                leaveRoom();
+
             // Send a message to the server that the user wishes to join the specific room
             lobby.put("joinRoom",roomName,userName);
 
