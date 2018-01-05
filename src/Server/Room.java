@@ -43,10 +43,7 @@ public class Room extends SequentialSpace implements Runnable
 
     public String[] getUsers()
     {
-        List<Object[]> users = this.queryAll(
-                new ActualField("user"),
-                new FormalField(String.class)
-        );
+        List<Object[]> users = this.queryAll(new FormalField(String.class));
         String[] users_string = new String[users.size()];
         int i =0;
 
@@ -66,7 +63,6 @@ public class Room extends SequentialSpace implements Runnable
             System.out.println(s);
         }
     }
-
 
     public void run ()
     {
