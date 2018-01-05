@@ -7,16 +7,16 @@ import java.util.Scanner;
 
 public class Client {
     static RemoteSpace lounge;
-    static String tcp = "tcp://10.16.172.127:9002/lounge?keep";
+    static String tcp = "tcp://" + "127.0.1.1" + ":9002/lounge?keep";
     static Scanner sc;
-    static String usrName;
+    static String userName = "";
 
     public static void main(String[] args)
     {
         sc = new Scanner(System.in);
 
         System.out.println("Welcome! Please wait while connecting to the server.");
-        initialize();
+        initialize(sc.next());
 
         while (true)
         {
@@ -44,7 +44,7 @@ public class Client {
 
 
     // Initialize user when first starting app
-    private static void initialize() {
+    private static boolean initialize(String nameInput) {
 
 
         try
@@ -54,65 +54,65 @@ public class Client {
             System.out.println("Connected to server!");
             boolean taken = false;
 
-            while (true) {
 
-                System.out.print("Please choose your desired username: ");
+            System.out.print("Please choose your desired username: ");
 
-                // Wait for user to input desired username
-                usrName = sc.next();
+            // Wait for user to input desired username
 
-                System.out.println("Your username is: " + usrName);
+            System.out.println("Your username is: " + nameInput);
 
-                // Take the lock - Assures no two users try to register at once
-                lounge.get(new ActualField("__registration_lock"));
+            // Take the lock - Assures no two users try to register at once
+            lounge.get(new ActualField("__registration_lock"));
 
-                // Read all existing users in the lounge touplespace
-                List<Object[]> userList = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
+            // Read all existing users in the lounge touplespace
+            List<Object[]> userList = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
 
-                System.out.println("Checking if your username is taken...");
+            System.out.println("Checking if your username is taken...");
 
 
-                // Go through found users - if one matches: set taken to true
-                for (Object[] u : userList) {
-                    String user = (String) u[1];
+            // Go through found users - if one matches: set taken to true
+            for (Object[] u : userList) {
+                String user = (String) u[1];
 
-                    // If found username matches with desired username: break and set taken to true
-                    if (user.equals(usrName)) {
-                        System.out.println("That username was taken :(");
-                        taken = true;
-                        break;
-                    }
-                }
-
-                // If username is taken: return
-                if (taken) {
-                    System.out.println("Please try again another time :)");
-                }
-
-                // If username is not taken: add username to lounge touplespace
-                else {
-
-                    System.out.println("You chose a unique username! Good job (y)");
-                    lounge.put("user", usrName);
-                }
-
-                // Release lock
-                lounge.put("__registration_lock");
-                if (!taken)
+                // If found username matches with desired username: break and set taken to true
+                if (user.equals(nameInput)) {
+                    System.out.println("That username was taken :(");
+                    taken = true;
                     break;
+                }
             }
 
-        } catch (Exception e) {e.printStackTrace();}
+            // If username is taken: return
+            if (taken) {
+                System.out.println("Please try again another time :)");
+            }
+
+            // If username is not taken: add username to lounge touplespace
+            else {
+
+                System.out.println("You chose a unique username! Good job (y)");
+                lounge.put("user", nameInput);
+                userName = nameInput;
+            }
+
+            // Release lock
+            lounge.put("__registration_lock");
+
+            return !taken;
+
+
+
+        } catch (Exception e) {e.printStackTrace(); return false;}
     }
 
 
     private static void createRoom(String name) {
-        lounge.put("createRoom",name, usrName);
+        lounge.put("createRoom",name, userName);
 
         try
         {
             System.out.println("Trying to create room...");
-            Object[] ack = lounge.get(new ActualField(usrName), new ActualField("response"), new FormalField(Boolean.class));
+            Object[] ack = lounge.get(new ActualField(userName), new ActualField("response"), new FormalField(Boolean.class));
 
             if ((boolean) ack[2])
                 System.out.println("Room created!");
