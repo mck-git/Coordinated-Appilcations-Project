@@ -24,7 +24,8 @@ public class WelcomeMenu extends TScene {
 
     private BorderPane root;
 
-    public WelcomeMenu() {
+    @Override
+    public void setup() {
         root = (BorderPane) getRoot();
         root.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
@@ -95,12 +96,8 @@ public class WelcomeMenu extends TScene {
     }
 
     @Override
-    public void setup() {
-
-    }
-
-    @Override
     public void refresh() {
 
     }
+
 }

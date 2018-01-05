@@ -20,10 +20,14 @@ public class Display extends Application {
         _stage.setTitle("Welcome");
 
         new AnimationTimer() {
-
+            long lastTime = 0;
             @Override
             public void handle(long now) {
-                scene.refresh();
+                if(now-lastTime > 33_333_333)
+                {
+                    scene.refresh();
+                    lastTime = now;
+                }
             }
         }.start();
 
@@ -35,5 +39,10 @@ public class Display extends Application {
         scene = scene_;
         _stage.setScene(scene);
         scene.setup();
+    }
+
+    public static Stage getStage()
+    {
+        return _stage;
     }
 }

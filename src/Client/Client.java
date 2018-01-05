@@ -12,7 +12,7 @@ public class Client {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "10.16.172.127";
+    static private String ip = "10.16.170.47";
 
     static private Scanner sc;
 
@@ -276,7 +276,6 @@ public class Client {
                     new FormalField(String.class)
             );
 
-
             // Collect all messages in a string array
             String[] messages_string = new String[messages.size()];
             int i = 0;
@@ -289,7 +288,7 @@ public class Client {
             // Return the string array
             return messages_string;
 
-        } catch (Exception e) {e.printStackTrace(); return null;}
+        } catch (Exception e) {e.printStackTrace(); return new String[] {};}
     }
 
     public static String[] getUsers()
@@ -330,7 +329,6 @@ public class Client {
             {
                 rooms_string[i] = (String) o[1];
                 i++;
-                System.out.print(" " + rooms_string[i]);
             }
 
             return rooms_string;
