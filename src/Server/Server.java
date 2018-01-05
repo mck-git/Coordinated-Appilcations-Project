@@ -10,11 +10,17 @@ import java.util.List;
 // Templates
 // client template: ("user", string name)
 // room template: ("room", string name, string owner)
-// createRoom template: ("createRoom", string name, string owner)
-// joinRoom template: ("joinRoom", string name, string user)
 // ack template: ("response", string user, , bool true)
 // nack template: ( "response", string user, bool false)
 // message template: ("message", string user, string msg);
+
+// Request templates
+// lockRoom template: ("lockRoom", string name, string owner)
+// createRoom template: ("createRoom", string name, string owner)
+// joinRoom template: ("joinRoom", string name, string user)
+
+
+
 
 public class Server {
     static Space lounge = new SequentialSpace();
@@ -30,7 +36,7 @@ public class Server {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        System.out.println(localhostAddress);
+        System.out.println("Host IP is: " + localhostAddress);
 
         repository.addGate("tcp://"+localhostAddress+":9002/?keep");
         repository.add("lounge", lounge);
@@ -81,14 +87,30 @@ public class Server {
                 joinRoom((String) o[1], (String) o[2]);
             }
 
-
+            // Check for lockRoom requests
+            // lockRoom template: ("lockRoom", string name, string owner)
+            for (Room r : rooms)
+            {
+                requests = r.getAll(
+                        new ActualField("lockRoom"),
+                        new FormalField(String.class),
+                        new FormalField(String.class)
+                );
+                for (Object[] o : requests)
+                {
+                    System.out.println((String) o[2] + " wants to lock room " + (String) o[1]);
+                    r.lock((String) o[1], (String) o[2]);
+                }
+            }
 
 
         } catch (Exception e) {e.printStackTrace();}
     }
 
+
     private static void joinRoom(String name, String user)
     {
+        System.out.println(user + " wants to join room " + name);
         // joinRoom template: ("joinRoom", string name, string user)
         boolean ack = false;
         for (Room r : rooms)
@@ -112,6 +134,7 @@ public class Server {
 
     private static void createRoom(String name, String owner) throws Exception
     {
+        System.out.println(owner + " wants to create room " + name);
         // room template: ("room", string name, string owner)
         // createRoom template: ("createRoom", string name, string owner)
 
@@ -128,6 +151,7 @@ public class Server {
         Room newRoom = new Room(name, owner);
         rooms.add(newRoom);
         repository.add(name, newRoom);
+        new Thread(newRoom).start();
 
         lounge.put("room", name, owner);
 
@@ -168,6 +192,7 @@ public class Server {
 
     private static void ack(String user)
     {
+        System.out.println("Sending ack to " + user);
         try {
             lounge.put("response", user, true);
         } catch (Exception e) {}
@@ -175,6 +200,8 @@ public class Server {
 
     private static void nack(String user)
     {
+        System.out.println("Sending nack to " + user);
+
         try {
         lounge.put("response", user, false);
         } catch (Exception e) {}
