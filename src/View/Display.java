@@ -8,18 +8,13 @@ import org.jspace.RemoteSpace;
 
 public class Display extends Application {
 
-    static RemoteSpace lobby;
-    static String tcp = "tcp://192.168.0.100:9002/lounge?keep";
-
     private static Stage _stage;
     @Override
     public void start(Stage stage) throws Exception{
 
-        lobby = new RemoteSpace(tcp);
-
         _stage = stage;
         BorderPane root = new BorderPane();
-        WelcomeMenu menu = new WelcomeMenu(root, lobby);
+        WelcomeMenu menu = new WelcomeMenu(root);
         _stage.setScene(menu);
 
         _stage.setTitle("Welcome");

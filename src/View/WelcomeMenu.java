@@ -1,5 +1,6 @@
 package View;
 
+import Client.Client;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,11 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.jspace.ActualField;
-import org.jspace.FormalField;
 import org.jspace.Space;
-
-import java.util.List;
 
 import static Fields.Constants.HEIGHT;
 import static Fields.Constants.WIDTH;
@@ -27,12 +24,8 @@ import static Fields.Constants.WIDTH;
 
 public class WelcomeMenu extends Scene{
 
-    private Space lobby;
-
-    public WelcomeMenu(BorderPane bp, Space lobby) {
+    public WelcomeMenu(BorderPane bp) {
         super(bp, WIDTH, HEIGHT);
-        this.lobby = lobby;
-
         bp.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
         bp.setPadding(new Insets(10,50,50,50));
@@ -86,7 +79,7 @@ public class WelcomeMenu extends Scene{
         });
 
         btnLogin.setOnAction(event -> {
-            if (login(txtUserName.getText()))
+            if (Client.initialize(txtUserName.getText()))
             {
                 lblErrorMessage.setText("Welcome " + txtUserName.getText() + "!");
             }
@@ -100,39 +93,4 @@ public class WelcomeMenu extends Scene{
         bp.setTop(hb);
         bp.setCenter(gridPane);
     }
-
-    private boolean login(String username)
-    {
-        boolean success = true;
-        try{
-            if(username.length() < 2) return false;
-
-            lobby.get(new ActualField("__registration_lock"));
-            List<Object[]> userList = lobby.queryAll(new ActualField("user"),new FormalField(String.class));
-
-            for (Object[] u : userList)
-            {
-                String user = (String) u[1];
-
-                // If found username matches with desired username: break and set taken to true
-                if (user.equals(username))
-                {
-                    success =  false;
-                }
-            }
-
-            if(success)
-            {
-                lobby.put("user", username);
-            }
-
-            lobby.put("__registration_lock");
-
-        } catch (Exception e)
-        {
-            success = false;
-        }
-        return success;
-    }
-
 }

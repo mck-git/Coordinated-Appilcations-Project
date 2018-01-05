@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Client {
-    static RemoteSpace lounge;
-    static String tcp = "tcp://" + "127.0.1.1" + ":9002/lounge?keep";
+    static RemoteSpace lobby;
+    static String tcp = "tcp://" + "10.16.170.47" + ":9002/lounge?keep";
     static Scanner sc;
     static String userName = "";
 
@@ -44,13 +44,13 @@ public class Client {
 
 
     // Initialize user when first starting app
-    private static boolean initialize(String nameInput) {
+    public static boolean initialize(String nameInput) {
 
 
         try
         {
             // Connect to the lounge
-            lounge = new RemoteSpace(tcp);
+            lobby = new RemoteSpace(tcp);
             System.out.println("Connected to server!");
             boolean taken = false;
 
@@ -62,10 +62,10 @@ public class Client {
             System.out.println("Your username is: " + nameInput);
 
             // Take the lock - Assures no two users try to register at once
-            lounge.get(new ActualField("__registration_lock"));
+            lobby.get(new ActualField("__registration_lock"));
 
             // Read all existing users in the lounge touplespace
-            List<Object[]> userList = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
+            List<Object[]> userList = lobby.queryAll(new ActualField("user"), new FormalField(String.class));
 
             System.out.println("Checking if your username is taken...");
 
@@ -91,12 +91,12 @@ public class Client {
             else {
 
                 System.out.println("You chose a unique username! Good job (y)");
-                lounge.put("user", nameInput);
+                lobby.put("user", nameInput);
                 userName = nameInput;
             }
 
             // Release lock
-            lounge.put("__registration_lock");
+            lobby.put("__registration_lock");
 
             return !taken;
 
@@ -107,12 +107,12 @@ public class Client {
 
 
     private static void createRoom(String name) {
-        lounge.put("createRoom",name, userName);
+        lobby.put("createRoom",name, userName);
 
         try
         {
             System.out.println("Trying to create room...");
-            Object[] ack = lounge.get(new ActualField(userName), new ActualField("response"), new FormalField(Boolean.class));
+            Object[] ack = lobby.get(new ActualField(userName), new ActualField("response"), new FormalField(Boolean.class));
 
             if ((boolean) ack[2])
                 System.out.println("Room created!");
