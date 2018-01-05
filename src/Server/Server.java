@@ -134,7 +134,7 @@ public class Server {
         ack(owner);
     }
 
-    private static String[] getUsers()
+    public static String[] getUsers()
     {
         try {
             List<Object[]> users = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
@@ -153,7 +153,7 @@ public class Server {
         return null;
     }
 
-    private static String[] getRooms()
+    public static String[] getRooms()
     {
         String[] rooms_string = new String[rooms.size()];
         int i = 0;
