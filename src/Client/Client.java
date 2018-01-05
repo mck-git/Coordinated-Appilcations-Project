@@ -11,6 +11,7 @@ public class Client {
     static private RemoteSpace currentRoom;
 
     static private String userName = "";
+    static private String currentRoomName = "";
     static private String ip = "10.16.172.127";
 
     static private Scanner sc;
@@ -29,22 +30,35 @@ public class Client {
             System.out.println("\n\nWhat do you want to do?");
             String input = sc.next();
             input = input + sc.nextLine();
+            input = input.toLowerCase();
 
-            if (input.equals("Create room"))
+            if (input.equals("create room"))
             {
                 System.out.print("Choose a name for your room: ");
                 String name = sc.next();
                 createRoom(name);
             }
 
-            else if (input.equals("Join_room"))
+            else if (input.equals("join room"))
             {
                 System.out.print("Which room do you want to join? ");
                 String roomName = sc.next();
                 joinRoom(roomName);
             }
 
-            else if (input.equals("Send_message"))
+            else if (input.equals("leave room"))
+            {
+                System.out.println("Returning to the lobby...");
+                leaveRoom();
+            }
+
+            else if (input.equals("lock room"))
+            {
+                System.out.println("Locking " + currentRoomName + "...");
+                lockRoom();
+            }
+
+            else if (input.equals("send message"))
             {
                 System.out.println("What do you wish to send?");
                 String message = sc.next();
@@ -52,7 +66,13 @@ public class Client {
                 sendMessage(message);
             }
 
-            else if (input.equals("Exit"))
+            else if (input.equals("get messages"))
+            {
+                System.out.println("Getting messages...");
+                getMessages();
+            }
+
+            else if (input.equals("exit"))
             {
                 System.out.println("We hope you enjoyed your stay. Goodbye");
                 break;
@@ -76,9 +96,10 @@ public class Client {
         try
         {
             String tcp = createURI("lounge");
-            // Connect to the lounge
+            // Connect to the lobby
             lobby = new RemoteSpace(tcp);
             currentRoom = new RemoteSpace(tcp);
+            currentRoomName = "lobby";
             System.out.println("Connected to server!");
             boolean taken = false;
 
@@ -177,6 +198,8 @@ public class Client {
 
             // Join the room by setting currentRoom to the specified room
             currentRoom = new RemoteSpace(createURI(roomName));
+            currentRoom.put(userName);
+            currentRoomName = roomName;
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
         } catch (Exception e)
@@ -188,11 +211,51 @@ public class Client {
 
     }
 
+    public static void leaveRoom()
+    {
+        try {
+
+            if (!currentRoomName.equals("lobby"))
+            {
+                currentRoom.get(new ActualField(userName));
+                currentRoom = new RemoteSpace(createURI("lounge"));
+            }
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+    public static void lockRoom()
+    {
+        currentRoom.put("lockRoom",currentRoomName,userName);
+    }
+
     // Send a message to the current room
     public static void sendMessage(String msg)
     {
         currentRoom.put("message", userName, msg);
     }
+
+
+    // Get all messages in the current room
+    public static void getMessages()
+    {
+        try {
+
+            List<Object[]> messages = currentRoom.queryAll(
+                    new ActualField("message"),
+                    new FormalField(String.class),
+                    new FormalField(String.class)
+            );
+
+            for (Object[] o : messages)
+            {
+                System.out.println("[" + currentRoomName + "]" + o[1] + ": " + o[2]);
+
+            }
+
+
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
 
     // Creates a URI address from a given room name
     private static String createURI(String roomName)
