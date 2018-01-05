@@ -16,7 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.jspace.Space;
 
 import static Fields.Constants.HEIGHT;
 import static Fields.Constants.WIDTH;
@@ -24,11 +23,15 @@ import static Fields.Constants.WIDTH;
 
 public class WelcomeMenu extends Scene{
 
-    public WelcomeMenu(BorderPane bp) {
-        super(bp, WIDTH, HEIGHT);
-        bp.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
+    private BorderPane root;
 
-        bp.setPadding(new Insets(10,50,50,50));
+    public WelcomeMenu() {
+        super(new BorderPane(), WIDTH, HEIGHT);
+
+        root = (BorderPane) getRoot();
+        root.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
+
+        root.setPadding(new Insets(10,50,50,50));
 
         HBox hb = new HBox();
         hb.setPadding(new Insets(20,20,20,30));
@@ -81,7 +84,7 @@ public class WelcomeMenu extends Scene{
         btnLogin.setOnAction(event -> {
             if (Client.initialize(txtUserName.getText()))
             {
-                lblErrorMessage.setText("Welcome " + txtUserName.getText() + "!");
+                Display.setScene(new Lobby());
             }
             else
             {
@@ -90,7 +93,7 @@ public class WelcomeMenu extends Scene{
         });
 
         //Add HBox and GridPane layout to BorderPane Layout
-        bp.setTop(hb);
-        bp.setCenter(gridPane);
+        root.setTop(hb);
+        root.setCenter(gridPane);
     }
 }

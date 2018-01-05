@@ -13,8 +13,7 @@ public class Display extends Application {
     public void start(Stage stage) throws Exception{
 
         _stage = stage;
-        BorderPane root = new BorderPane();
-        WelcomeMenu menu = new WelcomeMenu(root);
+        WelcomeMenu menu = new WelcomeMenu();
         _stage.setScene(menu);
 
         _stage.setTitle("Welcome");
