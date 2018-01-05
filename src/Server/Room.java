@@ -53,7 +53,13 @@ public class Room extends SequentialSpace implements Runnable
 
     public void run ()
     {
-        
+        while(true)
+        {
+            displayMessages(getMessages());
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {}
+        }
     }
 
     public boolean isOpen()
