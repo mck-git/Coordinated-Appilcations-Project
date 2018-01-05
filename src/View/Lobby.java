@@ -33,13 +33,13 @@ public class Lobby extends TScene {
         root.setPadding(new Insets(20,20,20,30));
 
         Label userLable = new Label();
-        userLable.setText("Users");
+        userLable.setText("Users in lobby");
         userView.setAlignment(Pos.CENTER);
         userView.getChildren().add(userLable);
         userView.getChildren().add(userListView);
 
         Label roomLable = new Label();
-        roomLable.setText("Rooms");
+        roomLable.setText("Active Rooms");
         roomView.setAlignment(Pos.CENTER);
         roomView.getChildren().add(roomLable);
         roomView.getChildren().add(roomListView);
@@ -99,7 +99,7 @@ public class Lobby extends TScene {
         joinRoomBtn.setOnAction(event -> {
             if(roomListView.getSelectionModel().getSelectedItem() != null) {
                 Client.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
-                Display.setScene(new Game());
+                Display.setScene(new GameWindow());
             }
         });
 
@@ -137,7 +137,7 @@ public class Lobby extends TScene {
             Client.createRoom(createRoomtxt.getText());
             createRoomtxt.clear();
             popup.hide();
-            Display.setScene(new Game());
+            Display.setScene(new GameWindow());
         });
 
         roomListView.setOnKeyPressed(key -> {
@@ -208,7 +208,7 @@ public class Lobby extends TScene {
     public void closingProtocol() {
         try {
             Client.quit();
-            System.exit(0);
+            Client.exitApplication();
         } catch (Exception ignored) {
         }
     }

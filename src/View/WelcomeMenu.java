@@ -125,7 +125,6 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void closingProtocol() {
-        System.exit(0);
+        Client.exitApplication();
     }
-
 }

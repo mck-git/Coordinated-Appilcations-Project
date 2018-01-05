@@ -18,8 +18,8 @@ public class Display extends Application {
         scene = new WelcomeMenu();
         setScene(scene);
         _stage.setOnCloseRequest(event -> {
-            event.consume();
             scene.closingProtocol();
+            event.consume();
         });
         _stage.setTitle("Welcome");
 

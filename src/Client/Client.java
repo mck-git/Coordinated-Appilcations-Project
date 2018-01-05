@@ -255,10 +255,7 @@ public class Client {
         } catch (InterruptedException e) {e.printStackTrace();}
     }
 
-    public static void exitApplication()
-    {
-        System.exit(0);
-    }
+
 
     // Lock the current room
     public static void lockRoom()
@@ -349,6 +346,10 @@ public class Client {
         return currentRoomName;
     }
 
+    public static void exitApplication()
+    {
+        System.exit(0);
+    }
 
     // Creates a URI address from a given room name
     public static String createURI(String roomName)

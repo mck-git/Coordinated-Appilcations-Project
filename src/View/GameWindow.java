@@ -4,8 +4,6 @@ import Client.Client;
 import Exceptions.Client.ServerNACKException;
 import Fields.Constants;
 import Templates.TScene;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -16,9 +14,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
 
-public class Game extends TScene {
+import static Fields.Constants.WIDTH;
+
+public class GameWindow extends TScene {
 
     private BorderPane root;
     private String[] messages = new String[]{};
@@ -121,9 +123,13 @@ public class Game extends TScene {
             popup.show(Display.getStage());
         });
 
-        VBox top = new VBox();
+        HBox top = new HBox();
+        Label roomlbl = new Label("Room: " + Client.getCurrentRoomName());
+        roomlbl.setFont(Font.font("Courier", FontWeight.EXTRA_BOLD, 36.0));
         top.setAlignment(Pos.CENTER_LEFT);
+        top.setSpacing(WIDTH/4);
         top.getChildren().add(exitRoom);
+        top.getChildren().add(roomlbl);
         root.setTop(top);
 
         setOnKeyPressed(key -> {
@@ -168,7 +174,7 @@ public class Game extends TScene {
         try {
             Client.leaveRoom();
             Client.quit();
-            System.exit(0);
+            Client.exitApplication();
         } catch (Exception ignored) {
         }
     }
