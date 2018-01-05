@@ -11,20 +11,19 @@ import java.util.List;
 // client template: ("user", string name)
 // room template: ("room", string name, string owner)
 // createRoom template: ("createRoom", string name, string owner)
-// ack template: (string user, "response", bool true)
-// nack template: (string user, "response", bool false)
+// joinRoom template: ("joinRoom", string name, string user)
+// ack template: ("response", string user, , bool true)
+// nack template: ( "response", string user, bool false)
 
 
 public class Server {
     static Space lounge = new SequentialSpace();
     static ArrayList<Room> rooms = new ArrayList<Room>();
-    static  SpaceRepository repository = new SpaceRepository();
+    static SpaceRepository repository = new SpaceRepository();
 
 
     public static void main(String[] args)
     {
-
-
         String localhostAddress = null;
         try {
             localhostAddress = InetAddress.getLocalHost().getHostAddress();
@@ -44,8 +43,6 @@ public class Server {
             {
                 handleRequests();
 
-                displayUsers();
-                displayRooms();
 
                 Thread.sleep(1000);
             }
@@ -58,8 +55,11 @@ public class Server {
     private static void handleRequests()
     {
         try {
+            List<Object[]> requests;
+
             // Check for createRoom requests
-            List<Object[]> requests = lounge.getAll(
+            // createRoom template: ("createRoom", string name, string owner)
+            requests = lounge.getAll(
                     new ActualField("createRoom"),
                     new FormalField(String.class),
                     new FormalField(String.class));
@@ -69,9 +69,46 @@ public class Server {
               createRoom((String) o[1], (String) o[2]);
             }
 
+            // Check for joinRoom requests
+            // joinRoom template: ("joinRoom", string name, string user)
+            requests = lounge.getAll(
+                    new ActualField("joinRoom"),
+                    new FormalField(String.class),
+                    new FormalField(String.class)
+            );
+            for (Object[] o : requests)
+            {
+                joinRoom((String) o[1], (String) o[2]);
+            }
+
+
+
+
         } catch (Exception e) {e.printStackTrace();}
     }
 
+    private static void joinRoom(String name, String user)
+    {
+        // joinRoom template: ("joinRoom", string name, string user)
+        boolean ack = false;
+        for (Room r : rooms)
+        {
+            if (r.getName().equals(name))
+            {
+                if (r.isOpen())
+                {
+                    ack(user);
+                    ack = true;
+                    break;
+                }
+            }
+        }
+
+        if (!ack)
+        {
+            nack(user);
+        }
+    }
 
     private static void createRoom(String name, String owner) throws Exception
     {
@@ -97,37 +134,50 @@ public class Server {
         ack(owner);
     }
 
-    private static void displayUsers()
+    private static String[] getUsers()
     {
-        System.out.print("Displaying users: ");
         try {
             List<Object[]> users = lounge.queryAll(new ActualField("user"), new FormalField(String.class));
+            String[] users_string = new String[users.size()];
+            int i = 0;
+
             for (Object[] o : users)
             {
-                System.out.print(" " + o[1]);
+                users_string[i] = (String) o[1];
+                i++;
             }
-            System.out.println();
+
+            return users_string;
+        } catch (Exception e) {}
+
+        return null;
+    }
+
+    private static String[] getRooms()
+    {
+        String[] rooms_string = new String[rooms.size()];
+        int i = 0;
+
+        for (Room r : rooms)
+        {
+            rooms_string[i] = r.getName();
+            i++;
+        }
+        return rooms_string;
+    }
+
+    private static void ack(String user)
+    {
+        try {
+            lounge.put("response", user, true);
         } catch (Exception e) {}
     }
 
-    private static void displayRooms()
+    private static void nack(String user)
     {
-        System.out.print("Displaying rooms: ");
-        for (Room r : rooms)
-        {
-            System.out.print(" " + r.getName());
-        }
-        System.out.println();
-    }
-
-    private static void ack(String user) throws Exception
-    {
-        lounge.put(user, "response", true);
-    }
-
-    private static void nack(String user) throws Exception
-    {
-        lounge.put(user, "response", false);
+        try {
+        lounge.put("response", user, false);
+        } catch (Exception e) {}
     }
 
 
