@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Server {
     static Space lounge = new SequentialSpace();
-    static ArrayList<Room> rooms = new ArrayList<Room>();
+    static ArrayList<Room> rooms = new ArrayList<>();
     static SpaceRepository repository = new SpaceRepository();
 
 

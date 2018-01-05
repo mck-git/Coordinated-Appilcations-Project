@@ -208,7 +208,6 @@ public class Client {
         }
 
 
-
     }
 
     public static void leaveRoom()
@@ -222,6 +221,7 @@ public class Client {
             }
         } catch (Exception e) {e.printStackTrace();}
     }
+
 
     public static void lockRoom()
     {
@@ -256,6 +256,44 @@ public class Client {
         } catch (Exception e) {e.printStackTrace();}
     }
 
+    public static String[] getUsers()
+    {
+        try {
+            List<Object[]> users = lobby.queryAll(new ActualField("user"), new FormalField(String.class));
+            String[] users_string = new String[users.size()];
+            int i = 0;
+
+            for (Object[] o : users)
+            {
+                String username = (String) o[1];
+                users_string[i] = username;
+                i++;
+            }
+
+            return users_string;
+        } catch (Exception e) {}
+
+        return null;
+    }
+
+    public static String[] getRooms()
+    {
+        try {
+            List<Object[]> rooms = lobby.queryAll(new ActualField("room"), new FormalField(String.class), new FormalField(String.class));
+            String[] rooms_string = new String[rooms.size()];
+            int i = 0;
+
+            for (Object[] o : rooms)
+            {
+                rooms_string[i] = (String) o[1];
+                i++;
+                System.out.print(" " + rooms_string[i]);
+            }
+
+            return rooms_string;
+        } catch (Exception e) {}
+        return null;
+    }
 
     // Creates a URI address from a given room name
     private static String createURI(String roomName)

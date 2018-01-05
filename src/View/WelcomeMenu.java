@@ -1,9 +1,9 @@
 package View;
 
 import Client.Client;
+import Templates.TScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,14 +20,11 @@ import javafx.scene.text.Text;
 import static Fields.Constants.HEIGHT;
 import static Fields.Constants.WIDTH;
 
-
-public class WelcomeMenu extends Scene{
+public class WelcomeMenu extends TScene {
 
     private BorderPane root;
 
     public WelcomeMenu() {
-        super(new BorderPane(), WIDTH, HEIGHT);
-
         root = (BorderPane) getRoot();
         root.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
@@ -95,5 +92,15 @@ public class WelcomeMenu extends Scene{
         //Add HBox and GridPane layout to BorderPane Layout
         root.setTop(hb);
         root.setCenter(gridPane);
+    }
+
+    @Override
+    public void setup() {
+
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }
