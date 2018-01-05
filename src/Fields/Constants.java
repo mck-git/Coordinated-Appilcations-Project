@@ -1,6 +1,6 @@
 package Fields;
 
 public interface Constants {
-    int HEIGHT = 400;
-    int WIDTH = 600;
+    int HEIGHT = 360;
+    int WIDTH = 720;
 }

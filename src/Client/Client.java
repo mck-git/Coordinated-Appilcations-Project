@@ -1,7 +1,10 @@
 package Client;
 
+import Exceptions.Client.CommandException;
 import Exceptions.Client.ServerNACKException;
-import org.jspace.*;
+import org.jspace.ActualField;
+import org.jspace.FormalField;
+import org.jspace.RemoteSpace;
 
 import java.util.List;
 import java.util.Scanner;
@@ -12,83 +15,69 @@ public class Client {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "10.16.170.47";
+    static private String ip = "192.168.0.100";
 
     static private Scanner sc;
 
     public static void main(String[] args)
     {
-        sc = new Scanner(System.in);
-        sc.useDelimiter("\\n");
+        try {
+            sc = new Scanner(System.in);
+            sc.useDelimiter("\\n");
 
-        System.out.println("Welcome! Please wait while connecting to the server.");
-        initialize(sc.next());
+            System.out.println("Welcome! Please wait while connecting to the server.");
+            initialize(sc.next());
 
-        while (true)
-        {
+            label:
+            while (true) {
 
-            System.out.println("\n\nWhat do you want to do?");
-            String input = sc.next();
-            input = input + sc.nextLine();
-            input = input.toLowerCase();
+                System.out.println("\n\nWhat do you want to do?");
+                String input = sc.next();
+                input = input + sc.nextLine();
+                input = input.toLowerCase();
 
-            if (input.equals("create room"))
-            {
-                System.out.print("Choose a name for your room: ");
-                String name = sc.next();
-                createRoom(name);
-            }
-
-            else if (input.equals("join room"))
-            {
-                System.out.print("Which room do you want to join? ");
-                String roomName = sc.next();
-                joinRoom(roomName);
-            }
-
-            else if (input.equals("leave room"))
-            {
-                System.out.println("Returning to the lobby...");
-                leaveRoom();
-            }
-
-            else if (input.equals("lock room"))
-            {
-                System.out.println("Locking " + currentRoomName + "...");
-                lockRoom();
-            }
-
-            else if (input.equals("send message"))
-            {
-                System.out.println("What do you wish to send?");
-                String message = sc.next();
-                message = message + sc.nextLine();
-                sendMessage(message);
-            }
-
-            else if (input.equals("get messages"))
-            {
-                System.out.println("Getting messages...");
-                String[] messages = getMessages();
-                for (String m : messages)
-                {
-                    System.out.println(m);
+                switch (input) {
+                    case "create room":
+                        System.out.print("Choose a name for your room: ");
+                        String name = sc.next();
+                        createRoom(name);
+                        break;
+                    case "join room":
+                        System.out.print("Which room do you want to join? ");
+                        String roomName = sc.next();
+                        joinRoom(roomName);
+                        break;
+                    case "leave room":
+                        System.out.println("Returning to the lobby...");
+                        leaveRoom();
+                        break;
+                    case "lock room":
+                        System.out.println("Locking " + currentRoomName + "...");
+                        lockRoom();
+                        break;
+                    case "send message":
+                        System.out.println("What do you wish to send?");
+                        String message = sc.next();
+                        message = message + sc.nextLine();
+                        sendMessage(message);
+                        break;
+                    case "get messages":
+                        System.out.println("Getting messages...");
+                        String[] messages = getMessages();
+                        for (String m : messages) {
+                            System.out.println(m);
+                        }
+                        break;
+                    case "exit":
+                        System.out.println("We hope you enjoyed your stay. Goodbye");
+                        break label;
+                    default:
+                        System.out.println("Sorry, I did not understand that.");
+                        break;
                 }
+
             }
-
-            else if (input.equals("exit"))
-            {
-                System.out.println("We hope you enjoyed your stay. Goodbye");
-                break;
-            }
-
-            else
-            {
-                System.out.println("Sorry, I did not understand that.");
-            }
-
-        }
-
+        } catch(Exception ignored) {}
         System.exit(0);
     }
 
@@ -96,10 +85,9 @@ public class Client {
     // Initialize user when first starting app
     public static boolean initialize(String nameInput)
     {
-
         try
         {
-            String tcp = createURI("lounge");
+            String tcp = createURI("lobby");
             // Connect to the lobby
             lobby = new RemoteSpace(tcp);
             currentRoom = new RemoteSpace(tcp);
@@ -224,32 +212,52 @@ public class Client {
         {
             e.printStackTrace();
         }
-
-
     }
 
     // Leave the current room, if it is not the lobby
-    public static void leaveRoom()
-    {
+    public static void leaveRoom() throws ServerNACKException {
         try {
             // If you are in a room other than the lobby
             if (!currentRoomName.equals("lobby"))
             {
-                currentRoom.put("leaveRoom",userName);
-
+                System.out.println("Leaving room: " + currentRoomName);
+                currentRoom.put("leaveRoom", userName);
                 Object[] response = currentRoom.get(
                         new ActualField("response"),
                         new ActualField(userName),
                         new FormalField(Boolean.class));
+                System.out.println("Got server response: " + response[2]);
 
-                if (!(boolean) response[2])
+                if (!(boolean) response[2]) {
+                    System.out.println("Got nack");
                     throw new ServerNACKException("leaveRoom");
+                }
 
                 // Remove yourself from the room and set currentRoom to be the lounge
-                currentRoom = new RemoteSpace(createURI("lounge"));
+                currentRoom = lobby;
                 currentRoomName = "lobby";
             }
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (InterruptedException e) {e.printStackTrace();}
+    }
+
+    // Leave the current room, if it is not the lobby
+    public static void quit() throws ServerNACKException, CommandException {
+        if(Client.getCurrentRoomName() != "lobby") throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
+        try {
+            lobby.put("quit", userName);
+
+            Object[] response = lobby.get(
+                    new ActualField("response"),
+                    new ActualField(userName),
+                    new FormalField(Boolean.class));
+            if (!(boolean)response[2])
+                throw new ServerNACKException("quit");
+        } catch (InterruptedException e) {e.printStackTrace();}
+    }
+
+    public static void exitApplication()
+    {
+        System.exit(0);
     }
 
     // Lock the current room
@@ -281,7 +289,7 @@ public class Client {
             int i = 0;
             for (Object[] o : messages)
             {
-                messages_string[i] = "[" + currentRoomName + "]" + o[1] + ": " + o[2];
+                messages_string[i] = o[1] + ":\n" + o[2];
                 i++;
             }
 
@@ -309,7 +317,7 @@ public class Client {
             }
 
             return users_string;
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         return null;
     }
@@ -332,9 +340,15 @@ public class Client {
             }
 
             return rooms_string;
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
         return null;
     }
+
+    public static String getCurrentRoomName()
+    {
+        return currentRoomName;
+    }
+
 
     // Creates a URI address from a given room name
     public static String createURI(String roomName)

@@ -3,7 +3,6 @@ package Server;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
-import org.jspace.Space;
 
 import java.util.List;
 
@@ -45,12 +44,10 @@ public class Room extends SequentialSpace implements Runnable
     {
         List<Object[]> users = this.queryAll(new FormalField(String.class));
         String[] users_string = new String[users.size()];
-        int i =0;
 
-        for (Object[] o : users)
+        for (int i = 0; i < users.size(); i++)
         {
-            users_string[i] = (String) o[1];
-            i++;
+            users_string[i] = (String) users.get(i)[0];
         }
 
         return users_string;
@@ -64,14 +61,25 @@ public class Room extends SequentialSpace implements Runnable
         }
     }
 
+    private void displayUsers(String[] users)
+    {
+        System.out.println("Users in room " +name+ ":");
+        for (String s : users)
+        {
+            System.out.print(" " + s);
+        }
+        System.out.println();
+    }
+
     public void run ()
     {
         while(true)
         {
-            displayMessages(getMessages());
+//            displayMessages(getMessages());
+//            displayUsers(getUsers());
             try {
                 Thread.sleep(3000);
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
     }
 
@@ -91,7 +99,6 @@ public class Room extends SequentialSpace implements Runnable
     {
         return (status == Status.OPEN);
     }
-
 
     public String getName()
     {

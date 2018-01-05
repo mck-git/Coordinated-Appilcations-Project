@@ -1,5 +1,6 @@
 package View;
 
+import Client.Client;
 import Templates.TScene;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -16,7 +17,10 @@ public class Display extends Application {
         _stage.setScene(scene);
         scene = new WelcomeMenu();
         setScene(scene);
-
+        _stage.setOnCloseRequest(event -> {
+            event.consume();
+            scene.closingProtocol();
+        });
         _stage.setTitle("Welcome");
 
         new AnimationTimer() {
@@ -45,4 +49,6 @@ public class Display extends Application {
     {
         return _stage;
     }
+
+
 }

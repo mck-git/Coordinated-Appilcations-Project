@@ -12,4 +12,5 @@ public abstract class TScene extends Scene {
 
     public abstract void setup();
     public abstract void refresh();
+    public abstract void closingProtocol();
 }

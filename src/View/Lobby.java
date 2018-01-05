@@ -18,8 +18,8 @@ import javafx.stage.Popup;
 
 public class Lobby extends TScene {
     private BorderPane root;
-    public static final ObservableList users = FXCollections.observableArrayList();
-    public static final ObservableList rooms = FXCollections.observableArrayList();
+    static final ObservableList users = FXCollections.observableArrayList();
+    static final ObservableList rooms = FXCollections.observableArrayList();
     private final ListView userListView = new ListView();
     private final ListView roomListView = new ListView();
     private final VBox roomView = new VBox();
@@ -29,7 +29,6 @@ public class Lobby extends TScene {
     public void setup()
     {
         root = (BorderPane) getRoot();
-        System.out.println("Settting up lobby");
 
         root.setPadding(new Insets(20,20,20,30));
 
@@ -45,13 +44,13 @@ public class Lobby extends TScene {
         roomView.getChildren().add(roomLable);
         roomView.getChildren().add(roomListView);
 
+
+
         userListView.setItems(users);
         roomListView.setItems(rooms);
 
         root.setLeft(userView);
         root.setCenter(roomView);
-        users.addAll(Client.getUsers());
-        rooms.addAll(Client.getRooms());
 
         HBox bottom = new HBox();
         bottom.setPadding(new Insets(10,30,10,30));
@@ -61,12 +60,34 @@ public class Lobby extends TScene {
         Button updateBtn = new Button("Update");
         Button joinRoomBtn = new Button("Join Room");
         Button createRoomBtn = new Button("Create Room");
+
         bottom.getChildren().add(updateBtn);
         bottom.getChildren().add(joinRoomBtn);
         bottom.getChildren().add(createRoomBtn);
 
         root.setBottom(bottom);
 
+        HBox top = new HBox();
+        top.setAlignment(Pos.CENTER_LEFT);
+        Button exitLobby = new Button("Exit Lobby");
+        exitLobby.setFocusTraversable(false);
+        top.getChildren().add(exitLobby);
+
+        root.setTop(top);
+
+        userListView.setFocusTraversable(false);
+//        roomListView.setFocusTraversable(false);
+//        roomListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//            joinRoomBtn.fire();
+//        });
+
+        exitLobby.setOnAction(event -> {
+            try {
+                Client.quit();
+                Display.setScene(new WelcomeMenu());
+            } catch (Exception ignored) {
+            }
+        });
 
         updateBtn.setOnAction( event -> {
             users.clear();
@@ -76,8 +97,10 @@ public class Lobby extends TScene {
         });
 
         joinRoomBtn.setOnAction(event -> {
-            Client.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
-            Display.setScene(new Game());
+            if(roomListView.getSelectionModel().getSelectedItem() != null) {
+                Client.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
+                Display.setScene(new Game());
+            }
         });
 
         VBox popUpVBox = new VBox();
@@ -85,15 +108,18 @@ public class Lobby extends TScene {
         TextField createRoomtxt = new TextField();
         Button createRoomTextBtn = new Button("Create Room");
 
+
         popUpVBox.getChildren().add(createRoomlbl);
         popUpVBox.getChildren().add(createRoomtxt);
         popUpVBox.getChildren().add(createRoomTextBtn);
+        popUpVBox.setStyle("-fx-background-color: LightGray; border-style: groove;");
+        popUpVBox.setPadding(new Insets(10, 20, 10, 20));
+        popUpVBox.setAlignment(Pos.CENTER);
 
         Popup popup = new Popup();
         popup.setAutoFix(false);
         popup.setHideOnEscape(true);
         popup.getContent().addAll(popUpVBox);
-        popup.setOpacity(1);
 
         createRoomBtn.setOnAction(event -> {
             if(!popup.isShowing())
@@ -114,11 +140,62 @@ public class Lobby extends TScene {
             Display.setScene(new Game());
         });
 
-        setOnKeyPressed(key -> {
-            if(key.getCode() == KeyCode.R){
-                updateBtn.fire();
+        roomListView.setOnKeyPressed(key -> {
+            switch(key.getCode())
+            {
+                case ENTER:
+                    joinRoomBtn.fire();
+                    break;
+                case ESCAPE:
+                    exitLobby.fire();
+                    break;
             }
         });
+
+        setOnKeyPressed(key -> {
+            switch(key.getCode())
+            {
+                case R:
+                    updateBtn.fire();
+                    break;
+                case J:
+                    joinRoomBtn.fire();
+                    break;
+                case C:
+                    createRoomBtn.fire();
+                    break;
+                case Q:
+                    exitLobby.fire();
+                    break;
+                case ESCAPE:
+                    exitLobby.fire();
+                    break;
+            }
+        });
+
+        createRoomBtn.setOnKeyPressed(key -> {
+            switch(key.getCode()) {
+                case ENTER:
+                    createRoomBtn.fire();
+                    break;
+            }
+        });
+        joinRoomBtn.setOnKeyPressed(key -> {
+            switch(key.getCode()) {
+                case ENTER:
+                    joinRoomBtn.fire();
+                    break;
+            }
+        });
+        updateBtn.setOnKeyPressed(key -> {
+            switch(key.getCode()) {
+                case ENTER:
+                    updateBtn.fire();
+                    break;
+            }
+        });
+
+        updateBtn.fire();
     }
 
     @Override
@@ -126,4 +203,14 @@ public class Lobby extends TScene {
     {
 
     }
+
+    @Override
+    public void closingProtocol() {
+        try {
+            Client.quit();
+            System.exit(0);
+        } catch (Exception ignored) {
+        }
+    }
+
 }

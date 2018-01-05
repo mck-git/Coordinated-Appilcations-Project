@@ -19,12 +19,20 @@ import java.util.List;
 // createRoom template: ("createRoom", string name, string owner)
 // joinRoom template: ("joinRoom", string name, string user)
 // leaveRoom template: ("leaveRoom", string user)
+// quit template:       ("quit", string name, string user)
 
 public class Server {
-    static Space lounge = new SequentialSpace();
-    static ArrayList<Room> rooms = new ArrayList<>();
-    static SpaceRepository repository = new SpaceRepository();
+    private static Space lobby;
+    private static SpaceRepository repository;
+    private static ArrayList<Room> rooms;
+    private static boolean running;
 
+    static {
+        lobby = new SequentialSpace();
+        repository = new SpaceRepository();
+        rooms = new ArrayList<>();
+        running = true;
+    }
 
     public static void main(String[] args)
     {
@@ -37,13 +45,13 @@ public class Server {
         System.out.println("Host IP is: " + localhostAddress);
 
         repository.addGate("tcp://"+localhostAddress+":9002/?keep");
-        repository.add("lounge", lounge);
+        repository.add("lobby", lobby);
 
         try {
             // Setup registration_lock
-            lounge.put("__registration_lock");
+            lobby.put("__registration_lock");
 
-            while (true)
+            while (running)
             {
                 handleRequests();
 
@@ -60,7 +68,7 @@ public class Server {
 
             // Check for createRoom requests
             // createRoom template: ("createRoom", string name, string owner)
-            requests = lounge.getAll(
+            requests = lobby.getAll(
                     new ActualField("createRoom"),
                     new FormalField(String.class),
                     new FormalField(String.class));
@@ -72,7 +80,7 @@ public class Server {
 
             // Check for joinRoom requests
             // joinRoom template: ("joinRoom", string name, string user)
-            requests = lounge.getAll(
+            requests = lobby.getAll(
                     new ActualField("joinRoom"),
                     new FormalField(String.class),
                     new FormalField(String.class)
@@ -82,18 +90,29 @@ public class Server {
                 joinRoom((String) o[1], (String) o[2]);
             }
 
+            // Check for quit requests
+            // quit template: ("quit", string user)
+            requests = lobby.getAll(
+                    new ActualField("quit"),
+                    new FormalField(String.class)
+            );
+            for (Object[] o : requests)
+            {
+                System.out.println("Got quit request from: " + o[1]);
+                quit((String) o[1]);
+            }
+
             // Check for leaveRoom requests
             // leaveRoom template: ("leaveRoom", string user)
             for (Room r : rooms)
             {
                 requests = r.getAll(
                         new ActualField("leaveRoom"),
-                        new FormalField(String.class),
                         new FormalField(String.class)
                 );
                 for (Object[] o : requests)
                 {
-                        System.out.println((String) o[1] + " wants to leave room " + r.getName());
+                        System.out.println(o[1] + " wants to leave room: " + r.getName());
                         leaveRoom(r, (String) o[1]);
                 }
             }
@@ -109,45 +128,53 @@ public class Server {
                 );
                 for (Object[] o : requests)
                 {
-                    System.out.println((String) o[2] + " wants to lock room " + (String) o[1]);
+                    System.out.println(o[2] + " wants to lock room: " + o[1]);
                     r.lock((String) o[1], (String) o[2]);
                 }
             }
-
 
         } catch (Exception e) {e.printStackTrace();}
     }
 
     private static void leaveRoom(Room r, String user)
     {
+        System.out.println("leaveRoom method run");
         Object[] result = r.getp(new ActualField(user));
-        if (!(result[0] == null))
+
+        if (result == null)
         {
-            ack(r.getName(), user);
+            nack(r.getName(), user);
             return;
         }
-        nack(r.getName(), user);
+        ack(r.getName(), user);
     }
 
 
-    private static void joinRoom(String name, String user) {
-        System.out.println(user + " wants to join room " + name);
+    private static void joinRoom(String name, String user)
+    {
+        System.out.println(user + " wants to join room: " + name);
         // joinRoom template: ("joinRoom", string name, string user)
-        boolean ack = false;
         for (Room r : rooms) {
-            if (r.getName().equals(name)) {
-                if (r.isOpen()) {
-                    r.put(user);
+            if (r.getName().equals(name) && r.isOpen()) {
+                r.put(user);
 
-                    ack("lounge", user);
-                    ack = true;
-                    break;
-                }
+                ack("lobby", user);
+                return;
             }
         }
 
-        if (!ack) {
-            nack("lounge", user);
+        nack("lobby", user);
+    }
+
+    private static void quit(String user)
+    {
+        try {
+            System.out.println(user + " wants to quit from lobby");
+            // quit template: ("quit", string name, string user)
+            lobby.get(new ActualField("user"), new ActualField(user));
+            ack("lobby", user);
+        } catch (Exception e) {
+            nack("lobby", user);
         }
     }
 
@@ -162,7 +189,7 @@ public class Server {
         {
             if (name.equals(r.getName()))
             {
-                nack("lounge", owner);
+                nack("lobby", owner);
                 return;
             }
         }
@@ -172,9 +199,9 @@ public class Server {
         repository.add(name, newRoom);
         new Thread(newRoom).start();
 
-        lounge.put("room", name, owner);
+        lobby.put("room", name, owner);
 
-        ack("lounge", owner);
+        ack("lobby", owner);
     }
 
     public static String[] getAllUsers()
@@ -194,9 +221,8 @@ public class Server {
         int i = 0;
         for (String[] s : users)
         {
-            for (int j = 0; j < s.length; j++)
-            {
-                users_string[i] = s[j];
+            for (String value : s) {
+                users_string[i] = value;
                 i++;
             }
         }
@@ -207,18 +233,18 @@ public class Server {
     public static String[] getUsers()
     {
         try {
-            List<Object[]> users = lounge.queryAll(new FormalField(String.class));
+            List<Object[]> users = lobby.queryAll(new FormalField(String.class));
             String[] users_string = new String[users.size()];
             int i = 0;
 
             for (Object[] o : users)
             {
-                users_string[i] = (String) o[1];
+                users_string[i] = (String) o[0];
                 i++;
             }
 
             return users_string;
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         return null;
     }
@@ -239,9 +265,9 @@ public class Server {
     private static void ack(String room, String user)
     {
         try {
-            if (room.equals("lounge"))
+            if (room.equals("lobby"))
             {
-                lounge.put("response", user, true);
+                lobby.put("response", user, true);
             }
             else
             {
@@ -249,20 +275,21 @@ public class Server {
                 {
                     if (r.getName().equals(room))
                     {
+                        System.out.println("Ack to room '" + r.getName() + "' with format: " + "'response', '" + user + "', true");
                         r.put("response", user, true);
                     }
                 }
             }
             System.out.println("Sending ack to " + user);
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 
     private static void nack(String room, String user)
     {
         try {
-            if (room.equals("lounge"))
+            if (room.equals("lobby"))
             {
-                lounge.put("response", user, false);
+                lobby.put("response", user, false);
             }
             else
             {
@@ -275,6 +302,6 @@ public class Server {
                 }
             }
             System.out.println("Sending nack to " + user);
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 }
