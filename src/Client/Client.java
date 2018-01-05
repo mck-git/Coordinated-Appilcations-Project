@@ -69,7 +69,11 @@ public class Client {
             else if (input.equals("get messages"))
             {
                 System.out.println("Getting messages...");
-                getMessages();
+                String[] messages = getMessages();
+                for (String m : messages)
+                {
+                    System.out.println(m);
+                }
             }
 
             else if (input.equals("exit"))
@@ -157,7 +161,7 @@ public class Client {
     }
 
     // Create a room from the lobby
-    private static void createRoom(String name)
+    public static void createRoom(String name)
     {
         // Put the request onto the server touplespace
         lobby.put("createRoom",name, userName);
@@ -187,7 +191,7 @@ public class Client {
     }
 
     // Join a room with a specific room name
-    private static void joinRoom(String roomName)
+    public static void joinRoom(String roomName)
     {
         try
         {
@@ -225,7 +229,7 @@ public class Client {
     }
 
     // Leave the current room, if it is not the lobby
-    private static void leaveRoom()
+    public static void leaveRoom()
     {
         try {
             // If you are in a room other than the lobby
@@ -249,20 +253,20 @@ public class Client {
     }
 
     // Lock the current room
-    private static void lockRoom()
+    public static void lockRoom()
     {
         currentRoom.put("lockRoom",currentRoomName,userName);
     }
 
     // Send a message to the current room
-    private static void sendMessage(String msg)
+    public static void sendMessage(String msg)
     {
         currentRoom.put("message", userName, msg);
     }
 
 
     // Get all messages in the current room
-    private static String[] getMessages()
+    public static String[] getMessages()
     {
         try {
             // Query the messages from the server touplespace for the current room
@@ -335,7 +339,7 @@ public class Client {
     }
 
     // Creates a URI address from a given room name
-    private static String createURI(String roomName)
+    public static String createURI(String roomName)
     {
         return "tcp://" + ip + ":9002/" + roomName + "?keep";
     }
