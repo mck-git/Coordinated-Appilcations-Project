@@ -155,32 +155,34 @@ public class Client {
     }
 
     // Create a room from the lobby
-    public static boolean createRoom(String name)
+    private static void createRoom(String name)
     {
+        // Put the request onto the server touplespace
         lobby.put("createRoom",name, userName);
 
         try
         {
             System.out.println("Trying to create room...");
+            // Get the response
             Object[] response = lobby.get(new ActualField("response"), new ActualField(userName), new FormalField(Boolean.class));
 
+            // If the response was an ACK - join room
             if ((boolean) response[2])
             {
                 System.out.println("Room created!");
                 joinRoom(name);
             }
+
+            // If the response was a NACK - throw error
             else
             {
-                System.out.println("Room did not get created. Try with a different name");
+                throw new ServerNACKException("createRoom");
             }
-
-            return (boolean) response[2];
-
         } catch (Exception e) {System.out.println("Request failed, please try again"); return false;}
     }
 
     // Join a room with a specific room name
-    public static void joinRoom(String roomName)
+    private static void joinRoom(String roomName)
     {
         try
         {
@@ -198,6 +200,8 @@ public class Client {
 
             // Join the room by setting currentRoom to the specified room
             currentRoom = new RemoteSpace(createURI(roomName));
+
+            // Put the username into the joined room, and set new room as currentRoomName
             currentRoom.put(userName);
             currentRoomName = roomName;
             System.out.println("Joined the room! Welcome to " + roomName + "!");
@@ -210,56 +214,65 @@ public class Client {
 
     }
 
-    public static void leaveRoom()
+    // Leave the current room, if it is not the lobby
+    private static void leaveRoom()
     {
         try {
-
+            // If you are in a room other than the lobby
             if (!currentRoomName.equals("lobby"))
             {
+                // Remove yourself from the room and set currentRoom to be the lounge
                 currentRoom.get(new ActualField(userName));
                 currentRoom = new RemoteSpace(createURI("lounge"));
+                currentRoomName = "lobby";
             }
         } catch (Exception e) {e.printStackTrace();}
     }
 
-
-    public static void lockRoom()
+    // Lock the current room
+    private static void lockRoom()
     {
         currentRoom.put("lockRoom",currentRoomName,userName);
     }
 
     // Send a message to the current room
-    public static void sendMessage(String msg)
+    private static void sendMessage(String msg)
     {
         currentRoom.put("message", userName, msg);
     }
 
 
     // Get all messages in the current room
-    public static void getMessages()
+    private static String[] getMessages()
     {
         try {
-
+            // Query the messages from the server touplespace for the current room
             List<Object[]> messages = currentRoom.queryAll(
                     new ActualField("message"),
                     new FormalField(String.class),
                     new FormalField(String.class)
             );
 
+
+            // Collect all messages in a string array
+            String[] messages_string = new String[messages.size()];
+            int i = 0;
             for (Object[] o : messages)
             {
-                System.out.println("[" + currentRoomName + "]" + o[1] + ": " + o[2]);
-
+                messages_string[i] = "[" + currentRoomName + "]" + o[1] + ": " + o[2];
+                i++;
             }
 
+            // Return the string array
+            return messages_string;
 
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {e.printStackTrace(); return null;}
     }
 
     public static String[] getUsers()
     {
         try {
-            List<Object[]> users = lobby.queryAll(new ActualField("user"), new FormalField(String.class));
+            List<Object[]> users = currentRoom.queryAll(new ActualField("user"), new FormalField(String.class));
             String[] users_string = new String[users.size()];
             int i = 0;
 
