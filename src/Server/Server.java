@@ -98,7 +98,6 @@ public class Server {
                 }
             }
 
-
             // Check for lockRoom requests
             // lockRoom template: ("lockRoom", string name, string owner)
             for (Room r : rooms)
@@ -278,7 +277,4 @@ public class Server {
             System.out.println("Sending nack to " + user);
         } catch (Exception e) {}
     }
-
-
-
 }
