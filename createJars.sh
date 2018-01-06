@@ -18,13 +18,11 @@ cd tmp
 
 touch ClientManifest.txt
 echo "Manifest-Version: 1.0
-Created-By: 1.7.0_06 (Oracle Corporation)
 Main-Class: Client.View.ClientDisplay
 " | cat > ClientManifest.txt
 
 touch ServerManifest.txt
 echo "Manifest-Version: 1.0
-Created-By: 1.7.0_06 (Oracle Corporation)
 Main-Class: Server.View.ServerDisplay
 " | cat > ServerManifest.txt
 
