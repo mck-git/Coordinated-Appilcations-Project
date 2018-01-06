@@ -1,5 +1,5 @@
 #!/bin/bash
-#Compiles Client and Server projects independentliy and creates executable jars
+#Compiles Client and Server projects independently and creates executable jars
 
 function mark {
     export $1="`pwd`";
