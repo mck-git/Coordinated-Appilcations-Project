@@ -1,14 +1,10 @@
 package Client.View;
 
 import Client.Client;
+import Client.GameEngine.World;
 import Templates.TScene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-
-import static Fields.Constants.HEIGHT;
-import static Fields.Constants.WIDTH;
 
 public class GameWindow extends TScene {
 
@@ -17,28 +13,55 @@ public class GameWindow extends TScene {
     }
 
     private Chat chat = new Chat();
+    World world = new World();
 
     @Override
     public void setup() {
         StackPane root = (StackPane) getRoot();
 
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        canvas.setFocusTraversable(true);
-        canvas.requestFocus();
+//        Group world = new Group();
+//
+//        SubScene subScene = new SubScene(world, WIDTH, HEIGHT);
+//        root.getChildren().add(subScene);
+//        subScene.setFill(Color.CADETBLUE);
+//        world.requestFocus();
+//        world.setFocusTraversable(true);
+
+
+//        Box box = new Box(100, 100, 100);
+//        world.getChildren().add(box);
+//        box.setTranslateX(0);
+//        box.setTranslateY(0);
+//        box.setTranslateZ(10);
+//
+//        Box box2 = new Box(100, 100, 100);
+//        world.getChildren().add(box2);
+//        box2.setTranslateX(150);
+//        box2.setTranslateY(0);
+//        box2.setTranslateZ(10);
+//
+//        Box box3 = new Box(100, 100, 100);
+//        world.getChildren().add(box3);
+//        box3.setTranslateX(-150);
+//        box3.setTranslateY(0);
+//        box3.setTranslateZ(10);
+
+        world.requestFocus();
+        world.setFocusTraversable(true);
+        root.getChildren().add(world);
 
         BorderPane bp = new BorderPane();
-
-        root.getChildren().add(canvas);
         root.getChildren().add(bp);
-
         bp.setRight(chat);
 
         TopMenu top = new TopMenu();
         bp.setTop(top);
 
         setOnKeyPressed(key -> {
-            if(key.getCode() == KeyCode.ESCAPE){
-                top.leave();
+            switch (key.getCode()) {
+                case ESCAPE:
+                    top.leave();
+                    break;
             }
         });
     }
@@ -46,6 +69,7 @@ public class GameWindow extends TScene {
     @Override
     public void refresh() {
         chat.updateMessageArea();
+        world.updateCamera();
     }
 
     @Override

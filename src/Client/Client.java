@@ -15,7 +15,7 @@ public class Client {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "192.168.0.100";
+    static private String ip = "192.168.6.155";
 
     static private Scanner sc;
 
