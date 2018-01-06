@@ -1,12 +1,11 @@
-package View;
+package Client.View;
 
-import Client.Client;
 import Templates.TScene;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Display extends Application {
+public class ClientDisplay extends Application {
 
     private static Stage _stage;
     private static TScene scene;
@@ -14,14 +13,13 @@ public class Display extends Application {
     public void start(Stage stage){
 
         _stage = stage;
-        _stage.setScene(scene);
         scene = new WelcomeMenu();
         setScene(scene);
         _stage.setOnCloseRequest(event -> {
             scene.closingProtocol();
             event.consume();
         });
-        _stage.setTitle("Welcome");
+        _stage.setTitle("Game Client");
 
         new AnimationTimer() {
             long lastTime = 0;
@@ -51,4 +49,7 @@ public class Display extends Application {
     }
 
 
+    public static TScene getScene() {
+        return scene;
+    }
 }

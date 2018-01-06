@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // Templates
 // client template: (string name)
@@ -25,16 +26,14 @@ public class Server {
     private static Space lobby;
     private static SpaceRepository repository;
     private static ArrayList<Room> rooms;
-    private static boolean running;
 
     static {
         lobby = new SequentialSpace();
         repository = new SpaceRepository();
         rooms = new ArrayList<>();
-        running = true;
     }
 
-    public static void main(String[] args)
+    public static void setup()
     {
         String localhostAddress = null;
         try {
@@ -47,21 +46,17 @@ public class Server {
         repository.addGate("tcp://"+localhostAddress+":9002/?keep");
         repository.add("lobby", lobby);
 
+        // Setup registration_lock
         try {
-            // Setup registration_lock
             lobby.put("__registration_lock");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-            while (running)
-            {
-                handleRequests();
-
-
-                Thread.sleep(1000);
-            }
-        } catch (Exception e) { e.printStackTrace(); }
+        new RequestHandler().start();
     }
 
-    private static void handleRequests()
+    static void handleRequests()
     {
         try {
             List<Object[]> requests;
@@ -136,9 +131,8 @@ public class Server {
         } catch (Exception e) {e.printStackTrace();}
     }
 
-    private static void leaveRoom(Room r, String user)
-    {
-        System.out.println("leaveRoom method run");
+    private static void leaveRoom(Room r, String user) throws InterruptedException {
+        System.out.println("Removing user from " + r.getName());
         Object[] result = r.getp(new ActualField(user));
 
         if (result == null)
@@ -147,16 +141,20 @@ public class Server {
             return;
         }
         ack(r.getName(), user);
+        lobby.put("user", user);
     }
 
 
-    private static void joinRoom(String name, String user)
-    {
+    private static void joinRoom(String name, String user) throws InterruptedException {
         System.out.println(user + " wants to join room: " + name);
         // joinRoom template: ("joinRoom", string name, string user)
         for (Room r : rooms) {
             if (r.getName().equals(name) && r.isOpen()) {
+                System.out.println("Removing "+ user + " from lobby");
+                lobby.getp(new ActualField("user"), new ActualField(user));
+                System.out.println("Adding user to " + r.getName());
                 r.put(user);
+
 
                 ack("lobby", user);
                 return;
@@ -206,40 +204,34 @@ public class Server {
 
     public static String[] getAllUsers()
     {
-        ArrayList<String[]> users = new ArrayList<>();
-        users.add(getUsers());
+        ArrayList<String> users = new ArrayList<>();
+
+        for(String user: getUsers())
+        {
+            users.add(String.format("[%s] %s", "lobby", user));
+        }
+
         for (Room r : rooms)
         {
-            users.add(r.getUsers());
-        }
-        int size = 0;
-        for (String[] s : users)
-        {
-            size += s.length;
-        }
-        String[] users_string = new String[size];
-        int i = 0;
-        for (String[] s : users)
-        {
-            for (String value : s) {
-                users_string[i] = value;
-                i++;
+            for(String user: r.getUsers())
+            {
+                users.add(String.format("[%s] %s", r.getName(), user));
             }
         }
 
-       return users_string;
+       return users.toArray(new String[users.size()]);
     }
 
-    public static String[] getUsers()
+    private static String[] getUsers()
     {
         try {
-            List<Object[]> users = lobby.queryAll(new FormalField(String.class));
+            List<Object[]> users = lobby.queryAll(new ActualField("user"), new FormalField(String.class));
             String[] users_string = new String[users.size()];
             int i = 0;
 
             for (Object[] o : users)
             {
-                users_string[i] = (String) o[0];
+                users_string[i] = (String) o[1];
                 i++;
             }
 
@@ -303,5 +295,20 @@ public class Server {
             }
             System.out.println("Sending nack to " + user);
         } catch (Exception ignored) {}
+    }
+}
+
+class RequestHandler extends Thread{
+    @Override
+    public void run() {
+        while(true)
+        {
+            try {
+                Server.handleRequests();
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

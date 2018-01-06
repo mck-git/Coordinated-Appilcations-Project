@@ -1,4 +1,4 @@
-package View;
+package Client.View;
 
 import Client.Client;
 import Templates.TScene;
@@ -22,11 +22,14 @@ import static Fields.Constants.WIDTH;
 
 public class WelcomeMenu extends TScene {
 
-    private BorderPane root;
+
+    WelcomeMenu() {
+        super(new BorderPane());
+    }
 
     @Override
     public void setup() {
-        root = (BorderPane) getRoot();
+        BorderPane root = (BorderPane) getRoot();
         root.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
         root.setPadding(new Insets(10,10,50,10));
@@ -37,9 +40,7 @@ public class WelcomeMenu extends TScene {
         exit.setFocusTraversable(false);
         quitPane.getChildren().add(exit);
         topPane.getChildren().add(quitPane);
-        exit.setOnAction(event -> {
-            Client.exitApplication();
-        });
+        exit.setOnAction(event -> Client.exitApplication());
 
         HBox hb = new HBox();
         topPane.getChildren().add(hb);
@@ -97,7 +98,7 @@ public class WelcomeMenu extends TScene {
         btnLogin.setOnAction(event -> {
             if (Client.initialize(txtUserName.getText()))
             {
-                Display.setScene(new Lobby());
+                ClientDisplay.setScene(new Lobby());
             }
             else
             {
@@ -120,11 +121,16 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void refresh() {
-
+        //Nothing
     }
 
     @Override
     public void closingProtocol() {
         Client.exitApplication();
+    }
+
+    @Override
+    public void leavingProtocol() {
+        //Nothing
     }
 }

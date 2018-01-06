@@ -200,7 +200,6 @@ public class Client {
             {
                 throw new ServerNACKException("joinRoom");
             }
-
             // Join the room by setting currentRoom to the specified room
             currentRoom = new RemoteSpace(createURI(roomName));
 
@@ -345,6 +344,13 @@ public class Client {
     {
         return currentRoomName;
     }
+
+    public static String getUserName()
+    {
+        return userName;
+    }
+
+
 
     public static void exitApplication()
     {

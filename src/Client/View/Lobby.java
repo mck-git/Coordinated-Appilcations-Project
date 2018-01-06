@@ -1,4 +1,4 @@
-package View;
+package Client.View;
 
 import Client.Client;
 import Templates.TScene;
@@ -17,9 +17,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 
 public class Lobby extends TScene {
-    private BorderPane root;
-    static final ObservableList users = FXCollections.observableArrayList();
-    static final ObservableList rooms = FXCollections.observableArrayList();
+
+    Lobby(){
+        super(new BorderPane());
+    }
+
+    private static final ObservableList users = FXCollections.observableArrayList();
+    private static final ObservableList rooms = FXCollections.observableArrayList();
     private final ListView userListView = new ListView();
     private final ListView roomListView = new ListView();
     private final VBox roomView = new VBox();
@@ -28,7 +32,7 @@ public class Lobby extends TScene {
     @Override
     public void setup()
     {
-        root = (BorderPane) getRoot();
+        BorderPane root = (BorderPane) getRoot();
 
         root.setPadding(new Insets(20,20,20,30));
 
@@ -43,7 +47,6 @@ public class Lobby extends TScene {
         roomView.setAlignment(Pos.CENTER);
         roomView.getChildren().add(roomLable);
         roomView.getChildren().add(roomListView);
-
 
 
         userListView.setItems(users);
@@ -67,27 +70,10 @@ public class Lobby extends TScene {
 
         root.setBottom(bottom);
 
-        HBox top = new HBox();
-        top.setAlignment(Pos.CENTER_LEFT);
-        Button exitLobby = new Button("Exit Lobby");
-        exitLobby.setFocusTraversable(false);
-        top.getChildren().add(exitLobby);
-
+        TopMenu top = new TopMenu();
         root.setTop(top);
 
         userListView.setFocusTraversable(false);
-//        roomListView.setFocusTraversable(false);
-//        roomListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            joinRoomBtn.fire();
-//        });
-
-        exitLobby.setOnAction(event -> {
-            try {
-                Client.quit();
-                Display.setScene(new WelcomeMenu());
-            } catch (Exception ignored) {
-            }
-        });
 
         updateBtn.setOnAction( event -> {
             users.clear();
@@ -99,7 +85,7 @@ public class Lobby extends TScene {
         joinRoomBtn.setOnAction(event -> {
             if(roomListView.getSelectionModel().getSelectedItem() != null) {
                 Client.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
-                Display.setScene(new GameWindow());
+                ClientDisplay.setScene(new GameWindow());
             }
         });
 
@@ -123,7 +109,7 @@ public class Lobby extends TScene {
 
         createRoomBtn.setOnAction(event -> {
             if(!popup.isShowing())
-                popup.show(Display.getStage());
+                popup.show(ClientDisplay.getStage());
         });
 
         createRoomtxt.setOnKeyPressed(key -> {
@@ -137,7 +123,7 @@ public class Lobby extends TScene {
             Client.createRoom(createRoomtxt.getText());
             createRoomtxt.clear();
             popup.hide();
-            Display.setScene(new GameWindow());
+            ClientDisplay.setScene(new GameWindow());
         });
 
         roomListView.setOnKeyPressed(key -> {
@@ -147,7 +133,7 @@ public class Lobby extends TScene {
                     joinRoomBtn.fire();
                     break;
                 case ESCAPE:
-                    exitLobby.fire();
+                    top.leave();
                     break;
             }
         });
@@ -165,10 +151,10 @@ public class Lobby extends TScene {
                     createRoomBtn.fire();
                     break;
                 case Q:
-                    exitLobby.fire();
+                    top.leave();
                     break;
                 case ESCAPE:
-                    exitLobby.fire();
+                    top.leave();
                     break;
             }
         });
@@ -209,6 +195,16 @@ public class Lobby extends TScene {
         try {
             Client.quit();
             Client.exitApplication();
+        } catch (Exception ignored) {
+        }
+    }
+
+    @Override
+    public void leavingProtocol()
+    {
+        try {
+            Client.quit();
+            ClientDisplay.setScene(new WelcomeMenu());
         } catch (Exception ignored) {
         }
     }
