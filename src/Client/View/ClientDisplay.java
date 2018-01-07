@@ -25,7 +25,7 @@ public class ClientDisplay extends Application {
             long lastTime = 0;
             @Override
             public void handle(long now) {
-                if(now-lastTime > 1e9/40.0)
+                if(now-lastTime > 1e9/40)
                 {
                     scene.refresh();
                     lastTime = now;
