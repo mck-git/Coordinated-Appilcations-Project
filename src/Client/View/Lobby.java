@@ -85,7 +85,7 @@ public class Lobby extends TScene {
         joinRoomBtn.setOnAction(event -> {
             if(roomListView.getSelectionModel().getSelectedItem() != null) {
                 Client.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
-                ClientDisplay.setScene(new GameWindow());
+                ClientDisplay.setScene(new RoomWindow());
             }
         });
 
@@ -123,7 +123,7 @@ public class Lobby extends TScene {
             Client.createRoom(createRoomtxt.getText());
             createRoomtxt.clear();
             popup.hide();
-            ClientDisplay.setScene(new GameWindow());
+            ClientDisplay.setScene(new RoomWindow());
         });
 
         roomListView.setOnKeyPressed(key -> {

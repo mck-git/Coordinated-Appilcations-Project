@@ -1,50 +1,25 @@
 package Client.View;
 
 import Client.Client;
+import Client.GameEngine.FpsCounter;
 import Client.GameEngine.World;
 import Templates.TScene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
-public class GameWindow extends TScene {
+public class RoomWindow extends TScene {
 
-    GameWindow(){
+    RoomWindow(){
         super(new StackPane());
     }
 
     private Chat chat = new Chat();
-    World world = new World();
+    private World world = new World();
+    private FpsCounter fps = new FpsCounter();
 
     @Override
     public void setup() {
         StackPane root = (StackPane) getRoot();
-
-//        Group world = new Group();
-//
-//        SubScene subScene = new SubScene(world, WIDTH, HEIGHT);
-//        root.getChildren().add(subScene);
-//        subScene.setFill(Color.CADETBLUE);
-//        world.requestFocus();
-//        world.setFocusTraversable(true);
-
-
-//        Box box = new Box(100, 100, 100);
-//        world.getChildren().add(box);
-//        box.setTranslateX(0);
-//        box.setTranslateY(0);
-//        box.setTranslateZ(10);
-//
-//        Box box2 = new Box(100, 100, 100);
-//        world.getChildren().add(box2);
-//        box2.setTranslateX(150);
-//        box2.setTranslateY(0);
-//        box2.setTranslateZ(10);
-//
-//        Box box3 = new Box(100, 100, 100);
-//        world.getChildren().add(box3);
-//        box3.setTranslateX(-150);
-//        box3.setTranslateY(0);
-//        box3.setTranslateZ(10);
 
         world.requestFocus();
         world.setFocusTraversable(true);
@@ -52,7 +27,10 @@ public class GameWindow extends TScene {
 
         BorderPane bp = new BorderPane();
         root.getChildren().add(bp);
+
+        bp.setBottom(fps);
         bp.setRight(chat);
+
 
         TopMenu top = new TopMenu();
         bp.setTop(top);
@@ -68,8 +46,9 @@ public class GameWindow extends TScene {
 
     @Override
     public void refresh() {
-        chat.updateMessageArea();
-        world.updateCamera();
+        chat.update();
+        world.update();
+        fps.update();
     }
 
     @Override

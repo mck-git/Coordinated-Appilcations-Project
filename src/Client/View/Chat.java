@@ -39,7 +39,7 @@ public class Chat extends VBox {
         });
     }
 
-    public void updateMessageArea() {
+    public void update() {
         String[] newMessages = Client.getMessages();
         boolean refreshNeeded = newMessages.length != messages.length;
 
