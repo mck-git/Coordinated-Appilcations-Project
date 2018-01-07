@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.effect.Light;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
@@ -59,14 +58,13 @@ public class World extends SubScene {
             b.setTranslateZ(0);
             root.getChildren().add(b);
         }
-
         this.setOnKeyPressed(this::keyPressedListeners);
         this.setOnKeyReleased(this::keyReleasedListeners);
     }
 
     public void update()
     {
-        double angle = camera.getRotate() * Math.PI / 180;
+        double angle = Math.toRadians(camera.getRotate());
         Point2D direction = new Point2D(Math.sin(angle), Math.cos(angle));
         Point2D perpDirection = new Point2D(direction.getY(), -direction.getX());
         Point2D step = Point2D.ZERO;
@@ -91,8 +89,8 @@ public class World extends SubScene {
             camera.setRotate((camera.getRotate() + PLAYER_TURN_SPEED)%360);
 
         FXCollections.sort(root.getChildren(), (Node a, Node b) -> {
-            double da = new Point2D(a.getTranslateX(), a.getTranslateZ()).distance(camera.getTranslateX(), camera.getTranslateZ());
-            double db = new Point2D(b.getTranslateX(), b.getTranslateZ()).distance(camera.getTranslateX(), camera.getTranslateZ());
+            double da = Math.pow((camera.getTranslateX() - a.getTranslateX()),2)+Math.pow((camera.getTranslateZ() - a.getTranslateZ()),2);
+            double db = Math.pow((camera.getTranslateX() - b.getTranslateX()),2)+Math.pow((camera.getTranslateZ() - b.getTranslateZ()),2);
             return Double.compare(db, da);
         });
 
