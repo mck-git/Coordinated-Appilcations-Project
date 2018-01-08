@@ -17,7 +17,7 @@ public class World extends SubScene {
 
     private PerspectiveCamera camera;
     private boolean[] WASDLR = new boolean[]{false, false, false, false, false, false};
-    private Cylinder player;
+    private Box player;
     private Group root;
     private Group shapes;
 
@@ -38,6 +38,8 @@ public class World extends SubScene {
         shapes = new Group();
         root.getChildren().add(shapes);
 
+        player = new Box(PLAYER_SIZE, 6, PLAYER_SIZE);
+
         camera = new PerspectiveCamera(true);
         this.setCamera(camera);
         this.setFill(Color.CADETBLUE);
@@ -46,8 +48,8 @@ public class World extends SubScene {
         camera.setFarClip(200.0);
         camera.setFieldOfView(40);
         camera.setRotationAxis(new Point3D(0, 1, 0));
+        camera.setTranslateY(-0.9*player.getHeight());
 
-        player = new Cylinder(5, 10);
         player.setTranslateZ(camera.getTranslateZ());
         player.setTranslateX(camera.getTranslateX());
         player.setTranslateY(camera.getTranslateY());
@@ -56,28 +58,25 @@ public class World extends SubScene {
 
         root.setFocusTraversable(true);
         root.requestFocus();
-//        for(int z = 0; z < 10; z++)
-//            for(int x = 0; x < 10; x++)
-//            {
-//                Box b = new Box(10, 10, 10);
-//                b.setTranslateX(x*b.getWidth());
-//                b.setTranslateZ(z*b.getDepth());
-//                shapes.getChildren().add(b);
-//            }
+        for(int z = 0; z < 30; z++)
+            for(int x = 0; x < 30; x++)
+            {
+                if(Math.random() < 0.5)
+                {
+                    Box b = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    b.setTranslateX(x * TILE_SIZE);
+                    b.setTranslateZ(z * TILE_SIZE);
+                    b.setTranslateY(-0.5*TILE_SIZE);
+                    shapes.getChildren().add(b);
+                }
+            }
 
-        Box b1 = new Box(10, 10, 10);
+        Box b1 = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
         b1.setMaterial(new PhongMaterial(Color.RED));
-        b1.setTranslateZ(0);
-        b1.setTranslateX(0);
-        b1.setTranslateY(10);
+        b1.setTranslateZ(-TILE_SIZE);
+        b1.setTranslateX(-TILE_SIZE);
+        b1.setTranslateY(-0.5*TILE_SIZE);
         shapes.getChildren().add(b1);
-
-        Box b2 = new Box(1, 10, 1);
-        b2.setMaterial(new PhongMaterial(Color.RED));
-        b2.setTranslateZ(0);
-        b2.setTranslateX(0);
-        b2.setTranslateY(0);
-        shapes.getChildren().add(b2);
 
         this.setOnKeyPressed(this::keyPressedListeners);
         this.setOnKeyReleased(this::keyReleasedListeners);
@@ -98,6 +97,10 @@ public class World extends SubScene {
             step = step.subtract(direction);
         if(WASDLR[3])
             step = step.add(perpDirection);
+        if(WASDLR[4])
+            camera.setRotate((camera.getRotate() - PLAYER_TURN_SPEED)%360);
+        if(WASDLR[5])
+            camera.setRotate((camera.getRotate() + PLAYER_TURN_SPEED)%360);
 
         step = step.normalize().multiply(PLAYER_SPEED);
 
@@ -107,23 +110,16 @@ public class World extends SubScene {
 //        camera.setTranslateX(camera.getTranslateX() + step.getX());
 //        camera.setTranslateZ(camera.getTranslateZ() + step.getY());
 
-        if(WASDLR[4])
-            camera.setRotate((camera.getRotate() - PLAYER_TURN_SPEED)%360);
-        if(WASDLR[5])
-            camera.setRotate((camera.getRotate() + PLAYER_TURN_SPEED)%360);
 
-        FXCollections.sort(shapes.getChildren(), (Node a, Node b) -> {
-            double da = Math.pow((player.getTranslateX() - a.getTranslateX()),2)+Math.pow((player.getTranslateZ() - a.getTranslateZ()),2);
-            double db = Math.pow((player.getTranslateX() - b.getTranslateX()),2)+Math.pow((player.getTranslateZ() - b.getTranslateZ()),2);
-            return Double.compare(db, da);
-        });
-
-        for(Node c : shapes.getChildren())
+//        double sx = step.getX();
+//        double sz = step.getY();
+//        boolean s = false;
+        Node c;
+        for(int i = shapes.getChildren().size()-1; i >= 0; i--)
         {
+            c = shapes.getChildren().get(i);
             if(player.getBoundsInParent().intersects(c.getBoundsInParent()))
             {
-
-                System.out.println("Colliding!");
                         //Subtracting projection does not work with corners.
 //                Point2D cp = new Point2D(
 //                        c.getTranslateX()-player.getTranslateX(),
@@ -134,36 +130,54 @@ public class World extends SubScene {
 //                player.setTranslateX(player.getTranslateX() + cp.getX());
 //                player.setTranslateZ(player.getTranslateZ() + cp.getY());
 
-                if(c instanceof Box){
-                    // Using the fact that box edges follow z and x planes.
-                    double dx = Math.abs(c.getTranslateX()-camera.getTranslateX());
-                    double dz = Math.abs(c.getTranslateZ()-camera.getTranslateZ());
+                //Subtract colliding part of vector, using that edges of box follow x and z planes
+//                if(c instanceof Box){
+//                    // Using the fact that box edges follow z and x planes.
+//                    double dx = Math.abs(c.getTranslateX()-camera.getTranslateX());
+//                    double dz = Math.abs(c.getTranslateZ()-camera.getTranslateZ());
+//
+//                    if(dx < player.getRadius() + ((Box) c).getWidth() || dz < player.getRadius() + ((Box) c).getDepth()) {
+//                        player.setTranslateX(player.getTranslateX() - step.getX());
+//                        player.setTranslateZ(player.getTranslateZ() - step.getY());
+//                        System.out.println("Less than");
+//                    }
+//                    else if(dx > dz)
+//                    {
+//                        player.setTranslateX(player.getTranslateX() - step.getX());
+//                    } else if(dx < dz)
 
-                    if(dx < player.getRadius() + ((Box) c).getWidth() || dz < player.getRadius() + ((Box) c).getDepth()) {
-                        player.setTranslateX(player.getTranslateX() - step.getX());
-                        player.setTranslateZ(player.getTranslateZ() - step.getY());
-                        System.out.println("Less than");
-                    }
-                    else if(dx > dz)
-                    {
-                        player.setTranslateX(player.getTranslateX() - step.getX());
-                    } else if(dx < dz)
-                    {
-                        player.setTranslateZ(player.getTranslateZ() - step.getY());
-                    } else {
-                        player.setTranslateX(player.getTranslateX() - step.getX());
-                        player.setTranslateZ(player.getTranslateZ() - step.getY());
-                    }
+//                    {
+//                        player.setTranslateZ(player.getTranslateZ() - step.getY());
+//                    } else {
+//                        player.setTranslateX(player.getTranslateX() - step.getX());
+//                        player.setTranslateZ(player.getTranslateZ() - step.getY());
+//                    }
+//                }
+//
+                // Using that boundsinparent is a close fitting rectangle.
+                // Player turned into a box instead of a cylinder
+                // Using that walls are made of square boxes with equal side lengths.
+                double dx = Math.abs(c.getTranslateX() - player.getTranslateX());
+                double dz = Math.abs(c.getTranslateZ() - player.getTranslateZ());
+                if (dz > dx) {
+                    player.setTranslateZ(c.getTranslateZ() - Math.signum(c.getTranslateZ() - camera.getTranslateZ())*0.5*(TILE_SIZE+PLAYER_SIZE+0.01));
                 }
-
-
+                if (dx > dz) {
+                    player.setTranslateX(c.getTranslateX() - Math.signum(c.getTranslateX() - camera.getTranslateX())*0.5*(TILE_SIZE+PLAYER_SIZE+0.01));
+                }
             }
         }
 
         camera.setTranslateX(player.getTranslateX());
         camera.setTranslateZ(player.getTranslateZ());
-    }
+//        camera.setTranslateZ(camera.getTranslateZ() + sz);
+//        camera.setTranslateX(camera.getTranslateX() + sx);
 
+//        player.setTranslateX(camera.getTranslateX());
+//        player.setTranslateZ(camera.getTranslateZ());
+
+        sortShapesByEuclidianDistance();
+    }
 
     private void keyPressedListeners(KeyEvent key)
     {
@@ -211,5 +225,13 @@ public class World extends SubScene {
                 WASDLR[5] = false;
                 break;
         }
+    }
+
+    private void sortShapesByEuclidianDistance() {
+        FXCollections.sort(shapes.getChildren(), (Node a, Node b) -> {
+            double da = Math.pow((player.getTranslateX() - a.getTranslateX()),2)+Math.pow((player.getTranslateZ() - a.getTranslateZ()),2);
+            double db = Math.pow((player.getTranslateX() - b.getTranslateX()),2)+Math.pow((player.getTranslateZ() - b.getTranslateZ()),2);
+            return Double.compare(db, da);
+        });
     }
 }

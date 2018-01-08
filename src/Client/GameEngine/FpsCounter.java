@@ -22,9 +22,9 @@ public class FpsCounter extends Label {
 
     public void update()
     {
-        fpsArray[fpsArrayIndex] = 1000/(System.currentTimeMillis()-lastupdate);
+        fpsArray[fpsArrayIndex] = 1e9/(System.nanoTime()-lastupdate);
         fpsArrayIndex = (fpsArrayIndex + 1) % fpsArraySize;
-        lastupdate = System.currentTimeMillis();
+        lastupdate = System.nanoTime();
         int averageFps = 0;
         for(double f : fpsArray)
         {
