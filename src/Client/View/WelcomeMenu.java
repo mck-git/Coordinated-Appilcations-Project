@@ -26,6 +26,7 @@ public class WelcomeMenu extends TScene {
 
 
     private ComboBox<String> serverView = new ComboBox<>();
+    private Button btnLogin;
 
     WelcomeMenu() {
         super(new BorderPane());
@@ -59,9 +60,10 @@ public class WelcomeMenu extends TScene {
         Label lblUserName = new Label("Username");
         final TextField txtUserName = new TextField();
         Label lblErrorMessage = new Label();
-        Button btnLogin = new Button("Login");
+        btnLogin = new Button("Login");
 
         Label lblChooseServer = new Label("Choose server: ");
+        serverView.setMinWidth(100);
 
         //Adding Nodes to GridPane layout
         gridPane.add(lblErrorMessage, 1, 0);
@@ -130,9 +132,14 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void refresh() {
+        serverView.setItems(FXCollections.observableArrayList(Client.foundServers));
         if(!serverView.getItems().isEmpty())
             serverView.getSelectionModel().select(0);
-        serverView.setItems(FXCollections.observableArrayList(Client.foundServers));
+
+        if(serverView.getSelectionModel().getSelectedItem() == null)
+            btnLogin.setDisable(true);
+        else if(btnLogin.isDisabled())
+            btnLogin.setDisable(false);
     }
 
     @Override

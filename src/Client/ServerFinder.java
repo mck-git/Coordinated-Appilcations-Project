@@ -41,7 +41,7 @@ public class ServerFinder extends Thread{
             try {
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 8888);
                 c.send(sendPacket);
-                System.out.println(getClass().getName() + ">>> Request packet sent to: 255.255.255.255 (DEFAULT)");
+//                System.out.println(getClass().getName() + ">>> Request packet sent to: 255.255.255.255 (DEFAULT)");
             } catch (Exception e) {
             }
 
