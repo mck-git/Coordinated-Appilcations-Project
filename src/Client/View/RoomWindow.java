@@ -31,7 +31,6 @@ public class RoomWindow extends TScene {
         bp.setBottom(fps);
         bp.setRight(chat);
 
-
         TopMenu top = new TopMenu();
         bp.setTop(top);
 

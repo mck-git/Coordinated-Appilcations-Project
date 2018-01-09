@@ -22,10 +22,10 @@ public class ClientDisplay extends Application {
         _stage.setTitle("Game Client");
 
         new AnimationTimer() {
-            long lastTime = 0;
+//            long lastTime = 0;
             @Override
             public void handle(long now) {
-//                if(now-lastTime > 1e9/31)
+//                if(now-lastTime > 1e9)
                 {
 //                    lastTime = now;
                     scene.refresh();
