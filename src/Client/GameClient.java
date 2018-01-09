@@ -66,6 +66,7 @@ public class GameClient
 
         room.put("command", userName, c);
 
+        // message = "";
     }
 
     public static String[] getMessages()

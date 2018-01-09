@@ -16,7 +16,12 @@ public class GameState {
         this.players = players;
     }
 
-    public ArrayList<String> getMessages () { return messages; }
+    public ArrayList<String> getMessages () {
+        for (String s : messages)
+            System.out.println("Get messages: " + s);
+
+
+        return messages; }
 
     public void addMessage(String msg)
     {

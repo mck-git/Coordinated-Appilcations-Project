@@ -244,7 +244,7 @@ public class Client {
 
     // Leave the current room, if it is not the lobby
     public static void quit() throws ServerNACKException, CommandException {
-        if(Client.getCurrentRoomName().equals("lobby")) throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
+        if(currentRoomName != "lobby") throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
         try {
             lobby.put("quit", userName);
 
