@@ -25,7 +25,7 @@ public class Chat extends VBox {
         this.setMaxWidth(150);
         this.setOpacity(0.2);
         this.prefHeightProperty().bind(ClientDisplay.getStage().heightProperty());
-        messageArea.prefHeightProperty().bind(this.heightProperty().multiply(0.8));
+        messageArea.prefHeightProperty().bind(this.heightProperty().subtract(100));
 
         this.setSpacing(10);
 

@@ -20,6 +20,8 @@ public class TopMenu extends HBox {
 
     TopMenu()
     {
+        this.prefWidthProperty().bind(ClientDisplay.getStage().widthProperty());
+
         Popup popup = new Popup();
         popup.setAutoFix(false);
         popup.setHideOnEscape(true);
@@ -71,20 +73,18 @@ public class TopMenu extends HBox {
         roomlbl.setFont(Font.font("Courier", FontWeight.EXTRA_BOLD, 20));
         topleft.setAlignment(Pos.CENTER_LEFT);
         topleft.getChildren().add(leaveRoom);
-        topleft.setMaxWidth(Double.MAX_VALUE);
-        topleft.setPrefWidth(0.2*WIDTH);
+        topleft.prefWidthProperty().bind(this.widthProperty().multiply(0.2));
+
 
         HBox topcenter = new HBox();
         topcenter.setAlignment(Pos.CENTER);
         topcenter.getChildren().add(roomlbl);
-        topcenter.setMaxWidth(Double.MAX_VALUE);
-        topcenter.setPrefWidth(0.6*WIDTH);
+        topcenter.prefWidthProperty().bind(this.widthProperty().multiply(0.6));
 
         HBox topright = new HBox();
         Label username = new Label("Username: " + Client.getUserName());
         topright.getChildren().add(username);
-        topright.setMaxWidth(Double.MAX_VALUE);
-        topright.setPrefWidth(0.2*WIDTH);
+        topright.prefWidthProperty().bind(this.widthProperty().multiply(0.2));
 
         this.getChildren().add(topleft);
         this.getChildren().add(topcenter);
