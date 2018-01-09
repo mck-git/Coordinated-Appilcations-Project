@@ -7,6 +7,12 @@ public class GameState {
 
     private ArrayList<String> messages;
 
+    public GameState()
+    {
+        this.players = new ArrayList<>();
+        this.messages = new ArrayList<>();
+    }
+
     public ArrayList<PlayerInfo> getPlayers() {
         return players;
     }

@@ -35,6 +35,11 @@ public class Command {
         this.message = msg;
     }
 
+    public String toString()
+    {
+        return "command: user:" + username + ", msg: " + message;
+    }
+
     public boolean isForward() {
         return forward;
     }

@@ -8,6 +8,11 @@ public class PlayerInfo {
     private Point3D direction;
     private int health;
 
+    public PlayerInfo(String username)
+    {
+        this.username = username;
+    }
+
     public PlayerInfo(String username, Point3D pos, Point3D dir, int health)
     {
         this.username = username;

@@ -14,6 +14,26 @@ public class GameController
         this.gs = new GameState();
     }
 
+    public GameState updatePlayerList(String[] users)
+    {
+        ArrayList<PlayerInfo> players = gs.getPlayers();
+        for (String u : users)
+        {
+            for (PlayerInfo p : players)
+            {
+                if(users.equals(p.getUsername()))
+                {
+                    continue;
+                }
+            }
+
+            players.add(new PlayerInfo(u));
+        }
+
+        gs.setPlayers(players);
+        return gs;
+    }
+
     public GameState applyCommands(List<Command> commands)
     {
         ArrayList<PlayerInfo> players = gs.getPlayers();
@@ -25,7 +45,6 @@ public class GameController
                 if (p_inf.getUsername().equals(c.getUsername()))
                 {
                     // Update player_info
-
 
                     // Check for new message
                     String msg = c.getMessage();
