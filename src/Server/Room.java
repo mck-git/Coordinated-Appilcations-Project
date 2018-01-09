@@ -1,9 +1,12 @@
 package Server;
 
+import Shared.Command;
+import Shared.GameState;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 
+import java.util.ArrayList;
 import java.util.List;
 
 enum Status {OPEN, LOCKED}
@@ -14,12 +17,52 @@ public class Room extends SequentialSpace implements Runnable
     private String owner;
     private Status status;
 
+    private GameState master_gs;
+    private GameController g_controller;
+
 
     public Room (String name, String owner)
     {
         this.name = name;
         this.owner = owner;
         this.status = Status.OPEN;
+
+        this.master_gs = new GameState();
+        this.g_controller = new GameController();
+    }
+
+    public void run ()
+    {
+        while(true)
+        {
+            try {
+                updateGamestate();
+                Thread.sleep(3000);
+            } catch (Exception ignored) {}
+        }
+    }
+
+    private void updateGamestate() throws Exception
+    {
+        master_gs = g_controller.applyCommands(getCommands());
+
+        // getP?
+        this.get(new ActualField("gamestate"), new FormalField(GameState.class));
+
+        this.put("gamestate", master_gs);
+    }
+
+    private List<Command> getCommands()
+    {
+        List<Command> commands = new ArrayList<Command>();
+        List<Object[]> tuple_commands = this.queryAll(new ActualField("commands"),
+                                                      new FormalField(Command.class));
+        for (Object[] o : tuple_commands)
+        {
+            commands.add((Command) o[1]);
+        }
+
+        return commands;
     }
 
     public String[] getMessages()
@@ -71,17 +114,7 @@ public class Room extends SequentialSpace implements Runnable
         System.out.println();
     }
 
-    public void run ()
-    {
-        while(true)
-        {
-//            displayMessages(getMessages());
-//            displayUsers(getUsers());
-            try {
-                Thread.sleep(3000);
-            } catch (Exception ignored) {}
-        }
-    }
+
 
     public void lock(String name, String user)
     {

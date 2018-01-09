@@ -21,6 +21,10 @@ import java.util.List;
 // leaveRoom template: ("leaveRoom", string user)
 // quit template:       ("quit", string name, string user)
 
+// Game templates
+// command template: ("command", string user, command command)
+// gamestate template: ("gamestate", GameState gs)
+
 public class Server {
     private static Space lobby;
     private static SpaceRepository repository;
