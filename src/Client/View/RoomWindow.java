@@ -46,7 +46,7 @@ public class RoomWindow extends TScene {
 
     @Override
     public void refresh() {
-        GameClient.update();
+        //GameClient.update();
         fps.update();
         chat.update();
         world.update();

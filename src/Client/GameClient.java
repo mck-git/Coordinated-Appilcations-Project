@@ -6,17 +6,20 @@ import org.jspace.RemoteSpace;
 import Shared.Command;
 import Shared.GameState;
 
+import java.util.ArrayList;
+
 public class GameClient
 {
 
     private static GameState gameState;
     private static RemoteSpace room;
-    private static String userName;
-    private static String message;
+    private static String userName = "";
+    private static String message = "";
 
     // Initialize GameClient when joining a new room
     public static void initialize(RemoteSpace r, String user)
     {
+        System.out.println("Initializing the GameClient");
         room = r;
         userName = user;
     }
@@ -25,9 +28,9 @@ public class GameClient
     {
         try
         {
-
             updateGamestate();
             updateCommand();
+            System.out.println("Updated the GameClient!");
         } catch (Exception e) {e.printStackTrace();}
     }
 
@@ -54,7 +57,15 @@ public class GameClient
 
     public static String[] getMessages()
     {
-        return gameState.getMessages();
+        ArrayList<String> msgs = gameState.getMessages();
+
+        if (msgs == null)
+        {
+            msgs = new String[1];
+        }
+
+        return msgs;
+
     }
 
     public static void sendMessage(String msg)
