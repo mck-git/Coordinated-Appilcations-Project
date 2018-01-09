@@ -25,9 +25,7 @@ public class GameController
                 if (p_inf.getUsername().equals(c.getUsername()))
                 {
                     // Update player_info
-                    //
-                    // blaah nothing here
-                    //
+
 
                     // Check for new message
                     String msg = c.getMessage();
