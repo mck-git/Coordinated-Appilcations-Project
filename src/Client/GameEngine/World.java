@@ -1,15 +1,16 @@
 package Client.GameEngine;
 
+import Client.View.ClientDisplay;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Sphere;
 
 import static Fields.Constants.*;
 
@@ -41,8 +42,12 @@ public class World extends SubScene {
         floor.setTranslateX(-floor.getWidth()/2);
         floor.setRotationAxis(new Point3D(1, 0, 0));
         floor.setRotate(90);
+        floor.setCacheHint(CacheHint.SCALE_AND_ROTATE);
+        floor.setCache(true);
         root.getChildren().add(floor);
 
+        this.heightProperty().bind(ClientDisplay.getStage().heightProperty());
+        this.widthProperty().bind(ClientDisplay.getStage().widthProperty());
 
         shapes = new Group();
         root.getChildren().add(shapes);
@@ -66,42 +71,37 @@ public class World extends SubScene {
 //        AmbientLight ambient = new AmbientLight(Color.color(0.1, 0.1, 0.1));
 //        root.getChildren().add(ambient);
 
-        torch = new PointLight(Color.color(0.72156864f/2, 0.5254902f/2, 0.043137256f/2));
-        torch.setTranslateY(camera.getTranslateY());
+        torch = new PointLight(Color.color(0.2, 0.2, 0.15));
+        torch.setTranslateY(camera.getTranslateY() * 2);
         root.getChildren().add(torch);
         torch.setRotationAxis(camera.getRotationAxis());
-
-//        Sphere sun = new Sphere(5);
-//        sun.setTranslateY(-5);
-//        shapes.getChildren().add(sun);
-//        sun.setTranslateX(0);
-//        sun.setTranslateY(0);
-//        sun.setTranslateZ(0);
-//        sun.translateXProperty().bind(torch.translateXProperty());
-//        sun.translateYProperty().bind(torch.translateYProperty());
-//        sun.translateZProperty().bind(torch.translateZProperty());
 
         player.setTranslateZ(camera.getTranslateZ());
         player.setTranslateX(camera.getTranslateX());
         player.setTranslateY(camera.getTranslateY());
-//        player.setMaterial(new PhongMaterial(Color.RED));
         root.getChildren().add(player);
 
         root.setFocusTraversable(true);
-        root.requestFocus();
-//        for(int z = 0; z < 10; z++)
-            for(int x = 0; x < 10; x++)
+        root.requestFocus();                                                             
+        for(int z = 0; z < 10; z++)
+            for(int x = 0; x < 10; x++)                                                  
             {
+                if(Math.random() < 0.5) {
                     Box b = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    b.setMaterial(new PhongMaterial());
+                    ((PhongMaterial) b.getMaterial()).setDiffuseMap(new Image("Images/concrete.png"));
                     b.setTranslateX(x * TILE_SIZE);
-//                    b.setTranslateZ(z * TILE_SIZE);
-                    b.setTranslateZ(10);
-                    b.setTranslateY(-0.5*TILE_SIZE);
+                    b.setTranslateZ(z * TILE_SIZE);
+                    b.setTranslateY(-0.5 * TILE_SIZE);
+                    b.setCacheHint(CacheHint.SCALE_AND_ROTATE);
+                    b.setCache(true);
                     shapes.getChildren().add(b);
-            }
-
-        Box b1 = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
-//        b1.setMaterial(new PhongMaterial(Color.RED));
+                }
+            }                                                                            
+                                                                                         
+        Box b1 = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);                               
+        b1.setMaterial(new PhongMaterial(Color.RED));
+        ((PhongMaterial) b1.getMaterial()).setDiffuseMap(new Image("Images/concrete.png"));
         b1.setTranslateZ(-TILE_SIZE);
         b1.setTranslateX(-TILE_SIZE);
         b1.setTranslateY(-0.5*TILE_SIZE);
@@ -136,13 +136,6 @@ public class World extends SubScene {
         player.setTranslateX(player.getTranslateX() + step.getX());
         player.setTranslateZ(player.getTranslateZ() + step.getY());
 
-//        camera.setTranslateX(camera.getTranslateX() + step.getX());
-//        camera.setTranslateZ(camera.getTranslateZ() + step.getY());
-
-
-//        double sx = step.getX();
-//        double sz = step.getY();
-//        boolean s = false;
         Node c;
         for(int i = shapes.getChildren().size()-1; i >= Math.max(0, shapes.getChildren().size() - 5); i--)
         {
@@ -199,15 +192,9 @@ public class World extends SubScene {
 
         camera.setTranslateX(player.getTranslateX());
         camera.setTranslateZ(player.getTranslateZ());
-//        camera.setTranslateZ(camera.getTranslateZ() + sz);
-//        camera.setTranslateX(camera.getTranslateX() + sx);
-
-//        player.setTranslateX(camera.getTranslateX());
-//        player.setTranslateZ(camera.getTranslateZ());
 
         torch.setTranslateX(camera.getTranslateX()*2);
-//        torch.setTranslateY(camera.getTranslateY()*2);
-        torch.setTranslateZ(camera.getTranslateZ()*2);
+        torch.setTranslateZ(camera.getTranslateZ());
 
         sortShapesByEuclidianDistance();
     }
