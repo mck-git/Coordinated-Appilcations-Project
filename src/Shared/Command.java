@@ -1,22 +1,31 @@
 package Shared;
 
 public class Command {
-    private boolean forward = false;
-    private boolean backward = false;
-    private boolean left = false;
-    private boolean right = false;
-    private boolean rotateRight = false;
-    private boolean rotateLeft = false;
-    private boolean fire = false;
+    private boolean forward;
+    private boolean left;
+    private boolean backward;
+    private boolean right;
+    private boolean rotateLeft;
+    private boolean rotateRight;
+    private boolean fire;
 
     public Command(boolean[] WASDLRF) {
         this.forward = WASDLRF[0];
-        this.backward = WASDLRF[1];
-        this.left = WASDLRF[2];
+        this.left = WASDLRF[1];
+        this.backward = WASDLRF[2];
         this.right = WASDLRF[3];
-        this.rotateRight = WASDLRF[4];
         this.rotateLeft = WASDLRF[5];
+        this.rotateRight = WASDLRF[4];
         this.fire = WASDLRF[6];
+    }
+    public Command(boolean forward, boolean left, boolean backward, boolean right, boolean rotateLeft, boolean rotateRight, boolean fire) {
+        this.forward = forward;
+        this.left = left;
+        this.backward = backward;
+        this.right = right;
+        this.rotateLeft = rotateLeft;
+        this.rotateRight = rotateRight;
+        this.fire = fire;
     }
 
     public boolean isForward() {
