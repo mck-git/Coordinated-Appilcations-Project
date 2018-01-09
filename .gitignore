@@ -3,3 +3,5 @@
 /bin
 /.idea
 .classpath
+*.jar
+/gamejars
