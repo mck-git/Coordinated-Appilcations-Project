@@ -19,6 +19,8 @@ public class Client {
 
     static private Scanner sc;
 
+    static private GameClient gameClient;
+
     public static void main(String[] args)
     {
         try {
@@ -205,6 +207,7 @@ public class Client {
 
             // Put the username into the joined room, and set new room as currentRoomName
             currentRoomName = roomName;
+            gameClient = new GameClient(currentRoom);
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
 
@@ -243,7 +246,7 @@ public class Client {
 
     // Leave the current room, if it is not the lobby
     public static void quit() throws ServerNACKException, CommandException {
-        if(Client.getCurrentRoomName() != "lobby") throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
+        if(Client.getCurrentRoomName().equals("lobby")) throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
         try {
             lobby.put("quit", userName);
 

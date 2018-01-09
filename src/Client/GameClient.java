@@ -1,5 +1,7 @@
 package Client;
 
+import org.jspace.ActualField;
+import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 
 public class GameClient {
@@ -10,6 +12,14 @@ public class GameClient {
         this.gameState = new GameState();
         this.room = room;
     }
+
+    public void updateGamestate() {
+        Object[] newState = room.query(new ActualField("gamestate"), new FormalField(GameState.class));
+
+        gameState = newState[1];
+    }
+
+    public void updateCommands(Command)
 
 
 
