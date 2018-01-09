@@ -4,6 +4,7 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import Shared.Command;
+import Shared.GameState;
 
 public class GameClient
 {
