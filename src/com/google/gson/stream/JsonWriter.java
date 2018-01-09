@@ -101,7 +101,7 @@ import static com.google.gson.stream.JsonScope.NONEMPTY_OBJECT;
  *       writer.name("geo").nullValue();
  *     }
  *     writer.name("user");
- *     writeUser(writer, message.getUser());
+ *     writeUser(writer, message.getUsername());
  *     writer.endObject();
  *   }
  *
