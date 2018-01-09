@@ -25,9 +25,9 @@ public class ClientDisplay extends Application {
             long lastTime = 0;
             @Override
             public void handle(long now) {
-                if(now-lastTime > 1e9/31)
+//                if(now-lastTime > 1e9/31)
                 {
-                    lastTime = now;
+//                    lastTime = now;
                     scene.refresh();
                 }
             }
