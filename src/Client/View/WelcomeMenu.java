@@ -2,6 +2,7 @@ package Client.View;
 
 import Client.Client;
 import Templates.TScene;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -59,8 +60,6 @@ public class WelcomeMenu extends TScene {
         final TextField txtUserName = new TextField();
         Label lblErrorMessage = new Label();
         Button btnLogin = new Button("Login");
-
-        serverView.setItems(Client.foundServers);
 
         Label lblChooseServer = new Label("Choose server: ");
 
@@ -131,9 +130,9 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void refresh() {
-        Client.refreshFoundServers();
         if(!serverView.getItems().isEmpty())
             serverView.getSelectionModel().select(0);
+        serverView.setItems(FXCollections.observableArrayList(Client.foundServers));
     }
 
     @Override

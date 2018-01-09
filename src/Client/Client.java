@@ -2,12 +2,10 @@ package Client;
 
 import Exceptions.Client.CommandException;
 import Exceptions.Client.ServerNACKException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,7 +20,7 @@ public class Client {
     static private Scanner sc;
 
     private static ServerFinder sf = new ServerFinder();
-    public static ObservableList foundServers = FXCollections.observableArrayList();
+    public static ArrayList<String> foundServers = new ArrayList<>();
 
     public static void main(String[] args)
     {
@@ -91,16 +89,10 @@ public class Client {
         sf.start();
     }
 
-    public static void refreshFoundServers()
-    {
-        if(!sf.isInterrupted())
-            sf.interrupt();
-    }
-
     public static boolean initialize(String nameInput, String serverAddress)
     {
         ip = serverAddress.replace("/", "");
-        System.out.println(createURI("lobby"));
+        System.out.println("Connecting to " + createURI("lobby"));
         return initialize(nameInput);
     }
 

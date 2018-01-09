@@ -15,7 +15,7 @@ public class BroadCast extends Thread{
             socket.setBroadcast(true);
 
             while (true) {
-                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
+//                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
 
                 //Receive a packet
                 byte[] recvBuf = new byte[15000];
@@ -23,8 +23,8 @@ public class BroadCast extends Thread{
                 socket.receive(packet);
 
                 //Packet received
-                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
+//                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
+//                System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()).trim());
 
                 //See if the packet holds the right command (message)
                 String message = new String(packet.getData()).trim();
@@ -35,7 +35,7 @@ public class BroadCast extends Thread{
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                     socket.send(sendPacket);
 
-                    System.out.println(getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
+//                    System.out.println(getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
                 }
             }
         } catch (IOException ex) {

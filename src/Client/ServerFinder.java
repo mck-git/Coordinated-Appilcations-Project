@@ -1,15 +1,15 @@
 package Client;
 
-import javafx.collections.ObservableList;
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class ServerFinder extends Thread{
-    private ObservableList foundServers = null;
-    public void initialize(ObservableList servers)
+    private ArrayList<String> foundServers = null;
+    public void initialize(ArrayList<String> servers)
     {
-        System.out.println("ServerFinder array initialized");
+        System.out.println("ServerFinder initialized");
         this.foundServers = servers;
     }
 
@@ -33,6 +33,7 @@ public class ServerFinder extends Thread{
             //Open a random port to send the package
             DatagramSocket c = new DatagramSocket();
             c.setBroadcast(true);
+            c.setSoTimeout(1000);
 
             byte[] sendData = "DISCOVER_FUIFSERVER_REQUEST".getBytes();
 
@@ -66,11 +67,11 @@ public class ServerFinder extends Thread{
                     } catch (Exception e) {
                     }
 
-                    System.out.println(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
+//                    System.out.println(getClass().getName() + ">>> Request packet sent to: " + broadcast.getHostAddress() + "; Interface: " + networkInterface.getDisplayName());
                 }
             }
 
-            System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
+//            System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
 
             try {
                 while (true) {
@@ -80,20 +81,19 @@ public class ServerFinder extends Thread{
                     c.receive(receivePacket);
 
                     //We have a response
-                    System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+//                    System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
 
                     //Check if the message is correct
                     String message = new String(receivePacket.getData()).trim();
                     if (message.equals("DISCOVER_FUIFSERVER_RESPONSE")) {
                         //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                        System.out.println("Found server:");
-                        System.out.println(receivePacket.getAddress());
+//                        System.out.println("Found server:");
+//                        System.out.println(receivePacket.getAddress());
                         if(!foundServers.contains(receivePacket.getAddress().toString()))
                             foundServers.add(receivePacket.getAddress().toString());
                     }
-                    Thread.sleep(100);
                 }
-            } catch (InterruptedException ignored) {}
+            } catch (SocketTimeoutException ignored) {}
                 //Close the port!
                 c.close();
         } catch (IOException ex) {
