@@ -1,5 +1,6 @@
 package Client.View;
 
+import Client.Client;
 import Templates.TScene;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -20,6 +21,8 @@ public class ClientDisplay extends Application {
             event.consume();
         });
         _stage.setTitle("Game Client");
+
+        Client.setupServerSearch();
 
         new AnimationTimer() {
 //            long lastTime = 0;

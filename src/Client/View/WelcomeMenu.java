@@ -5,6 +5,7 @@ import Templates.TScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -22,6 +23,8 @@ import static Fields.Constants.WIDTH;
 
 public class WelcomeMenu extends TScene {
 
+
+    private ComboBox<String> serverView = new ComboBox<>();
 
     WelcomeMenu() {
         super(new BorderPane());
@@ -57,11 +60,17 @@ public class WelcomeMenu extends TScene {
         Label lblErrorMessage = new Label();
         Button btnLogin = new Button("Login");
 
+        serverView.setItems(Client.foundServers);
+
+        Label lblChooseServer = new Label("Choose server: ");
+
         //Adding Nodes to GridPane layout
         gridPane.add(lblErrorMessage, 1, 0);
         gridPane.add(lblUserName, 0, 1);
         gridPane.add(txtUserName, 1, 1);
         gridPane.add(btnLogin, 1, 2);
+        gridPane.add(lblChooseServer, 0, 3);
+        gridPane.add(serverView, 1, 3);
 
         //Reflection for gridPane
         Reflection r = new Reflection();
@@ -96,7 +105,7 @@ public class WelcomeMenu extends TScene {
         });
 
         btnLogin.setOnAction(event -> {
-            if (Client.initialize(txtUserName.getText()))
+            if (serverView.getSelectionModel() != null && Client.initialize(txtUserName.getText(), serverView.getSelectionModel().getSelectedItem()))
             {
                 ClientDisplay.setScene(new Lobby());
             }
@@ -117,11 +126,14 @@ public class WelcomeMenu extends TScene {
         //Add HBox and GridPane layout to BorderPane Layout
         root.setTop(topPane);
         root.setCenter(gridPane);
+
     }
 
     @Override
     public void refresh() {
-        //Nothing
+        Client.refreshFoundServers();
+        if(!serverView.getItems().isEmpty())
+            serverView.getSelectionModel().select(0);
     }
 
     @Override

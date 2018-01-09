@@ -2,6 +2,8 @@ package Client;
 
 import Exceptions.Client.CommandException;
 import Exceptions.Client.ServerNACKException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -15,9 +17,12 @@ public class Client {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "10.16.172.99";
+    static private String ip = "";//"10.16.172.99";
 
     static private Scanner sc;
+
+    private static ServerFinder sf = new ServerFinder();
+    public static ObservableList foundServers = FXCollections.observableArrayList();
 
     public static void main(String[] args)
     {
@@ -75,12 +80,29 @@ public class Client {
                         System.out.println("Sorry, I did not understand that.");
                         break;
                 }
-
             }
         } catch(Exception ignored) {}
         System.exit(0);
     }
 
+    public static void setupServerSearch()
+    {
+        sf.initialize(foundServers);
+        sf.start();
+    }
+
+    public static void refreshFoundServers()
+    {
+        if(!sf.isInterrupted())
+            sf.interrupt();
+    }
+
+    public static boolean initialize(String nameInput, String serverAddress)
+    {
+        ip = serverAddress.replace("/", "");
+        System.out.println(createURI("lobby"));
+        return initialize(nameInput);
+    }
 
     // Initialize user when first starting app
     public static boolean initialize(String nameInput)
