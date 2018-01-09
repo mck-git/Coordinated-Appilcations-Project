@@ -8,8 +8,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Shape;
 
 import static Fields.Constants.*;
 
@@ -58,8 +56,8 @@ public class World extends SubScene {
 
         root.setFocusTraversable(true);
         root.requestFocus();
-        for(int z = 0; z < 30; z++)
-            for(int x = 0; x < 30; x++)
+        for(int z = 0; z < 10; z++)
+            for(int x = 0; x < 10; x++)
             {
                 if(Math.random() < 0.5)
                 {
@@ -115,7 +113,7 @@ public class World extends SubScene {
 //        double sz = step.getY();
 //        boolean s = false;
         Node c;
-        for(int i = shapes.getChildren().size()-1; i >= 0; i--)
+        for(int i = shapes.getChildren().size()-1; i >= Math.max(0, shapes.getChildren().size() - 5); i--)
         {
             c = shapes.getChildren().get(i);
             if(player.getBoundsInParent().intersects(c.getBoundsInParent()))
