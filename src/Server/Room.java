@@ -1,6 +1,7 @@
 package Server;
 
 import Shared.Command;
+import Shared.GameController;
 import Shared.GameState;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
@@ -59,7 +60,7 @@ public class Room extends SequentialSpace implements Runnable
                                                       new FormalField(Command.class));
         for (Object[] o : tuple_commands)
         {
-            commands.add((Command) o[1]);
+            commands.add((Command) o[2]);
         }
 
         return commands;
