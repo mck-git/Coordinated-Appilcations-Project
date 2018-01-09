@@ -207,6 +207,7 @@ public class Client {
             currentRoomName = roomName;
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
+
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -216,6 +217,7 @@ public class Client {
     // Leave the current room, if it is not the lobby
     public static void leaveRoom() throws ServerNACKException {
         try {
+
             // If you are in a room other than the lobby
             if (!currentRoomName.equals("lobby"))
             {
