@@ -46,6 +46,7 @@ public class GameController
                 {
                     // Update player_info
 
+
                     // Check for new message
                     String msg = c.getMessage();
                     if (!msg.equals(""))
