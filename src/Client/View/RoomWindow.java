@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.GameClient;
 import Client.GameEngine.FpsCounter;
 import Client.GameEngine.World;
 import Templates.TScene;
@@ -45,6 +46,7 @@ public class RoomWindow extends TScene {
 
     @Override
     public void refresh() {
+        GameClient.update();
         fps.update();
         chat.update();
         world.update();

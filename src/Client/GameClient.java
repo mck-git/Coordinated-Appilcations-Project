@@ -9,18 +9,31 @@ import Shared.GameState;
 public class GameClient
 {
 
-    private GameState gameState;
-    private RemoteSpace room;
-    private String userName;
+    private static GameState gameState;
+    private static RemoteSpace room;
+    private static String userName;
+    private static String message;
 
-    public GameClient(RemoteSpace room, String user)
+    // Initialize GameClient when joining a new room
+    public static void initialize(RemoteSpace r, String user)
     {
-        this.gameState = new GameState();
-        this.room = room;
+        room = r;
+        userName = user;
     }
 
+    public static void update()
+    {
+        try
+        {
+
+            updateGamestate();
+            updateCommand();
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+
     // Update the local gamestate to be the newest gamestate in the touplespace
-    public void updateGamestate()
+    public static void updateGamestate() throws InterruptedException
     {
         Object[] newState = room.query(new ActualField("gamestate"), new FormalField(GameState.class));
 
@@ -28,18 +41,26 @@ public class GameClient
     }
 
     // Update the player command in the touplespace
-    public void updateCommands(Command c) throws InterruptedException
+    public static void updateCommand() throws InterruptedException
     {
         Object[] cmd = room.get(new ActualField("command"), new ActualField(userName), new FormalField(Command.class));
+
+        boolean[] bools = new boolean[7];
+
+        Command c = new Command(bools,message);
 
         room.put("command", userName, c);
     }
 
-    public String[] displayMessages()
+    public static String[] getMessages()
     {
-        return gameState.messages();
+        return gameState.getMessages();
     }
 
+    public static void sendMessage(String msg)
+    {
+        message = msg;
+    }
 
 
 

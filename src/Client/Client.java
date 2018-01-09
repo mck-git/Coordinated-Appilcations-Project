@@ -19,8 +19,6 @@ public class Client {
 
     static private Scanner sc;
 
-    static private GameClient gameClient;
-
     public static void main(String[] args)
     {
         try {
@@ -207,7 +205,7 @@ public class Client {
 
             // Put the username into the joined room, and set new room as currentRoomName
             currentRoomName = roomName;
-            gameClient = new GameClient(currentRoom,userName);
+            GameClient.initialize(currentRoom,userName);
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
 
