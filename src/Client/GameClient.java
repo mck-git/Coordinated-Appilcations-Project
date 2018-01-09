@@ -19,9 +19,19 @@ public class GameClient
     // Initialize GameClient when joining a new room
     public static void initialize(RemoteSpace r, String user)
     {
-        System.out.println("Initializing the GameClient");
         room = r;
         userName = user;
+
+
+        boolean[] bools = new boolean[7];
+
+        Command c = new Command(bools,message,userName);
+
+        room.put("command", userName, c);
+
+
+        update();
+        System.out.println("Initialized the GameClient");
     }
 
     public static void update()
@@ -30,7 +40,6 @@ public class GameClient
         {
             updateGamestate();
             updateCommand();
-            System.out.println("Updated the GameClient!");
         } catch (Exception e) {e.printStackTrace();}
     }
 
@@ -46,31 +55,36 @@ public class GameClient
     // Update the player command in the touplespace
     public static void updateCommand() throws InterruptedException
     {
-        Object[] cmd = room.get(new ActualField("command"), new ActualField(userName), new FormalField(Command.class));
+        Object[] cmd = room.getp(
+                new ActualField("command"),
+                new ActualField(userName),
+                new FormalField(Command.class));
 
         boolean[] bools = new boolean[7];
 
-        Command c = new Command(bools,message);
+        Command c = new Command(bools,message,userName);
 
         room.put("command", userName, c);
+
     }
 
     public static String[] getMessages()
     {
-        ArrayList<String> msgs = gameState.getMessages();
+        ArrayList<String> msgs = new ArrayList<>();
 
-        if (msgs == null)
-        {
-            msgs = new String[1];
-        }
+        if (!(gameState.getMessages() == null))
+            msgs.addAll(gameState.getMessages());
 
-        return msgs;
+        msgs.add("");
+
+        return msgs.toArray(new String[0]);
 
     }
 
     public static void sendMessage(String msg)
     {
         message = msg;
+        System.out.println("New message is " + msg);
     }
 
 
