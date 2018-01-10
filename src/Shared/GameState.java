@@ -28,4 +28,18 @@ public class GameState {
     {
         messages.add(msg);
     }
+
+
+    public String toString()
+    {
+        String gs = "Gamestate info: \n";
+        gs += " players in game: \n";
+        for (PlayerInfo p : players)
+        {
+            gs += p.toString();
+        }
+
+        return gs;
+    }
+
 }
