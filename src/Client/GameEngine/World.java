@@ -1,5 +1,6 @@
 package Client.GameEngine;
 
+import Client.GameClient;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
@@ -14,7 +15,7 @@ import static Fields.Constants.*;
 public class World extends SubScene {
 
     private PerspectiveCamera camera;
-    private boolean[] WASDLR = new boolean[]{false, false, false, false, false, false};
+    private boolean[] WASDLRS = new boolean[]{false, false, false, false, false, false};
     private Box player;
     private Group root;
     private Group shapes;
@@ -87,17 +88,17 @@ public class World extends SubScene {
         Point2D perpDirection = new Point2D(direction.getY(), -direction.getX());
         Point2D step = Point2D.ZERO;
 
-        if(WASDLR[0])
+        if(WASDLRS[0])
             step = step.add(direction);
-        if(WASDLR[1])
+        if(WASDLRS[1])
             step = step.subtract(perpDirection);
-        if(WASDLR[2])
+        if(WASDLRS[2])
             step = step.subtract(direction);
-        if(WASDLR[3])
+        if(WASDLRS[3])
             step = step.add(perpDirection);
-        if(WASDLR[4])
+        if(WASDLRS[4])
             camera.setRotate((camera.getRotate() - PLAYER_TURN_SPEED)%360);
-        if(WASDLR[5])
+        if(WASDLRS[5])
             camera.setRotate((camera.getRotate() + PLAYER_TURN_SPEED)%360);
 
         step = step.normalize().multiply(PLAYER_SPEED);
@@ -181,23 +182,33 @@ public class World extends SubScene {
     {
         switch (key.getCode()) {
             case W:
-                WASDLR[0] = true;
+                WASDLRS[0] = true;
+                GameClient.setKeyPress("forward",true);
                 break;
             case A:
-                WASDLR[1] = true;
+                WASDLRS[1] = true;
+                GameClient.setKeyPress("left",true);
                 break;
             case S:
-                WASDLR[2] = true;
+                WASDLRS[2] = true;
+                GameClient.setKeyPress("back",true);
                 break;
             case D:
-                WASDLR[3] = true;
+                WASDLRS[3] = true;
+                GameClient.setKeyPress("right",true);
                 break;
             case LEFT:
-                WASDLR[4] = true;
+                WASDLRS[4] = true;
+                GameClient.setKeyPress("rotateLeft",true);
                 break;
             case RIGHT:
-                WASDLR[5] = true;
+                WASDLRS[5] = true;
+                GameClient.setKeyPress("rotateRight",true);
                 break;
+            case SPACE:
+                WASDLRS[6] = true;
+                GameClient.setKeyPress("fire",true);
+
         }
     }
 
@@ -205,23 +216,32 @@ public class World extends SubScene {
     {
         switch (key.getCode()) {
             case W:
-                WASDLR[0] = false;
+                WASDLRS[0] = false;
+                GameClient.setKeyPress("forward",false);
                 break;
             case A:
-                WASDLR[1] = false;
+                WASDLRS[1] = false;
+                GameClient.setKeyPress("left",false);
                 break;
             case S:
-                WASDLR[2] = false;
+                WASDLRS[2] = false;
+                GameClient.setKeyPress("back",false);
                 break;
             case D:
-                WASDLR[3] = false;
+                WASDLRS[3] = false;
+                GameClient.setKeyPress("right",false);
                 break;
             case LEFT:
-                WASDLR[4] = false;
+                WASDLRS[4] = false;
+                GameClient.setKeyPress("rotateLeft",false);
                 break;
             case RIGHT:
-                WASDLR[5] = false;
+                WASDLRS[5] = false;
+                GameClient.setKeyPress("rotateRight",false);
                 break;
+            case SPACE:
+                WASDLRS[6] = false;
+                GameClient.setKeyPress("fire",false);
         }
     }
 

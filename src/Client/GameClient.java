@@ -17,6 +17,9 @@ public class GameClient
     private static String userName = "";
     private static String message = "";
 
+    private static boolean[] keysPressed = new boolean[7];
+
+
     // Initialize GameClient when joining a new room
     public static void initialize(RemoteSpace r, String user)
     {
@@ -61,14 +64,40 @@ public class GameClient
                 new ActualField(userName),
                 new FormalField(Command.class));
 
-        boolean[] bools = new boolean[7];
-
-        Command c = new Command(bools,message,userName);
+        Command c = new Command(keysPressed,message,userName);
 
         room.put("command", userName, c);
 
         // message = "";
     }
+
+
+    public static void setKeyPress(String key, boolean state)
+    {
+        switch (key) {
+            case "forward":
+                keysPressed[0] = state;
+                break;
+            case "left":
+                keysPressed[1] = state;
+                break;
+            case "back":
+                keysPressed[2] = state;
+                break;
+            case "right":
+                keysPressed[3] = state;
+                break;
+            case "rotateLeft":
+                keysPressed[4] = state;
+                break;
+            case "rotateRight":
+                keysPressed[5] = state;
+                break;
+            case "fire":
+                keysPressed[6] = state;
+        }
+    }
+
 
     // Send a message to the current room
     public static void sendMessage(String msg)
