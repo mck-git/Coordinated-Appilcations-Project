@@ -7,4 +7,5 @@ public interface Constants {
     int PLAYER_TURN_SPEED = 5;
     int TILE_SIZE = 10;
     int PLAYER_SIZE = 3;
+    int PLAYER_HEIGHT = 6;
 }

@@ -4,24 +4,28 @@ import javafx.geometry.Point3D;
 
 public class PlayerInfo {
     public String username;
-    public Point3D position;
-    public Point3D direction;
+    public int x;
+    public int y;
+    public int z;
+    public int angle;
     public int health;
     public boolean fire;
 
     public PlayerInfo(String username)
     {
         this(username,
-                Point3D.ZERO,
-                Point3D.ZERO,
+                0, (int) -0.9*Constants.PLAYER_HEIGHT,0,
+                0,
                 100);
     }
 
-    public PlayerInfo(String username, Point3D pos, Point3D dir, int health)
+    public PlayerInfo(String username, int x, int y, int z, int angle, int health)
     {
         this.username = username;
-        this.position = pos;
-        this.direction = dir;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.angle = angle;
         this.health = health;
     }
 
@@ -29,8 +33,8 @@ public class PlayerInfo {
         String p = username + " info: \n";
         p += "  health: " + health + "\n";
         p += "  fire: " + fire + "\n";
-        p += "  position: " + position.toString() + "\n";
-        p += "  direction: " + direction.toString() + "\n";
+        p += "  position: (" + x + "," + y + "," + z  + ")\n";
+        p += "  angle: " + angle + "\n";
 
         return p;
     }
