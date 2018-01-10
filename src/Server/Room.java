@@ -39,7 +39,6 @@ public class Room extends SequentialSpace implements Runnable
         {
             try {
                 updateGamestate();
-                System.out.println(master_gs.getMessages());
                 Thread.sleep(3000);
             } catch (Exception ignored) {}
         }
@@ -52,7 +51,6 @@ public class Room extends SequentialSpace implements Runnable
 
         // getP?
         this.get(new ActualField("gamestate"), new FormalField(GameState.class));
-
         this.put("gamestate", master_gs);
     }
 
