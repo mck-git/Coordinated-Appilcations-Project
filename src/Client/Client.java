@@ -238,11 +238,7 @@ public class Client {
 
 
                 // Remove yourself from the room and set currentRoom to be the lounge
-                currentRoom.getp(
-                        new ActualField("command"),
-                        new ActualField(userName),
-                        new FormalField(Command.class));
-
+                GameClient.leaveRoom();
                 currentRoom = lobby;
                 currentRoomName = "lobby";
             }

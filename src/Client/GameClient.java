@@ -15,7 +15,6 @@ public class GameClient
     private static GameState gameState;
     private static RemoteSpace room;
     private static String userName = "";
-    private static String message = "";
 
     private static boolean[] keysPressed = new boolean[7];
 
@@ -63,8 +62,6 @@ public class GameClient
         Command c = new Command(keysPressed,userName);
 
         room.put("command", userName, c);
-
-        // message = "";
     }
 
 
@@ -94,6 +91,16 @@ public class GameClient
         }
     }
 
+    public static void leaveRoom() throws InterruptedException
+    {
+        // Remove command from touplespace
+        room.getp(
+                new ActualField("command"),
+                new ActualField(userName),
+                new FormalField(Command.class));
+
+
+    }
 
     // Send a message to the current room
     public static void sendMessage(String msg)
@@ -118,7 +125,7 @@ public class GameClient
             int i = 0;
             for (Object[] o : messages)
             {
-                messages_string[i] = o[1] + ":\n" + o[2];
+                messages_string[i] = o[1] + ":" + o[2];
                 i++;
             }
 
