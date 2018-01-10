@@ -33,7 +33,21 @@ public class Command {
 
     public String toString()
     {
-        return "command: user:" + username;
+        String cmd = username + " command: ";
+        if (forward)
+            cmd += ", forward";
+        if (left)
+            cmd += ", left";
+        if (right)
+            cmd += ", right";
+        if (rotateLeft)
+            cmd += ", rotateLeft";
+        if (rotateRight)
+            cmd += ", rotateRight";
+        if (fire)
+            cmd += ", fire";
+
+        return cmd;
     }
 
     public boolean isForward() {
