@@ -11,7 +11,10 @@ public class PlayerInfo {
 
     public PlayerInfo(String username)
     {
-        this.username = username;
+        this(username,
+                Point3D.ZERO,
+                Point3D.ZERO,
+                100);
     }
 
     public PlayerInfo(String username, Point3D pos, Point3D dir, int health)

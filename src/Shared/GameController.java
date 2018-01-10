@@ -15,37 +15,37 @@ public class GameController
 
     public GameState updatePlayerList(String[] users)
     {
-        ArrayList<PlayerInfo> players = gs.getPlayers();
+        try {
+            ArrayList<PlayerInfo> players = gs.getPlayers();
 
-        // Remove users that isnt in provided users array
-        playerloop: for (PlayerInfo p : players)
-        {
-            for (String s : users)
-            {
-              if(p.username.equals(s))
-              {
-                    continue playerloop;
-              }
-            }
-            players.remove(p);
-        }
-
-
-        // Add users that isnt in gamestate
-        userloop: for (String u : users)
-        {
-            for (PlayerInfo p : players)
-            {
-                if(u.equals(p.username))
-                {
-                    continue userloop;
+            // Remove users that isnt in provided users array
+            playerloop:
+            for (PlayerInfo p : players) {
+                for (String s : users) {
+                    if (p.username.equals(s)) {
+                        continue playerloop;
+                    }
                 }
+                players.remove(p);
             }
 
-            players.add(new PlayerInfo(u));
-        }
 
-        gs.setPlayers(players);
+            // Add users that isnt in gamestate
+            userloop:
+            for (String u : users) {
+
+                for (PlayerInfo p : players) {
+                    if (u.equals(p.username)) {
+                        continue userloop;
+                    }
+                }
+
+                players.add(new PlayerInfo(u));
+
+            }
+            gs.setPlayers(players);
+
+        } catch (Exception ignored) {};
         return gs;
     }
 

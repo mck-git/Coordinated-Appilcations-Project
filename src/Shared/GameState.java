@@ -7,7 +7,7 @@ public class GameState {
 
     public GameState()
     {
-        this.players = new ArrayList<>();
+        this.players = new ArrayList<PlayerInfo>();
     }
 
     public ArrayList<PlayerInfo> getPlayers() {
@@ -22,10 +22,10 @@ public class GameState {
     public String toString()
     {
         String gs = "Gamestate info: \n";
-        gs += " players in game: \n";
+        gs += "     players in game: \n";
         for (PlayerInfo p : players)
         {
-            gs += p.toString();
+            gs += "     " + p.toString();
         }
 
         return gs;

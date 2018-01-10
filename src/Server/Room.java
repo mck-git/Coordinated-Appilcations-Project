@@ -35,13 +35,14 @@ public class Room extends SequentialSpace implements Runnable
 
     public void run ()
     {
-        while(true)
-        {
-            try {
+        try {
+            while(true)
+            {
                 updateGamestate();
-                Thread.sleep(3000);
-            } catch (Exception ignored) {}
-        }
+                Thread.sleep(17);
+
+            }
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     private void updateGamestate() throws Exception
