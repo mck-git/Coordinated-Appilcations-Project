@@ -1,4 +1,4 @@
-package Server;
+package Server.Networking;
 
 import Shared.Command;
 import Shared.GameController;
@@ -8,7 +8,6 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,10 +62,10 @@ public class Room extends SequentialSpace implements Runnable
         List<Object[]> tuple_commands = this.queryAll(new ActualField("command"),
                                                       new FormalField(String.class),
                                                       new FormalField(Command.class));
-        System.out.println("Got following " + tuple_commands.size() + " commands:");
+//        System.out.println("Got following " + tuple_commands.size() + " commands:");
         for (Object[] o : tuple_commands)
         {
-            System.out.println(((Command) o[2]).toString());
+//            System.out.println(((Command) o[2]).toString());
             commands.add((Command) o[2]);
         }
 

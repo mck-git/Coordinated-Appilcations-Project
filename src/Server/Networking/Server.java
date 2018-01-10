@@ -1,4 +1,5 @@
-package Server;
+package Server.Networking;
+
 
 import org.jspace.*;
 

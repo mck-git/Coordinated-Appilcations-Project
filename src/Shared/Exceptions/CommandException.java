@@ -1,4 +1,4 @@
-package Exceptions.Client;
+package Shared.Exceptions;
 
 public class CommandException extends Exception {
     private String message;

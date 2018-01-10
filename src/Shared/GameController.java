@@ -7,7 +7,6 @@ public class GameController
 {
     private GameState gs;
 
-
     public GameController()
     {
         this.gs = new GameState();

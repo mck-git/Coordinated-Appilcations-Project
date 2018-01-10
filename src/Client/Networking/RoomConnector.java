@@ -1,4 +1,4 @@
-package Client;
+package Client.Networking;
 
 import org.jspace.ActualField;
 import org.jspace.FormalField;
@@ -9,7 +9,7 @@ import Shared.GameState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameClient
+public class RoomConnector
 {
 
     private static GameState gameState;
@@ -19,7 +19,7 @@ public class GameClient
     private static boolean[] keysPressed = new boolean[7];
 
 
-    // Initialize GameClient when joining a new room
+    // Initialize RoomConnector when joining a new room
     public static void initialize(RemoteSpace r, String user)
     {
         room = r;
@@ -30,7 +30,7 @@ public class GameClient
         room.put("command", userName, c);
 
         update();
-        System.out.println("Initialized the GameClient");
+        System.out.println("Initialized the RoomConnector");
     }
 
     public static void update()

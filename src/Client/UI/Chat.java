@@ -1,7 +1,7 @@
-package Client.View;
+package Client.UI;
 
-import Client.Client;
-import Client.GameClient;
+import Client.ClientApp;
+import Client.Networking.RoomConnector;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -25,7 +25,7 @@ public class Chat extends VBox {
         this.getChildren().add(messageField);
         this.setMaxWidth(150);
         this.setOpacity(0.2);
-        this.prefHeightProperty().bind(ClientDisplay.getStage().heightProperty());
+        this.prefHeightProperty().bind(ClientApp.getStage().heightProperty());
         messageArea.prefHeightProperty().bind(this.heightProperty().subtract(100));
 
         this.setSpacing(10);
@@ -35,15 +35,15 @@ public class Chat extends VBox {
 
         messageField.setOnKeyPressed(key -> {
             if (key.getCode() == KeyCode.ENTER) {
-                //Client.sendMessage(messageField.getText());
-                GameClient.sendMessage(messageField.getText());
+                //MainConnector.sendMessage(messageField.getText());
+                RoomConnector.sendMessage(messageField.getText());
                 messageField.clear();
             }
         });
     }
 
     public void update() {
-        String[] newMessages = GameClient.getMessages();
+        String[] newMessages = RoomConnector.getMessages();
         boolean refreshNeeded = newMessages.length != messages.length;
 
         if(!refreshNeeded)

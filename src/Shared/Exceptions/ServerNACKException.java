@@ -1,4 +1,4 @@
-package Exceptions.Client;
+package Shared.Exceptions;
 
 public class ServerNACKException extends Exception {
 

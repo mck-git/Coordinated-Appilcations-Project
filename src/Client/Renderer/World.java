@@ -1,7 +1,7 @@
-package Client.GameEngine;
+package Client.Renderer;
 
-import Client.View.ClientDisplay;
-import Client.GameClient;
+import Client.Networking.RoomConnector;
+import Client.ClientApp;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
@@ -13,7 +13,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Rectangle;
 
-import static Fields.Constants.*;
+import static Shared.Constants.*;
 
 public class World extends SubScene {
 
@@ -47,8 +47,8 @@ public class World extends SubScene {
         floor.setCache(true);
         root.getChildren().add(floor);
 
-        this.heightProperty().bind(ClientDisplay.getStage().heightProperty());
-        this.widthProperty().bind(ClientDisplay.getStage().widthProperty());
+        this.heightProperty().bind(ClientApp.getStage().heightProperty());
+        this.widthProperty().bind(ClientApp.getStage().widthProperty());
 
         shapes = new Group();
         root.getChildren().add(shapes);
@@ -90,7 +90,7 @@ public class World extends SubScene {
                 if(Math.random() < 0.5) {
                     Box b = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     b.setMaterial(new PhongMaterial());
-                    ((PhongMaterial) b.getMaterial()).setDiffuseMap(new Image("Images/concrete.png"));
+                    ((PhongMaterial) b.getMaterial()).setDiffuseMap(new Image("Shared/Resources/concrete.png"));
                     b.setTranslateX(x * TILE_SIZE);
                     b.setTranslateZ(z * TILE_SIZE);
                     b.setTranslateY(-0.5 * TILE_SIZE);
@@ -102,7 +102,7 @@ public class World extends SubScene {
 
         Box b1 = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
         b1.setMaterial(new PhongMaterial(Color.RED));
-        ((PhongMaterial) b1.getMaterial()).setDiffuseMap(new Image("Images/concrete.png"));
+        ((PhongMaterial) b1.getMaterial()).setDiffuseMap(new Image("Shared/Resources/concrete.png"));
         b1.setTranslateZ(-TILE_SIZE);
         b1.setTranslateX(-TILE_SIZE);
         b1.setTranslateY(-0.5*TILE_SIZE);
@@ -205,31 +205,31 @@ public class World extends SubScene {
         switch (key.getCode()) {
             case W:
                 WASDLRS[0] = true;
-                GameClient.setKeyPress("forward",true);
+                RoomConnector.setKeyPress("forward",true);
                 break;
             case A:
                 WASDLRS[1] = true;
-                GameClient.setKeyPress("left",true);
+                RoomConnector.setKeyPress("left",true);
                 break;
             case S:
                 WASDLRS[2] = true;
-                GameClient.setKeyPress("back",true);
+                RoomConnector.setKeyPress("back",true);
                 break;
             case D:
                 WASDLRS[3] = true;
-                GameClient.setKeyPress("right",true);
+                RoomConnector.setKeyPress("right",true);
                 break;
             case LEFT:
                 WASDLRS[4] = true;
-                GameClient.setKeyPress("rotateLeft",true);
+                RoomConnector.setKeyPress("rotateLeft",true);
                 break;
             case RIGHT:
                 WASDLRS[5] = true;
-                GameClient.setKeyPress("rotateRight",true);
+                RoomConnector.setKeyPress("rotateRight",true);
                 break;
             case SPACE:
                 WASDLRS[6] = true;
-                GameClient.setKeyPress("fire",true);
+                RoomConnector.setKeyPress("fire",true);
 
         }
     }
@@ -239,31 +239,31 @@ public class World extends SubScene {
         switch (key.getCode()) {
             case W:
                 WASDLRS[0] = false;
-                GameClient.setKeyPress("forward",false);
+                RoomConnector.setKeyPress("forward",false);
                 break;
             case A:
                 WASDLRS[1] = false;
-                GameClient.setKeyPress("left",false);
+                RoomConnector.setKeyPress("left",false);
                 break;
             case S:
                 WASDLRS[2] = false;
-                GameClient.setKeyPress("back",false);
+                RoomConnector.setKeyPress("back",false);
                 break;
             case D:
                 WASDLRS[3] = false;
-                GameClient.setKeyPress("right",false);
+                RoomConnector.setKeyPress("right",false);
                 break;
             case LEFT:
                 WASDLRS[4] = false;
-                GameClient.setKeyPress("rotateLeft",false);
+                RoomConnector.setKeyPress("rotateLeft",false);
                 break;
             case RIGHT:
                 WASDLRS[5] = false;
-                GameClient.setKeyPress("rotateRight",false);
+                RoomConnector.setKeyPress("rotateRight",false);
                 break;
             case SPACE:
                 WASDLRS[6] = false;
-                GameClient.setKeyPress("fire",false);
+                RoomConnector.setKeyPress("fire",false);
         }
     }
 

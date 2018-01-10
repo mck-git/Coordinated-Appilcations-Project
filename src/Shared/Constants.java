@@ -1,4 +1,4 @@
-package Fields;
+package Shared;
 
 public interface Constants {
     int HEIGHT = 360;

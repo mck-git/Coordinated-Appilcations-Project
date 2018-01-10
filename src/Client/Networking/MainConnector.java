@@ -1,8 +1,7 @@
-package Client;
+package Client.Networking;
 
-import Exceptions.Client.CommandException;
-import Exceptions.Client.ServerNACKException;
-import Shared.Command;
+import Shared.Exceptions.CommandException;
+import Shared.Exceptions.ServerNACKException;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -10,13 +9,13 @@ import org.jspace.RemoteSpace;
 import java.util.List;
 import java.util.Scanner;
 
-public class Client {
+public class MainConnector {
     static private RemoteSpace lobby;
     static private RemoteSpace currentRoom;
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "10.16.172.151";
+    static private String ip = "10.16.172.99";
 
     static private Scanner sc;
 
@@ -60,11 +59,11 @@ public class Client {
                         System.out.println("What do you wish to send?");
                         String message = sc.next();
                         message = message + sc.nextLine();
-                        GameClient.sendMessage(message);
+                        RoomConnector.sendMessage(message);
                         break;
                     case "get messages":
                         System.out.println("Getting messages...");
-                        String[] messages = GameClient.getMessages();
+                        String[] messages = RoomConnector.getMessages();
                         for (String m : messages) {
                             System.out.println(m);
                         }
@@ -206,7 +205,7 @@ public class Client {
 
             // Put the username into the joined room, and set new room as currentRoomName
             currentRoomName = roomName;
-            GameClient.initialize(currentRoom,userName);
+            RoomConnector.initialize(currentRoom,userName);
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
 
@@ -238,7 +237,7 @@ public class Client {
 
 
                 // Remove yourself from the room and set currentRoom to be the lounge
-                GameClient.leaveRoom();
+                RoomConnector.leaveRoom();
                 currentRoom = lobby;
                 currentRoomName = "lobby";
             }
@@ -247,7 +246,7 @@ public class Client {
 
     // Leave the current room, if it is not the lobby
     public static void quit() throws ServerNACKException, CommandException {
-        if(!currentRoomName.equals("lobby")) throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
+        if(!currentRoomName.equals("lobby")) throw new CommandException("Illegal quit from "+ MainConnector.getCurrentRoomName()+". Only from lobby");
         try {
             lobby.put("quit", userName);
 
