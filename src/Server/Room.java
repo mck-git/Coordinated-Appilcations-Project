@@ -47,8 +47,8 @@ public class Room extends SequentialSpace implements Runnable
 
     private void updateGamestate() throws Exception
     {
-        master_gs = g_controller.applyCommands(getCommands());
         master_gs = g_controller.updatePlayerList(getUsers());
+        master_gs = g_controller.applyCommands(getCommands());
 
         // getP?
         this.get(new ActualField("gamestate"), new FormalField(GameState.class));
@@ -62,10 +62,10 @@ public class Room extends SequentialSpace implements Runnable
         List<Object[]> tuple_commands = this.queryAll(new ActualField("command"),
                                                       new FormalField(String.class),
                                                       new FormalField(Command.class));
+        System.out.println("Got following " + tuple_commands.size() + " commands:");
         for (Object[] o : tuple_commands)
         {
             System.out.println(((Command) o[2]).toString());
-            System.out.println("number of tuples"  + this.size());
             commands.add((Command) o[2]);
         }
 
