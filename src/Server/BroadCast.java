@@ -6,18 +6,20 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class BroadCast extends Thread{
-    DatagramSocket socket;
+    private DatagramSocket socket;
+    private int port = 9002;
     @Override
     public void run() {
         try {
-            socket = new DatagramSocket(8888, InetAddress.getByName("0.0.0.0"));
+//            socket = new DatagramSocket(port, InetAddress.getByName("0.0.0.0"));
+            socket = new DatagramSocket(port);
             socket.setBroadcast(true);
 
             while (true) {
 //                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
 
                 //Receive a packet
-                byte[] recvBuf = new byte[15000];
+                byte[] recvBuf = new byte[1000];
                 DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
                 socket.receive(packet);
 
@@ -27,8 +29,8 @@ public class BroadCast extends Thread{
 
                 //Check packet
                 String message = new String(packet.getData()).trim();
-                if (message.equals("DISCOVER_FUIFSERVER_REQUEST")) {
-                    byte[] sendData = "DISCOVER_FUIFSERVER_RESPONSE".getBytes();
+                if (message.equals("02148_TEAM_10_SERVER_REQUEST")) {
+                    byte[] sendData = "02148_TEAM_10_SERVER_RESPONSE".getBytes();
 
                     //Send a response
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
