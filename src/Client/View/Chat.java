@@ -2,12 +2,11 @@ package Client.View;
 
 import Client.Client;
 import Client.GameClient;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-
-import static Fields.Constants.HEIGHT;
 
 public class Chat extends VBox {
     private TextArea messageArea;
@@ -15,6 +14,7 @@ public class Chat extends VBox {
 
     Chat()
     {
+        this.setAlignment(Pos.CENTER);
         messageArea = new TextArea();
         messageArea.setEditable(false);
         messageArea.setFocusTraversable(false);
@@ -24,13 +24,14 @@ public class Chat extends VBox {
         TextField messageField = new TextField();
         this.getChildren().add(messageField);
         this.setMaxWidth(150);
-        this.setOpacity(0.5);
-        messageArea.setPrefHeight(HEIGHT*0.8);
+        this.setOpacity(0.2);
+        this.prefHeightProperty().bind(ClientDisplay.getStage().heightProperty());
+        messageArea.prefHeightProperty().bind(this.heightProperty().subtract(100));
 
         this.setSpacing(10);
 
         this.setOnMouseEntered(mouse -> this.setOpacity(0.8));
-        this.setOnMouseExited(mouse -> this.setOpacity(0.3));
+        this.setOnMouseExited(mouse -> this.setOpacity(0.2));
 
         messageField.setOnKeyPressed(key -> {
             if (key.getCode() == KeyCode.ENTER) {
