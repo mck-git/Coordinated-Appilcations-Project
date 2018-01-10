@@ -82,9 +82,8 @@ public class World extends SubScene {
         root.requestFocus();
         renderings.getChildren().addAll(Map.getNodes());
 
-        Box b1 = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
-        b1.setMaterial(new PhongMaterial(Color.RED));
-        ((PhongMaterial) b1.getMaterial()).setDiffuseMap(new Image("Shared/Resources/concrete.png"));
+        Box b1 = new Box(TILE_SIZE/3, TILE_SIZE, TILE_SIZE/3);
+        b1.setMaterial(new PhongMaterial(Color.color(0.4, 0, 0.2, 0.5)));
         b1.setTranslateZ(-TILE_SIZE);
         b1.setTranslateX(-TILE_SIZE);
         b1.setTranslateY(-0.5*TILE_SIZE);

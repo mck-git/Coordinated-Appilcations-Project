@@ -1,5 +1,8 @@
 package Shared;
 
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 import static Shared.Constants.PLAYER_HEIGHT;
@@ -14,6 +17,8 @@ public class Player extends Box {
         this.setHeight(PLAYER_HEIGHT);
         this.setWidth(Constants.PLAYER_SIZE);
         this.setDepth(Constants.PLAYER_SIZE);
+        this.setMaterial(new PhongMaterial(Color.DARKGREEN));
+        ((PhongMaterial)this.getMaterial()).setSelfIlluminationMap(new Image("Shared/Resources/slim_creeper.png"));
         update(info);
     }
 
