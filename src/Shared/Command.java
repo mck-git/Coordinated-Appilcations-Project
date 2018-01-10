@@ -8,10 +8,9 @@ public class Command {
     private boolean rotateLeft;
     private boolean rotateRight;
     private boolean fire;
-    private String message;
     private String username;
 
-    public Command(boolean[] WASDLRF, String msg, String user) {
+    public Command(boolean[] WASDLRF, String user) {
         this.forward = WASDLRF[0];
         this.left = WASDLRF[1];
         this.backward = WASDLRF[2];
@@ -21,9 +20,8 @@ public class Command {
         this.fire = WASDLRF[6];
 
         this.username = user;
-        this.message = msg;
     }
-    public Command(boolean forward, boolean left, boolean backward, boolean right, boolean rotateLeft, boolean rotateRight, boolean fire, String msg) {
+    public Command(boolean forward, boolean left, boolean backward, boolean right, boolean rotateLeft, boolean rotateRight, boolean fire) {
         this.forward = forward;
         this.left = left;
         this.backward = backward;
@@ -31,13 +29,11 @@ public class Command {
         this.rotateLeft = rotateLeft;
         this.rotateRight = rotateRight;
         this.fire = fire;
-
-        this.message = msg;
     }
 
     public String toString()
     {
-        return "command: user:" + username + ", msg: " + message;
+        return "command: user:" + username;
     }
 
     public boolean isForward() {
@@ -66,10 +62,6 @@ public class Command {
 
     public boolean isFire() {
         return fire;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public String getUsername() { return username; }
