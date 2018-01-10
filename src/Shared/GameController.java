@@ -1,5 +1,8 @@
 package Shared;
 
+import javafx.geometry.Point3D;
+import javafx.scene.shape.Line;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +62,14 @@ public class GameController
                 if (p.username.equals(c.getUsername()))
                 {
                     updatePlayerInfo(p,c);
+
+                    // KILLEM ALL
+                    if (p.fire)
+                    {
+                        players.remove(p);
+                        checkBulletCollision(p, players);
+                        players.add(p);
+                    }
 
                     continue cmdloop;
                 }
@@ -130,6 +141,18 @@ public class GameController
                 System.out.println(p.username + " stopped firing...");
             }
             p.fire = false;
+        }
+    }
+
+    private void checkBulletCollision(PlayerInfo player, List<PlayerInfo> enemies)
+    {
+        for (PlayerInfo enemy : enemies)
+        {
+            Line raycast = new Line();
+            raycast.setRotationAxis(new Point3D(1,0,0));
+            raycast.setRotate(90);
+
+
         }
     }
 }
