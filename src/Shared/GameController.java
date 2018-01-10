@@ -10,36 +10,82 @@ public class GameController
 
     public GameController()
     {
-
         this.gs = new GameState();
+    }
+
+    public GameState updatePlayerList(String[] users)
+    {
+        ArrayList<PlayerInfo> players = gs.getPlayers();
+
+        // Remove users that isnt in provided users array
+        playerloop: for (PlayerInfo p : players)
+        {
+            for (String s : users)
+            {
+              if(p.username.equals(s))
+              {
+                    continue playerloop;
+              }
+            }
+            players.remove(p);
+        }
+
+
+        // Add users that isnt in gamestate
+        userloop: for (String u : users)
+        {
+            for (PlayerInfo p : players)
+            {
+                if(u.equals(p.username))
+                {
+                    continue userloop;
+                }
+            }
+
+            players.add(new PlayerInfo(u));
+        }
+
+        gs.setPlayers(players);
+        return gs;
     }
 
     public GameState applyCommands(List<Command> commands)
     {
         ArrayList<PlayerInfo> players = gs.getPlayers();
 
-        for (Command c : commands)
+        cmdloop: for (Command c : commands)
         {
-            for (PlayerInfo p_inf : players)
+            for (PlayerInfo p : players)
             {
-                if (p_inf.getUsername().equals(c.getUsername()))
+                if (p.username.equals(c.getUsername()))
                 {
-                    // Update player_info
+                    updatePlayerInfo(p,c);
 
-
-                    // Check for new message
-                    String msg = c.getMessage();
-                    if (!msg.equals(""))
-                    {
-                        gs.addMessage(p_inf.getUsername() + ": " + msg);
-                    }
-
-                    continue;
+                    continue cmdloop;
                 }
             }
         }
 
         gs.setPlayers(players);
         return gs;
+    }
+
+    private void updatePlayerInfo(PlayerInfo p, Command c)
+    {
+        if (c.isFire())
+        {
+            if (!p.fire)
+            {
+                System.out.println(p.username + " is now firing!");
+            }
+            p.fire = true;
+        } else
+        {
+            if (p.fire)
+            {
+                System.out.println(p.username + " stopped firing...");
+            }
+            p.fire = false;
+        }
     }
 }

@@ -3,10 +3,16 @@ package Shared;
 import javafx.geometry.Point3D;
 
 public class PlayerInfo {
-    private String username;
-    private Point3D position;
-    private Point3D direction;
-    private int health;
+    public String username;
+    public Point3D position;
+    public Point3D direction;
+    public int health;
+    public boolean fire;
+
+    public PlayerInfo(String username)
+    {
+        this.username = username;
+    }
 
     public PlayerInfo(String username, Point3D pos, Point3D dir, int health)
     {
@@ -16,19 +22,13 @@ public class PlayerInfo {
         this.health = health;
     }
 
-    public String getUsername() {
-        return username;
-    }
+    public String toString() {
+        String p = username + " info: \n";
+        p += "  health: " + health + "\n";
+        p += "  fire: " + fire + "\n";
+        p += "  position: " + position.toString() + "\n";
+        p += "  direction: " + direction.toString() + "\n";
 
-    public Point3D getPosition() {
-        return position;
-    }
-
-    public Point3D getDirection() {
-        return direction;
-    }
-
-    public int getHealth() {
-        return health;
+        return p;
     }
 }
