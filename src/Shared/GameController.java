@@ -17,13 +17,29 @@ public class GameController
     public GameState updatePlayerList(String[] users)
     {
         ArrayList<PlayerInfo> players = gs.getPlayers();
-        for (String u : users)
+
+        // Remove users that isnt in provided users array
+        playerloop: for (PlayerInfo p : players)
+        {
+            for (String s : users)
+            {
+              if(p.getUsername().equals(s))
+              {
+                    continue playerloop;
+              }
+            }
+            players.remove(p);
+        }
+
+
+        // Add users that isnt in gamestate
+        userloop: for (String u : users)
         {
             for (PlayerInfo p : players)
             {
-                if(users.equals(p.getUsername()))
+                if(u.equals(p.getUsername()))
                 {
-                    continue;
+                    continue userloop;
                 }
             }
 
@@ -38,7 +54,7 @@ public class GameController
     {
         ArrayList<PlayerInfo> players = gs.getPlayers();
 
-        for (Command c : commands)
+        cmdloop: for (Command c : commands)
         {
             for (PlayerInfo p_inf : players)
             {
@@ -47,14 +63,7 @@ public class GameController
                     // Update player_info
 
 
-                    // Check for new message
-                    String msg = c.getMessage();
-                    if (!msg.equals(""))
-                    {
-                        gs.addMessage(p_inf.getUsername() + ": " + msg);
-                    }
-
-                    continue;
+                    continue cmdloop;
                 }
             }
         }
