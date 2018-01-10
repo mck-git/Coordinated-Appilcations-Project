@@ -1,4 +1,4 @@
-package View;
+package Client.View;
 
 import Client.Client;
 import Templates.TScene;
@@ -9,10 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Reflection;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -22,16 +22,28 @@ import static Fields.Constants.WIDTH;
 
 public class WelcomeMenu extends TScene {
 
-    private BorderPane root;
 
-    public WelcomeMenu() {
-        root = (BorderPane) getRoot();
+    WelcomeMenu() {
+        super(new BorderPane());
+    }
+
+    @Override
+    public void setup() {
+        BorderPane root = (BorderPane) getRoot();
         root.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
-        root.setPadding(new Insets(10,50,50,50));
+        root.setPadding(new Insets(10,10,50,10));
+
+        VBox topPane = new VBox();
+        HBox quitPane = new HBox();
+        Button exit = new Button("Exit Game");
+        exit.setFocusTraversable(false);
+        quitPane.getChildren().add(exit);
+        topPane.getChildren().add(quitPane);
+        exit.setOnAction(event -> Client.exitApplication());
 
         HBox hb = new HBox();
-        hb.setPadding(new Insets(20,20,20,30));
+        topPane.getChildren().add(hb);
 
         //Adding GridPane
         GridPane gridPane = new GridPane();
@@ -72,16 +84,21 @@ public class WelcomeMenu extends TScene {
         gridPane.setAlignment(Pos.CENTER);
 
         setOnKeyPressed(key -> {
-            if(key.getCode() == KeyCode.ENTER)
+            switch(key.getCode())
             {
-                btnLogin.fire();
+                case ENTER:
+                    btnLogin.fire();
+                    break;
+                case ESCAPE:
+                    exit.fire();
+                    break;
             }
         });
 
         btnLogin.setOnAction(event -> {
             if (Client.initialize(txtUserName.getText()))
             {
-                Display.setScene(new Lobby());
+                ClientDisplay.setScene(new Lobby());
             }
             else
             {
@@ -89,18 +106,31 @@ public class WelcomeMenu extends TScene {
             }
         });
 
+        btnLogin.setOnKeyPressed(key -> {
+            switch(key.getCode()) {
+                case ENTER:
+                    btnLogin.fire();
+                    break;
+            }
+        });
+
         //Add HBox and GridPane layout to BorderPane Layout
-        root.setTop(hb);
+        root.setTop(topPane);
         root.setCenter(gridPane);
     }
 
     @Override
-    public void setup() {
-
+    public void refresh() {
+        //Nothing
     }
 
     @Override
-    public void refresh() {
+    public void closingProtocol() {
+        Client.exitApplication();
+    }
 
+    @Override
+    public void leavingProtocol() {
+        //Nothing
     }
 }

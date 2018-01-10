@@ -1,6 +1,10 @@
 package Fields;
 
 public interface Constants {
-    int HEIGHT = 400;
-    int WIDTH = 600;
+    int HEIGHT = 360;
+    int WIDTH = 720;
+    int PLAYER_SPEED = 1;
+    int PLAYER_TURN_SPEED = 6;
+    int TILE_SIZE = 10;
+    int PLAYER_SIZE = 3;
 }

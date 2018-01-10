@@ -1,11 +1,11 @@
-package View;
+package Client.View;
 
 import Templates.TScene;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Display extends Application {
+public class ClientDisplay extends Application {
 
     private static Stage _stage;
     private static TScene scene;
@@ -13,17 +13,23 @@ public class Display extends Application {
     public void start(Stage stage){
 
         _stage = stage;
-        _stage.setScene(scene);
         scene = new WelcomeMenu();
         setScene(scene);
-
-        _stage.setTitle("Welcome");
+        _stage.setOnCloseRequest(event -> {
+            scene.closingProtocol();
+            event.consume();
+        });
+        _stage.setTitle("Game Client");
 
         new AnimationTimer() {
-
+//            long lastTime = 0;
             @Override
             public void handle(long now) {
-                scene.refresh();
+//                if(now-lastTime > 1e9)
+                {
+//                    lastTime = now;
+                    scene.refresh();
+                }
             }
         }.start();
 
@@ -35,5 +41,15 @@ public class Display extends Application {
         scene = scene_;
         _stage.setScene(scene);
         scene.setup();
+    }
+
+    public static Stage getStage()
+    {
+        return _stage;
+    }
+
+
+    public static TScene getScene() {
+        return scene;
     }
 }
