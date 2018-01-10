@@ -15,15 +15,23 @@ public class RoomConnector
     private static GameState gameState;
     private static RemoteSpace room;
     private static String userName = "";
+    private static boolean inRoom = false;
 
     private static boolean[] keysPressed = new boolean[7];
 
 
-    // Initialize RoomConnector when joining a new room
-    public static void initialize(RemoteSpace r, String user)
+    public static void initialize(String user)
+    {
+        userName = user;
+        inRoom = false;
+    }
+
+    // Connect to the room when joining a new room
+    public static void connect(RemoteSpace r)
     {
         room = r;
-        userName = user;
+
+        inRoom = true;
 
         Command c = new Command(keysPressed,userName);
 
@@ -37,8 +45,11 @@ public class RoomConnector
     {
         try
         {
-            updateGamestate();
-            updateCommand();
+            if (inRoom)
+            {
+                updateGamestate();
+                updateCommand();
+            }
         } catch (Exception e) {e.printStackTrace();}
     }
 
@@ -99,6 +110,7 @@ public class RoomConnector
                 new ActualField(userName),
                 new FormalField(Command.class));
 
+        inRoom = false;
 
     }
 
@@ -136,7 +148,10 @@ public class RoomConnector
     }
 
 
-
+    public static GameState getGamestate()
+    {
+        return gameState;
+    }
 
 
 

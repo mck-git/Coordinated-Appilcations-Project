@@ -205,7 +205,7 @@ public class MainConnector {
 
             // Put the username into the joined room, and set new room as currentRoomName
             currentRoomName = roomName;
-            RoomConnector.initialize(currentRoom,userName);
+            RoomConnector.connect(currentRoom,userName);
             System.out.println("Joined the room! Welcome to " + roomName + "!");
 
 
