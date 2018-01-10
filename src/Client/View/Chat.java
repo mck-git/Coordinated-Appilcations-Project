@@ -1,6 +1,7 @@
 package Client.View;
 
 import Client.Client;
+import Client.GameClient;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -33,14 +34,15 @@ public class Chat extends VBox {
 
         messageField.setOnKeyPressed(key -> {
             if (key.getCode() == KeyCode.ENTER) {
-                Client.sendMessage(messageField.getText());
+                //Client.sendMessage(messageField.getText());
+                GameClient.sendMessage(messageField.getText());
                 messageField.clear();
             }
         });
     }
 
     public void update() {
-        String[] newMessages = Client.getMessages();
+        String[] newMessages = GameClient.getMessages();
         boolean refreshNeeded = newMessages.length != messages.length;
 
         if(!refreshNeeded)
