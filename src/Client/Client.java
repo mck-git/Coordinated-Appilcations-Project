@@ -59,11 +59,11 @@ public class Client {
                         System.out.println("What do you wish to send?");
                         String message = sc.next();
                         message = message + sc.nextLine();
-                        sendMessage(message);
+                        GameClient.sendMessage(message);
                         break;
                     case "get messages":
                         System.out.println("Getting messages...");
-                        String[] messages = getMessages();
+                        String[] messages = GameClient.getMessages();
                         for (String m : messages) {
                             System.out.println(m);
                         }
@@ -244,7 +244,7 @@ public class Client {
 
     // Leave the current room, if it is not the lobby
     public static void quit() throws ServerNACKException, CommandException {
-        if(currentRoomName != "lobby") throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
+        if(!currentRoomName.equals("lobby")) throw new CommandException("Illegal quit from "+Client.getCurrentRoomName()+". Only from lobby");
         try {
             lobby.put("quit", userName);
 
@@ -263,39 +263,6 @@ public class Client {
     public static void lockRoom()
     {
         currentRoom.put("lockRoom",currentRoomName,userName);
-    }
-
-    // Send a message to the current room
-    public static void sendMessage(String msg)
-    {
-        currentRoom.put("message", userName, msg);
-    }
-
-
-    // Get all messages in the current room
-    public static String[] getMessages()
-    {
-        try {
-            // Query the messages from the server touplespace for the current room
-            List<Object[]> messages = currentRoom.queryAll(
-                    new ActualField("message"),
-                    new FormalField(String.class),
-                    new FormalField(String.class)
-            );
-
-            // Collect all messages in a string array
-            String[] messages_string = new String[messages.size()];
-            int i = 0;
-            for (Object[] o : messages)
-            {
-                messages_string[i] = o[1] + ":\n" + o[2];
-                i++;
-            }
-
-            // Return the string array
-            return messages_string;
-
-        } catch (Exception e) {e.printStackTrace(); return new String[] {};}
     }
 
     public static String[] getUsers()
@@ -365,5 +332,41 @@ public class Client {
     {
         return "tcp://" + ip + ":9002/" + roomName + "?keep";
     }
+
+
+    // IF WE WANT CHAT IN LOBBY - UNCOMMENT AND REMOVE THE METHODS FROM GAMECLIENT
+
+    //    // Send a message to the current room
+//    public static void sendMessage(String msg)
+//    {
+//        currentRoom.put("message", userName, msg);
+//    }
+//
+//
+//    // Get all messages in the current room
+//    public static String[] getMessages()
+//    {
+//        try {
+//            // Query the messages from the server touplespace for the current room
+//            List<Object[]> messages = currentRoom.queryAll(
+//                    new ActualField("message"),
+//                    new FormalField(String.class),
+//                    new FormalField(String.class)
+//            );
+//
+//            // Collect all messages in a string array
+//            String[] messages_string = new String[messages.size()];
+//            int i = 0;
+//            for (Object[] o : messages)
+//            {
+//                messages_string[i] = o[1] + ":\n" + o[2];
+//                i++;
+//            }
+//
+//            // Return the string array
+//            return messages_string;
+//
+//        } catch (Exception e) {e.printStackTrace(); return new String[] {};}
+//    }
 
 }

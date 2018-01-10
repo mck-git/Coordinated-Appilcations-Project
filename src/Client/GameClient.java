@@ -7,6 +7,7 @@ import Shared.Command;
 import Shared.GameState;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameClient
 {
@@ -69,23 +70,37 @@ public class GameClient
         // message = "";
     }
 
-    public static String[] getMessages()
-    {
-        ArrayList<String> msgs = new ArrayList<>();
-
-        if (!(gameState.getMessages() == null))
-            msgs.addAll(gameState.getMessages());
-
-        msgs.add("");
-
-        return msgs.toArray(new String[0]);
-
-    }
-
+    // Send a message to the current room
     public static void sendMessage(String msg)
     {
-        message = msg;
-        System.out.println("New message is " + msg);
+        room.put("message", userName, msg);
+    }
+
+
+    // Get all messages in the current room
+    public static String[] getMessages()
+    {
+        try {
+            // Query the messages from the server touplespace for the current room
+            List<Object[]> messages = room.queryAll(
+                    new ActualField("message"),
+                    new FormalField(String.class),
+                    new FormalField(String.class)
+            );
+
+            // Collect all messages in a string array
+            String[] messages_string = new String[messages.size()];
+            int i = 0;
+            for (Object[] o : messages)
+            {
+                messages_string[i] = o[1] + ":\n" + o[2];
+                i++;
+            }
+
+            // Return the string array
+            return messages_string;
+
+        } catch (Exception e) {e.printStackTrace(); return new String[] {};}
     }
 
 
