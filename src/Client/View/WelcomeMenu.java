@@ -132,14 +132,16 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void refresh() {
-        serverView.setItems(FXCollections.observableArrayList(Client.foundServers));
-        if(!serverView.getItems().isEmpty())
-            serverView.getSelectionModel().select(0);
+        try {
+            serverView.setItems(FXCollections.observableArrayList(Client.foundServers));
+            if (!serverView.getItems().isEmpty())
+                serverView.getSelectionModel().select(0);
 
-        if(serverView.getSelectionModel().getSelectedItem() == null)
-            btnLogin.setDisable(true);
-        else if(btnLogin.isDisabled())
-            btnLogin.setDisable(false);
+            if (serverView.getSelectionModel().getSelectedItem() == null)
+                btnLogin.setDisable(true);
+            else if (btnLogin.isDisabled())
+                btnLogin.setDisable(false);
+        } catch (Exception ignored){}
     }
 
     @Override

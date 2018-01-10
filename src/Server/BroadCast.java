@@ -10,7 +10,6 @@ public class BroadCast extends Thread{
     @Override
     public void run() {
         try {
-            //Keep a socket open to listen to all the UDP trafic that is destined for this port
             socket = new DatagramSocket(8888, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
 
@@ -23,10 +22,10 @@ public class BroadCast extends Thread{
                 socket.receive(packet);
 
                 //Packet received
-//                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-//                System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()).trim());
+                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
+                System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()).trim());
 
-                //See if the packet holds the right command (message)
+                //Check packet
                 String message = new String(packet.getData()).trim();
                 if (message.equals("DISCOVER_FUIFSERVER_REQUEST")) {
                     byte[] sendData = "DISCOVER_FUIFSERVER_RESPONSE".getBytes();
