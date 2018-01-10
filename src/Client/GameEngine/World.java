@@ -15,7 +15,7 @@ import static Fields.Constants.*;
 public class World extends SubScene {
 
     private PerspectiveCamera camera;
-    private boolean[] WASDLRS = new boolean[]{false, false, false, false, false, false};
+    private boolean[] WASDLRS = new boolean[]{false, false, false, false, false, false,false};
     private Box player;
     private Group root;
     private Group shapes;

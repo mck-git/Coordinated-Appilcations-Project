@@ -17,7 +17,7 @@ public class GameClient
     private static String userName = "";
     private static String message = "";
 
-    private static boolean[] keysPressed = new boolean[8];
+    private static boolean[] keysPressed = new boolean[7];
 
 
     // Initialize GameClient when joining a new room
