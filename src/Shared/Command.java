@@ -2,9 +2,9 @@ package Shared;
 
 public class Command {
     private boolean forward;
-    private boolean left;
+    private boolean strafeLeft;
     private boolean backward;
-    private boolean right;
+    private boolean strafeRight;
     private boolean rotateLeft;
     private boolean rotateRight;
     private boolean fire;
@@ -12,9 +12,9 @@ public class Command {
 
     public Command(boolean[] WASDLRF, String user) {
         this.forward = WASDLRF[0];
-        this.left = WASDLRF[1];
+        this.strafeLeft = WASDLRF[1];
         this.backward = WASDLRF[2];
-        this.right = WASDLRF[3];
+        this.strafeRight = WASDLRF[3];
         this.rotateLeft = WASDLRF[5];
         this.rotateRight = WASDLRF[4];
         this.fire = WASDLRF[6];
@@ -23,9 +23,9 @@ public class Command {
     }
     public Command(boolean forward, boolean left, boolean backward, boolean right, boolean rotateLeft, boolean rotateRight, boolean fire) {
         this.forward = forward;
-        this.left = left;
+        this.strafeLeft = left;
         this.backward = backward;
-        this.right = right;
+        this.strafeRight = right;
         this.rotateLeft = rotateLeft;
         this.rotateRight = rotateRight;
         this.fire = fire;
@@ -36,10 +36,10 @@ public class Command {
         String cmd = username + " command: ";
         if (forward)
             cmd += ", forward";
-        if (left)
-            cmd += ", left";
-        if (right)
-            cmd += ", right";
+        if (strafeLeft)
+            cmd += ", strafeLeft";
+        if (strafeRight)
+            cmd += ", strafeRight";
         if (rotateLeft)
             cmd += ", rotateLeft";
         if (rotateRight)
@@ -58,12 +58,12 @@ public class Command {
         return backward;
     }
 
-    public boolean isLeft() {
-        return left;
+    public boolean isStrafeLeft() {
+        return strafeLeft;
     }
 
-    public boolean isRight() {
-        return right;
+    public boolean isStrafeRight() {
+        return strafeRight;
     }
 
     public boolean isRotateRight() {

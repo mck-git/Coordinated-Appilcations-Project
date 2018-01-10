@@ -4,9 +4,9 @@ import javafx.geometry.Point3D;
 
 public class PlayerInfo {
     public String username;
-    public int x;
-    public int y;
-    public int z;
+    public double x;
+    public double y;
+    public double z;
     public int angle;
     public int health;
     public boolean fire;
@@ -19,7 +19,7 @@ public class PlayerInfo {
                 100);
     }
 
-    public PlayerInfo(String username, int x, int y, int z, int angle, int health)
+    public PlayerInfo(String username, double x, double y, double z, int angle, int health)
     {
         this.username = username;
         this.x = x;

@@ -74,7 +74,7 @@ public class GameController
 
     private void updatePlayerInfo(PlayerInfo p, Command c)
     {
-        // Update position
+        // Update direction
         if(c.isRotateLeft())
         {
             p.angle -= Constants.PLAYER_TURN_SPEED % 360;
@@ -83,26 +83,39 @@ public class GameController
         {
             p.angle += Constants.PLAYER_TURN_SPEED % 360;
         }
-        if (c.isForward() || c.isBackward() || c.isLeft() || c.isRight())
+
+        // Update position
+        if (c.isForward() || c.isBackward() || c.isStrafeLeft() || c.isStrafeRight())
         {
-               double direction = Math.toRadians(p.angle);
+               double angle_radians = Math.toRadians(p.angle);
+               double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
+               double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
 
                if (c.isForward())
                {
-                 p.x = (int) (p.x + Math.sin(direction) * Constants.PLAYER_SPEED);
-                 p.z = (int) (p.z + Math.cos(direction) * Constants.PLAYER_SPEED);
+                 p.x += xspeed;
+                 p.z += zspeed;
                }
 
                if (c.isBackward())
                {
-                   p.x = (int) (p.x - Math.sin(direction) * Constants.PLAYER_SPEED);
-                   p.z = (int) (p.z - Math.cos(direction) * Constants.PLAYER_SPEED);
+                   p.x -= xspeed;
+                   p.z -= zspeed;
+               }
+
+               if (c.isStrafeLeft())
+               {
+                   p.x -= zspeed;
+                   p.z += xspeed;
+               }
+               if (c.isRotateRight())
+               {
+                   p.x += zspeed;
+                   p.z -= xspeed;
                }
         }
 
-
-
-
+        // Update fire
         if (c.isFire())
         {
             if (!p.fire)
