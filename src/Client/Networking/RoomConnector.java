@@ -61,7 +61,7 @@ public class RoomConnector
     {
         Object[] newState = room.queryp(new ActualField("gamestate"), new FormalField(GameState.class));
 
-        if(newState != null)
+        if(newState != null && newState.length == 2)
             gameState = (GameState) newState[1];
     }
 

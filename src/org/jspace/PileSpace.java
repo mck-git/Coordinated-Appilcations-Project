@@ -20,19 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
-package org.jspace.protocol;
 
-/**
- * This class represents a generic message 
- */
-public class pSpaceMessage {
+package org.jspace;
+
+public class PileSpace extends SequentialSpace {
 	
-	private ClientMessageType messageType;
+	public PileSpace() {
+		this(-1);
+	}
 	
-	private String sessionId;
-	
-	public pSpaceMessage( ClientMessageType messageType ) {
-		
+	public PileSpace(int bound) {
+		super(bound);
 	}
 
+	@Override
+	protected void addTuple(Tuple tuple) {
+		tuples.push(tuple);
+	}
+
+	
 }

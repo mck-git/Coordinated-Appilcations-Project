@@ -22,7 +22,7 @@ public class Room extends SequentialSpace implements Runnable
     private GameController g_controller;
 
 
-    public Room (String name, String owner)
+    public Room (String name, String owner) throws InterruptedException
     {
         this.name = name;
         this.owner = owner;
