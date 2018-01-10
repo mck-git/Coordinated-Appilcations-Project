@@ -1,7 +1,5 @@
 package Shared;
 
-import javafx.geometry.Point3D;
-
 public class PlayerInfo {
     public String username;
     public double x;
@@ -14,7 +12,7 @@ public class PlayerInfo {
     public PlayerInfo(String username)
     {
         this(username,
-                0, (int) -0.9*Constants.PLAYER_HEIGHT,0,
+                0, -0.5*Constants.PLAYER_HEIGHT,0,
                 0,
                 100);
     }

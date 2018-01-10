@@ -47,7 +47,7 @@ public class GameController
             }
             gs.setPlayers(players);
 
-        } catch (Exception ignored) {};
+        } catch (Exception e) {e.printStackTrace();}
         return gs;
     }
 
@@ -78,7 +78,7 @@ public class GameController
 
         gs.setPlayers(players);
 
-        System.out.println(gs.toString());
+//        System.out.println(gs.toString());
 
         return gs;
     }
@@ -88,11 +88,11 @@ public class GameController
         // Update direction
         if(c.isRotateLeft())
         {
-            p.angle -= Constants.PLAYER_TURN_SPEED % 360;
+            p.angle += Constants.PLAYER_TURN_SPEED % 360;
         }
         if(c.isRotateRight())
         {
-            p.angle += Constants.PLAYER_TURN_SPEED % 360;
+            p.angle -= Constants.PLAYER_TURN_SPEED % 360;
         }
 
         // Update position
@@ -119,7 +119,7 @@ public class GameController
                    p.x -= zspeed;
                    p.z += xspeed;
                }
-               if (c.isRotateRight())
+               if (c.isStrafeRight())
                {
                    p.x += zspeed;
                    p.z -= xspeed;

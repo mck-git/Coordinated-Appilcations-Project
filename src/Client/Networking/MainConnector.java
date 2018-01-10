@@ -15,7 +15,7 @@ public class MainConnector {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "10.16.172.99";
+    static private String ip = "192.168.0.100";
 
     static private Scanner sc;
 
@@ -77,7 +77,7 @@ public class MainConnector {
                 }
 
             }
-        } catch(Exception ignored) {}
+        } catch(Exception e) {e.printStackTrace();}
         System.exit(0);
     }
 
@@ -136,6 +136,7 @@ public class MainConnector {
                 System.out.println("You chose a unique username! Good job (y)");
                 lobby.put("user", nameInput);
                 userName = nameInput;
+                RoomConnector.initialize(nameInput);
             }
 
             // Release lock
@@ -285,7 +286,7 @@ public class MainConnector {
             }
 
             return users_string;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
 
         return null;
     }
@@ -308,7 +309,7 @@ public class MainConnector {
             }
 
             return rooms_string;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
         return null;
     }
 

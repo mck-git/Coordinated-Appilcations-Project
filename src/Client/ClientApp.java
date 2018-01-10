@@ -1,5 +1,6 @@
 package Client;
 
+import Client.Networking.RoomConnector;
 import Client.UI.WelcomeMenu;
 import Templates.TScene;
 import javafx.animation.AnimationTimer;
@@ -29,7 +30,7 @@ public class ClientApp extends Application {
 //                if(now-lastTime > 1e9)
                 {
 //                    lastTime = now;
-
+                    RoomConnector.update();
                     scene.refresh();
                 }
             }
