@@ -67,6 +67,9 @@ public class GameController
         }
 
         gs.setPlayers(players);
+
+        System.out.println(gs.toString());
+
         return gs;
     }
 
