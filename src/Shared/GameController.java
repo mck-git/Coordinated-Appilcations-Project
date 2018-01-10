@@ -74,6 +74,35 @@ public class GameController
 
     private void updatePlayerInfo(PlayerInfo p, Command c)
     {
+        // Update position
+        if(c.isRotateLeft())
+        {
+            p.angle -= Constants.PLAYER_TURN_SPEED % 360;
+        }
+        if(c.isRotateRight())
+        {
+            p.angle += Constants.PLAYER_TURN_SPEED % 360;
+        }
+        if (c.isForward() || c.isBackward() || c.isLeft() || c.isRight())
+        {
+               double direction = Math.toRadians(p.angle);
+
+               if (c.isForward())
+               {
+                 p.x = (int) (p.x + Math.sin(direction) * Constants.PLAYER_SPEED);
+                 p.z = (int) (p.z + Math.cos(direction) * Constants.PLAYER_SPEED);
+               }
+
+               if (c.isBackward())
+               {
+                   p.x = (int) (p.x - Math.sin(direction) * Constants.PLAYER_SPEED);
+                   p.z = (int) (p.z - Math.cos(direction) * Constants.PLAYER_SPEED);
+               }
+        }
+
+
+
+
         if (c.isFire())
         {
             if (!p.fire)
