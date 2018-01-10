@@ -8,6 +8,8 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 enum Status {OPEN, LOCKED}
@@ -35,14 +37,14 @@ public class Room extends SequentialSpace implements Runnable
 
     public void run ()
     {
-        try {
-            while(true)
-            {
+        while(true)
+        {
+            try {
                 updateGamestate();
                 Thread.sleep(17);
 
-            }
-        } catch (Exception e) {e.printStackTrace();}
+            } catch (Exception e) {e.printStackTrace();}
+        }
     }
 
     private void updateGamestate() throws Exception
@@ -91,12 +93,12 @@ public class Room extends SequentialSpace implements Runnable
 
     public String[] getUsers()
     {
-        List<Object[]> users = this.queryAll(new FormalField(String.class));
+        LinkedList<Object[]> users = this.queryAll(new FormalField(String.class));
         String[] users_string = new String[users.size()];
-
-        for (int i = 0; i < users.size(); i++)
+        int index = 0;
+        for (Object[] o : users)
         {
-            users_string[i] = (String) users.get(i)[0];
+            users_string[index++] = (String) o[0];
         }
 
         return users_string;
