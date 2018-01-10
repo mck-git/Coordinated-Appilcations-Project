@@ -5,12 +5,9 @@ import java.util.ArrayList;
 public class GameState {
     private ArrayList<PlayerInfo> players;
 
-    private ArrayList<String> messages;
-
     public GameState()
     {
         this.players = new ArrayList<>();
-        this.messages = new ArrayList<>();
     }
 
     public ArrayList<PlayerInfo> getPlayers() {
@@ -22,10 +19,16 @@ public class GameState {
         this.players = players;
     }
 
-    public ArrayList<String> getMessages () {return messages;}
-
-    public void addMessage(String msg)
+    public String toString()
     {
-        messages.add(msg);
+        String gs = "Gamestate info: \n";
+        gs += " players in game: \n";
+        for (PlayerInfo p : players)
+        {
+            gs += p.toString();
+        }
+
+        return gs;
     }
+
 }

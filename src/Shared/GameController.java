@@ -10,7 +10,6 @@ public class GameController
 
     public GameController()
     {
-
         this.gs = new GameState();
     }
 
@@ -23,7 +22,7 @@ public class GameController
         {
             for (String s : users)
             {
-              if(p.getUsername().equals(s))
+              if(p.username.equals(s))
               {
                     continue playerloop;
               }
@@ -37,7 +36,7 @@ public class GameController
         {
             for (PlayerInfo p : players)
             {
-                if(u.equals(p.getUsername()))
+                if(u.equals(p.username))
                 {
                     continue userloop;
                 }
@@ -56,12 +55,11 @@ public class GameController
 
         cmdloop: for (Command c : commands)
         {
-            for (PlayerInfo p_inf : players)
+            for (PlayerInfo p : players)
             {
-                if (p_inf.getUsername().equals(c.getUsername()))
+                if (p.username.equals(c.getUsername()))
                 {
-                    // Update player_info
-
+                    updatePlayerInfo(p,c);
 
                     continue cmdloop;
                 }
@@ -70,5 +68,24 @@ public class GameController
 
         gs.setPlayers(players);
         return gs;
+    }
+
+    private void updatePlayerInfo(PlayerInfo p, Command c)
+    {
+        if (c.isFire())
+        {
+            if (!p.fire)
+            {
+                System.out.println(p.username + " is now firing!");
+            }
+            p.fire = true;
+        } else
+        {
+            if (p.fire)
+            {
+                System.out.println(p.username + " stopped firing...");
+            }
+            p.fire = false;
+        }
     }
 }
