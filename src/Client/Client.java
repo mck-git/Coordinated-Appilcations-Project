@@ -2,6 +2,7 @@ package Client;
 
 import Exceptions.Client.CommandException;
 import Exceptions.Client.ServerNACKException;
+import Shared.Command;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -235,7 +236,13 @@ public class Client {
                     throw new ServerNACKException("leaveRoom");
                 }
 
+
                 // Remove yourself from the room and set currentRoom to be the lounge
+                currentRoom.getp(
+                        new ActualField("command"),
+                        new ActualField(userName),
+                        new FormalField(Command.class));
+
                 currentRoom = lobby;
                 currentRoomName = "lobby";
             }

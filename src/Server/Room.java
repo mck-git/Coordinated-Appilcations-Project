@@ -39,7 +39,7 @@ public class Room extends SequentialSpace implements Runnable
         {
             try {
                 updateGamestate();
-                System.out.println(master_gs.getMessages());
+               // System.out.println(master_gs.getMessages());
                 Thread.sleep(3000);
             } catch (Exception ignored) {}
         }
