@@ -189,17 +189,17 @@ public class GameController
 
     private PlayerInfo handleMapCollision(PlayerInfo new_p_inf, PlayerInfo old_p_inf, Node collider)
     {
-        double dx = Math.abs(new_p_inf.x - old_p_inf.x);
-        double dz = Math.abs(new_p_inf.z - old_p_inf.z);
+        double dx = Math.abs(collider.getTranslateX() - new_p_inf.x);
+        double dz = Math.abs(collider.getTranslateZ() - new_p_inf.z);
         if (dz > dx) {
             new_p_inf.z = collider.getTranslateZ()
                     - Math.signum(collider.getTranslateZ() - old_p_inf.z)
-                    *0.5*(Constants.TILE_SIZE+Constants.PLAYER_SIZE + 0.01);
+                    *0.5*(Constants.TILE_SIZE + Constants.PLAYER_SIZE + 0.01);
         }
         if (dx > dz) {
             new_p_inf.x = collider.getTranslateX()
                     - Math.signum(collider.getTranslateX() - old_p_inf.x)
-                    *0.5*(Constants.TILE_SIZE+Constants.PLAYER_SIZE + 0.01);
+                    *0.5*(Constants.TILE_SIZE + Constants.PLAYER_SIZE + 0.01);
         }
 
         return new_p_inf;
