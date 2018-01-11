@@ -8,6 +8,7 @@ public class PlayerInfo {
     public int angle;
     public int health;
     public boolean fire;
+    public boolean dead;
 
     public PlayerInfo(String username)
     {

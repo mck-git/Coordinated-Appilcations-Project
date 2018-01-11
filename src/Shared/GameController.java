@@ -1,5 +1,6 @@
 package Shared;
 
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.shape.Cylinder;
@@ -97,6 +98,31 @@ public class GameController
 
         return gs;
     }
+
+    public GameState updateStatus()
+    {
+        // Update death -> respawn
+        ArrayList<PlayerInfo> playerInfos = gs.getPlayer_infos();
+        for (PlayerInfo p_inf : playerInfos)
+        {
+            if (p_inf.dead)
+            {
+                Point2D respawn_pos = map.getNewRespawnLocation();
+
+                p_inf.x = respawn_pos.getX();
+                p_inf.z = respawn_pos.getY();
+                p_inf.dead = false;
+                p_inf.health = 100;
+
+                findPlayer(p_inf).update(p_inf);
+            }
+        }
+
+
+
+        return gs;
+    }
+
 
     private void updatePlayerInfo(PlayerInfo new_p_inf, Command c)
     {
@@ -201,6 +227,8 @@ public class GameController
             }
             new_p_inf.fire = false;
         }
+
+
     }
 
     private PlayerInfo handleMapCollision(PlayerInfo new_p_inf, PlayerInfo old_p_inf, Node collider)
@@ -302,4 +330,6 @@ public class GameController
             }
         }
     }
+
+
 }
