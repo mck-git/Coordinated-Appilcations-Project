@@ -99,6 +99,7 @@ public class RoomWindow extends TScene {
         temp = System.nanoTime();
         long time_for_everything = temp - start;
 
+        /*
         System.out.println("__Top level cpu time__");
         System.out.println("connection time: " +  (100 * connectorTime / time_for_everything) + "%"
             + ". In milli seconds: " + connectorTime / 1000000);
@@ -106,7 +107,7 @@ public class RoomWindow extends TScene {
                 + ". In milli seconds: " + chatTime / 1000000);
         System.out.println("render time: " + (100 * renderTime / time_for_everything) + "%"
                 + ". In milli seconds: " + renderTime / 1000000);
-
+        */
         healthBar.update(RoomConnector.getClientPlayerInfo().health);
 
         // world.update(RoomConnector.update());

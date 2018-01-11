@@ -23,6 +23,12 @@ public class RoomConnector
     private static boolean[] keysPressed = new boolean[7];
 
 
+    private static long gamestateTime = 0;
+    private static long commandTime = 0;
+
+    private static long getpCommandTime = 0;
+    private static long putCommandTime = 0;
+
     public static void initialize(String user)
     {
         userName = user;
@@ -52,10 +58,27 @@ public class RoomConnector
         {
             if (inRoom)
             {
+                long temp;
+                long start = System.nanoTime();
 
+                temp = System.nanoTime();
                 updateGamestate();
+                gamestateTime = System.nanoTime() - temp;
 
+                temp = System.nanoTime();
                 updateCommand();
+                commandTime = System.nanoTime() - temp;
+
+                temp = System.nanoTime();
+                long time_for_everything = temp - start;
+
+                /*
+                System.out.println("    __connection level cpu time__");
+                System.out.println("    gamestate time: " +  (100 * gamestateTime / time_for_everything) + "%"
+                        + ". In milli seconds: " + gamestateTime / 1000000);
+                System.out.println("    command time: " + (100 * commandTime / time_for_everything) + "%"
+                        + ". In milli seconds: " + commandTime / 1000000);
+                */
 
             }
         } catch (Exception e) {e.printStackTrace();}
@@ -76,13 +99,34 @@ public class RoomConnector
     // Update the player command in the tuplespace
     public static void updateCommand() throws InterruptedException
     {
+        long temp;
+        long start = System.nanoTime();
+
+        temp = System.nanoTime();
         room.getp(
                 new ActualField("command"),
                 new ActualField(userName),
                 new FormalField(Command.class));
+        getpCommandTime = System.nanoTime() - temp;
 
         Command c = new Command(keysPressed,userName);
+
+        temp = System.nanoTime();
         room.put("command", userName, c);
+        putCommandTime = System.nanoTime() - temp;
+
+        temp = System.nanoTime();
+        long time_for_everything = temp - start;
+
+        System.out.println("        __update Command level cpu time__");
+        System.out.println("        getp command time: " +  (100 * getpCommandTime / time_for_everything) + "%"
+                + ". In milli seconds: " + getpCommandTime / 1000000);
+        System.out.println("        put command time: " + (100 * putCommandTime / time_for_everything) + "%"
+                + ". In milli seconds: " + putCommandTime / 1000000);
+
+
+
+
     }
 
 
