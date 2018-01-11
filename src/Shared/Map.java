@@ -38,8 +38,8 @@ public class Map {
         int z;
         do
         {
-            z = random.nextInt(grid.length - 1) + 1;
-            x = random.nextInt(grid[0].length - 1) + 1;
+            z = random.nextInt(grid.length - 2) + 1;
+            x = random.nextInt(grid[0].length - 2) + 1;
 
         } while (grid[z][x] != 0);
 
