@@ -55,11 +55,12 @@ public class PlayerInfo {
     }
 
     public String toString() {
-        String p = username + ": KDR (" + kills + "/" + deaths + ". info: \n";
+        String p = username + ". info: \n";
         p += "  health: " + health + "\n";
         p += "  fire: " + fire + "\n";
         p += "  position: (" + x + "," + y + "," + z  + ")\n";
         p += "  angle: " + angle + "\n";
+        p += "  kdr: " + calculateKDR() + "\n";
         p += "  cooldown: " + cooldown + "\n";
 
         return p;
