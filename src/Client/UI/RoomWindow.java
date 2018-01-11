@@ -8,7 +8,9 @@ import Client.Renderer.KillDeathRatio;
 import Client.Renderer.World;
 import Templates.TScene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class RoomWindow extends TScene {
 
@@ -19,7 +21,8 @@ public class RoomWindow extends TScene {
     private Chat chat = new Chat();
     private World world = new World();
     private FpsCounter fps = new FpsCounter();
-    private KillDeathRatio kdr = new KillDeathRatio();
+    private KillDeathRatio u_kdr = new KillDeathRatio("user");
+    private KillDeathRatio top_kdr = new KillDeathRatio("top");
 
     @Override
     public void setup() {
@@ -34,7 +37,12 @@ public class RoomWindow extends TScene {
 
         bp.setBottom(fps);
         bp.setRight(chat);
-        bp.setLeft(kdr);
+
+        VBox scores = new VBox();
+
+        scores.getChildren().addAll(u_kdr,top_kdr);
+
+        bp.setLeft(scores);
 
         TopMenu top = new TopMenu();
         bp.setTop(top);
@@ -53,7 +61,8 @@ public class RoomWindow extends TScene {
         RoomConnector.update();
 
         fps.update();
-        kdr.update(RoomConnector.getPlayerInfo());
+        u_kdr.update(RoomConnector.getPlayerInfo());
+        top_kdr.update(RoomConnector.getHighestKDRPlayerInfo());
         chat.update();
 
         world.update(RoomConnector.getGamestate());

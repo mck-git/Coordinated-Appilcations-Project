@@ -165,4 +165,22 @@ public class RoomConnector
         return p_i;
     }
 
+    public static PlayerInfo getHighestKDRPlayerInfo()
+    {
+        PlayerInfo topP_I = getPlayerInfo();
+        double topKDR = topP_I.calculateKDR();
+
+        for( PlayerInfo pi : gameState.getPlayer_infos())
+        {
+            double kdr = pi.calculateKDR();
+            if (kdr > topKDR)
+            {
+                topP_I = pi;
+                topKDR = kdr;
+            }
+        }
+
+        return topP_I;
+    }
+
 }
