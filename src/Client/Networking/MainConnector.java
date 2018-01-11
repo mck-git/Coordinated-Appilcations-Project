@@ -6,7 +6,7 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,6 +17,9 @@ public class MainConnector {
     static private String userName = "";
     static private String currentRoomName = "";
     static private String ip = "10.16.164.65";
+
+    private static ServerFinder sf = new ServerFinder();
+    public static ArrayList<String> foundServers = new ArrayList<>();
 
     static private Scanner sc;
 
@@ -82,12 +85,36 @@ public class MainConnector {
         System.exit(0);
     }
 
+    public static void setupServerFinder()
+    {
+        sf.initialize(foundServers);
+        sf.start();
+    }
+
+    public static void activateServerFinder()
+    {
+        sf.activate();
+    }
+    public static void deactivateServerFinder()
+    {
+        sf.deactive();
+    }
+
+    public static boolean initialize(String nameInput, String serverAddress)
+    {
+        ip = serverAddress.replace("/", "");
+        System.out.println(createURI("lobby"));
+        return initialize(nameInput);
+    }
+
 
     // Initialize user when first starting app
     public static boolean initialize(String nameInput)
     {
         try
         {
+            MainConnector.deactivateServerFinder();
+
             String tcp = createURI("lobby");
             // Connect to the lobby
             lobby = new RemoteSpace(tcp);
@@ -258,6 +285,8 @@ public class MainConnector {
                     new FormalField(Boolean.class));
             if (!(boolean)response[2])
                 throw new ServerNACKException("quit");
+
+            MainConnector.activateServerFinder();
         } catch (InterruptedException e) {e.printStackTrace();}
     }
 

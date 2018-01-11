@@ -7,7 +7,7 @@ public class GameState {
 
     public GameState()
     {
-        this.player_infos = new ArrayList<PlayerInfo>();
+        this.player_infos = new ArrayList<>();
     }
 
     public ArrayList<PlayerInfo> getPlayer_infos() {

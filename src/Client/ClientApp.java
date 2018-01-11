@@ -1,5 +1,6 @@
 package Client;
 
+import Client.Networking.MainConnector;
 import Client.Networking.RoomConnector;
 import Client.UI.WelcomeMenu;
 import Templates.TScene;
@@ -22,6 +23,9 @@ public class ClientApp extends Application {
             event.consume();
         });
         _stage.setTitle("Game MainConnector");
+
+        MainConnector.setupServerFinder();
+        MainConnector.activateServerFinder();
 
         new AnimationTimer() {
 //            long lastTime = 0;

@@ -3,9 +3,11 @@ package Client.UI;
 import Client.ClientApp;
 import Client.Networking.MainConnector;
 import Templates.TScene;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
@@ -23,6 +25,8 @@ import static Shared.Constants.WIDTH;
 
 public class WelcomeMenu extends TScene {
 
+    private ComboBox<String> serverView = new ComboBox<>();
+    private Button btnLogin;
 
     public WelcomeMenu() {
         super(new BorderPane());
@@ -56,13 +60,18 @@ public class WelcomeMenu extends TScene {
         Label lblUserName = new Label("Username");
         final TextField txtUserName = new TextField();
         Label lblErrorMessage = new Label();
-        Button btnLogin = new Button("Login");
+        btnLogin = new Button("Login");
+
+        Label lblChooseServer = new Label("Choose server: ");
+        serverView.setMinWidth(100);
 
         //Adding Nodes to GridPane layout
         gridPane.add(lblErrorMessage, 1, 0);
         gridPane.add(lblUserName, 0, 1);
         gridPane.add(txtUserName, 1, 1);
         gridPane.add(btnLogin, 1, 2);
+        gridPane.add(lblChooseServer, 0, 3);
+        gridPane.add(serverView, 1, 3);
 
         //Reflection for gridPane
         Reflection r = new Reflection();
@@ -97,7 +106,7 @@ public class WelcomeMenu extends TScene {
         });
 
         btnLogin.setOnAction(event -> {
-            if (MainConnector.initialize(txtUserName.getText()))
+            if (serverView.getSelectionModel() != null && MainConnector.initialize(txtUserName.getText(), serverView.getSelectionModel().getSelectedItem()))
             {
                 ClientApp.setScene(new Lobby());
             }
@@ -122,7 +131,16 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void refresh() {
-        //Nothing
+        try {
+            serverView.setItems(FXCollections.observableArrayList(MainConnector.foundServers));
+            if (!serverView.getItems().isEmpty())
+                serverView.getSelectionModel().select(0);
+
+            if (serverView.getSelectionModel().getSelectedItem() == null)
+                btnLogin.setDisable(true);
+            else if (btnLogin.isDisabled())
+                btnLogin.setDisable(false);
+        } catch (Exception ignored){}
     }
 
     @Override

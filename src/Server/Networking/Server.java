@@ -58,6 +58,7 @@ public class Server {
         }
 
         new RequestHandler().start();
+        new BroadCast().start();
     }
 
     static void handleRequests()

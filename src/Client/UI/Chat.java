@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 public class Chat extends VBox {
     private TextArea messageArea;
     private String[] messages = new String[]{};
+    private long lastCheck = 0;
 
     Chat()
     {
@@ -38,6 +39,8 @@ public class Chat extends VBox {
     }
 
     public void update() {
+        if(System.currentTimeMillis() - lastCheck < 1000) return;
+
         String[] newMessages = RoomConnector.getMessages();
         boolean refreshNeeded = newMessages.length != messages.length;
 
@@ -65,6 +68,7 @@ public class Chat extends VBox {
             messageArea.setWrapText(true);
             messageArea.setScrollTop(Double.MAX_VALUE);
         }
-    }
 
+        lastCheck = System.currentTimeMillis();
+    }
 }
