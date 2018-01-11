@@ -17,7 +17,7 @@ public class Player extends Box {
         this.setHeight(PLAYER_HEIGHT);
         this.setWidth(Constants.PLAYER_SIZE);
         this.setDepth(Constants.PLAYER_SIZE);
-        this.setMaterial(new PhongMaterial(Color.DARKGREEN));
+        this.setMaterial(new PhongMaterial(Color.color(0.1, 0.5, 0.1)));
         ((PhongMaterial)this.getMaterial()).setSelfIlluminationMap(new Image("Shared/Resources/slim_creeper.png"));
         update(info);
     }
@@ -28,6 +28,7 @@ public class Player extends Box {
         this.setTranslateY(info.y);
         this.setTranslateZ(info.z);
         this.active = true;
+        ((PhongMaterial)this.getMaterial()).setDiffuseColor(Color.color(1 - info.health / 100.0, info.health / 100.0, 0.1 ));
     }
 
     public boolean is(String username) {
