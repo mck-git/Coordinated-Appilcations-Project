@@ -16,6 +16,8 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+
 import static Shared.Constants.*;
 
 public class World extends SubScene {
@@ -324,36 +326,32 @@ public class World extends SubScene {
         double radians = Math.toRadians(angle);
         Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
 
-        double height = 10;
-        double sx = x, sy = z;
-//        for(int i = 0; i < 20; i++)
-//        {
-//            if(sx < 0 || sy < 0)
-//                continue;
-//
-//            if(mapGrid[(int) (sy/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
-//            {
-//                System.out.println("Hit wall at step " + i);
-//                break;
-//            }
-//            sx += direction.getX();
-//            sy += direction.getZ();
-//            height += direction.magnitude();
-//        }
+        double height = 0;
+        double sx = x+0.5*TILE_SIZE, sz = z+0.5*TILE_SIZE;
+        for(int i = 0; i < 10; i++)
+        {
+            if(sx < 0 || sz < 0)
+                continue;
 
-        if(mapGrid[(int) (sy/TILE_SIZE)][(int) (sx/TILE_SIZE)] == 1)
-            System.out.println("In wall");
+            if(mapGrid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
+            {
+                break;
+            }
+            sx += SHOT_INTERVAL*direction.getX();
+            sz += SHOT_INTERVAL*direction.getZ();
+            height += 10;
+        }
 
         Cylinder shot = new Cylinder();
-        shot.setTranslateY(camera.getTranslateY()*0.9);
+        shot.setTranslateY(camera.getTranslateY()*0.95);
         shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
         shot.setRotate(-90);
         shot.setRadius(0.1);
         shot.setHeight(height);
-        shot.setTranslateX(x + direction.multiply(0.5*shot.getHeight()).getX() + 1);
-        shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()).getZ() + 1);
-        shot.setMaterial(new PhongMaterial(Color.color(0.2, 0.2, 0.8, 0.5)));
+        shot.setTranslateX(x + direction.multiply(0.5*shot.getHeight()+1).getX() + 0.2*direction.getZ());
+        shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()+1).getZ() - 0.2*direction.getX());
+        shot.setMaterial(new PhongMaterial(Color.color(0.2, 0.4, 1, 0.9)));
         renderings.getChildren().add(shot);
-        System.out.println("Shot " + height + " (" + sx + ", " + sy + ")");
+        System.out.println("Shot " + height + " (" + sx + ", " + sz + ")");
     }
 }
