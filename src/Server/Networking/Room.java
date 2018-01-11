@@ -1,6 +1,7 @@
 package Server.Networking;
 
 import Shared.Command;
+import Shared.Constants;
 import Shared.GameController;
 import Shared.GameState;
 import org.jspace.ActualField;
@@ -37,7 +38,7 @@ public class Room extends SequentialSpace implements Runnable
         try {
             while (true) {
                 updateGamestate();
-                Thread.sleep(17);
+                Thread.sleep(1000 / Constants.SERVER_TICKRATE );
             }
         } catch (Exception e){e.printStackTrace();}
     }

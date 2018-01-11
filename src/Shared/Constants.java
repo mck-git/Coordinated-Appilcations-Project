@@ -8,4 +8,5 @@ public interface Constants {
     int TILE_SIZE = 20;
     int PLAYER_SIZE = 3;
     int PLAYER_HEIGHT = 10;
+    int SERVER_TICKRATE = 17;
 }

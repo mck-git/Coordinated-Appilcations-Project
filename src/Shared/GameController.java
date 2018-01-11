@@ -158,18 +158,24 @@ public class GameController
                  ArrayList<Node> collisions = checkMapCollision(p);
 
                  // Sort closests nodes first
+
                  collisions.sort((Node a, Node b) ->
                  {
-                     double da = Math.pow((p.getTranslateX() - a.getTranslateX()),2)
-                             + Math.pow((p.getTranslateZ() - a.getTranslateZ()),2);
-                     double db = Math.pow((p.getTranslateX() - b.getTranslateX()),2)
-                             + Math.pow((p.getTranslateZ() - b.getTranslateZ()),2);
+                     double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
+                             + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
+                     double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
+                             + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
                      return Double.compare(da, db);
                  });
+                 PlayerInfo tempnew;
+                 PlayerInfo tempold = old_p_inf;
                  for (Node n : collisions)
                  {
-                     new_p_inf = handleMapCollision(new_p_inf, old_p_inf, n);
+                     tempnew = handleMapCollision(new_p_inf, tempold, n);
+                     tempold = new_p_inf;
+                     new_p_inf = tempnew;
                      p.update(new_p_inf);
+
                  }
 
                } catch (NullPointerException e)
