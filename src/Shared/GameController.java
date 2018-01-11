@@ -97,6 +97,29 @@ public class GameController
         return gs;
     }
 
+    public GameState updateStatus()
+    {
+        // Update death -> respawn
+        ArrayList<PlayerInfo> playerInfos = gs.getPlayer_infos();
+        for (PlayerInfo p_inf : playerInfos)
+        {
+            if (p_inf.dead)
+            {
+                p_inf.x = Constants.SPAWN_X;
+                p_inf.z = Constants.SPAWN_Z;
+                p_inf.dead = false;
+                p_inf.health = 100;
+
+                findPlayer(p_inf).update(p_inf);
+            }
+        }
+
+
+
+        return gs;
+    }
+
+
     private void updatePlayerInfo(PlayerInfo new_p_inf, Command c)
     {
         // Update direction
@@ -200,6 +223,8 @@ public class GameController
             }
             new_p_inf.fire = false;
         }
+
+
     }
 
     private PlayerInfo handleMapCollision(PlayerInfo new_p_inf, PlayerInfo old_p_inf, Node collider)
@@ -263,4 +288,6 @@ public class GameController
             }
         }
     }
+
+
 }
