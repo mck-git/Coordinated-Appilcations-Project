@@ -30,7 +30,7 @@ public class ClientApp extends Application {
 //                if(now-lastTime > 1e9)
                 {
 //                    lastTime = now;
-                    RoomConnector.update();
+//                    RoomConnector.update();
                     scene.refresh();
                 }
             }

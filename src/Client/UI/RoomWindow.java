@@ -26,6 +26,9 @@ public class RoomWindow extends TScene {
     private KillDeathRatio top_kdr = new KillDeathRatio("top");
     private int number = 100;
 
+    public long connectorTime = 0;
+    public long renderTime = 0;
+
     @Override
     public void setup() {
         StackPane root = (StackPane) getRoot();
@@ -71,14 +74,30 @@ public class RoomWindow extends TScene {
 
     @Override
     public void refresh() {
+        long start = System.nanoTime();
+        long temp;
+
+        temp = System.nanoTime();
         RoomConnector.update();
+        connectorTime = System.nanoTime() - temp;
 
         fps.update();
         u_kdr.update(RoomConnector.getClientPlayerInfo());
         top_kdr.update(RoomConnector.getHighestKDRPlayerInfo());
         chat.update();
 
+        temp = System.nanoTime();
         world.update(RoomConnector.getGamestate());
+        renderTime = System.nanoTime() - temp;
+
+        temp = System.nanoTime();
+        long time_for_everything = temp - start;
+
+        System.out.println("connection time: " +  (100 * connectorTime / time_for_everything) + "%"
+            + ". In mili seconds: " + connectorTime / 1000);
+        System.out.println("render time: " + (100 * renderTime / time_for_everything) + "%"
+                + ". In mili seconds: " + renderTime / 1000);
+
         healthBar.update(RoomConnector.getClientPlayerInfo().health);
 
         // world.update(RoomConnector.update());
