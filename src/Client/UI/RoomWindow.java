@@ -4,6 +4,7 @@ import Client.ClientApp;
 import Client.Networking.MainConnector;
 import Client.Networking.RoomConnector;
 import Client.Renderer.FpsCounter;
+import Client.Renderer.KillDeathRatio;
 import Client.Renderer.World;
 import Templates.TScene;
 import javafx.scene.layout.BorderPane;
@@ -18,6 +19,7 @@ public class RoomWindow extends TScene {
     private Chat chat = new Chat();
     private World world = new World();
     private FpsCounter fps = new FpsCounter();
+    private KillDeathRatio kdr = new KillDeathRatio();
 
     @Override
     public void setup() {
@@ -32,6 +34,7 @@ public class RoomWindow extends TScene {
 
         bp.setBottom(fps);
         bp.setRight(chat);
+        bp.setLeft(kdr);
 
         TopMenu top = new TopMenu();
         bp.setTop(top);
@@ -48,8 +51,11 @@ public class RoomWindow extends TScene {
     @Override
     public void refresh() {
         RoomConnector.update();
+
         fps.update();
+        kdr.update(RoomConnector.getPlayerInfo());
         chat.update();
+
         world.update(RoomConnector.getGamestate());
 
         // world.update(RoomConnector.update());

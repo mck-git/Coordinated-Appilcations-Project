@@ -1,5 +1,6 @@
 package Client.Networking;
 
+import Shared.PlayerInfo;
 import javafx.scene.input.KeyCode;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
@@ -17,6 +18,7 @@ public class RoomConnector
     private static RemoteSpace room;
     private static String userName = "";
     private static boolean inRoom = false;
+    private static PlayerInfo p_i;
 
     private static boolean[] keysPressed = new boolean[7];
 
@@ -24,6 +26,7 @@ public class RoomConnector
     public static void initialize(String user)
     {
         userName = user;
+        p_i = new PlayerInfo(userName);
         inRoom = false;
         System.out.println("Initialized the RoomConnector");
     }
@@ -63,12 +66,14 @@ public class RoomConnector
 
         if(newState != null && newState.length == 2)
             gameState = (GameState) newState[1];
+
+        p_i = gameState.getPlayer_info(userName);
     }
 
     // Update the player command in the tuplespace
     public static void updateCommand() throws InterruptedException
     {
-        Object[] cmd = room.getp(
+        room.getp(
                 new ActualField("command"),
                 new ActualField(userName),
                 new FormalField(Command.class));
@@ -155,6 +160,9 @@ public class RoomConnector
         return gameState;
     }
 
-
+    public static PlayerInfo getPlayerInfo()
+    {
+        return p_i;
+    }
 
 }
