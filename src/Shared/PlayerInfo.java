@@ -12,7 +12,7 @@ public class PlayerInfo {
     public PlayerInfo(String username)
     {
         this(username,
-                0, -0.5*Constants.PLAYER_HEIGHT,0,
+                100, -0.5*Constants.PLAYER_HEIGHT,100,
                 0,
                 100);
     }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import static Shared.Constants.TILE_SIZE;
 
 public class Map {
-    public static final int[][] grid = {
+    public final int[][] grid = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
@@ -30,7 +30,7 @@ public class Map {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
-    public static ArrayList<Node> getNodes()
+    public ArrayList<Node> getNodes()
     {
         ArrayList<Node> walls = new ArrayList();
 
