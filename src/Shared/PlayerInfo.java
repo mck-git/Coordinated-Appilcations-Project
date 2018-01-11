@@ -9,6 +9,7 @@ public class PlayerInfo {
     public int health;
     public boolean fire;
     public boolean dead;
+    public int cooldown;
 
     public int kills;
     public int deaths;
@@ -18,7 +19,8 @@ public class PlayerInfo {
         this(username,
                 100, -0.5*Constants.PLAYER_HEIGHT,100,
                 0,
-                100);
+                100,
+                Constants.FIRE_RATE);
     }
 
     public PlayerInfo(double x, double z)
@@ -26,10 +28,11 @@ public class PlayerInfo {
         this("old_position",
                 x, -0.5*Constants.PLAYER_HEIGHT,z,
                 0,
-                100);
+                100,
+                Constants.FIRE_RATE);
     }
 
-    public PlayerInfo(String username, double x, double y, double z, int angle, int health)
+    public PlayerInfo(String username, double x, double y, double z, int angle, int health, int fireate)
     {
         this.username = username;
         this.x = x;
@@ -37,6 +40,7 @@ public class PlayerInfo {
         this.z = z;
         this.angle = angle;
         this.health = health;
+        this.cooldown = Constants.FIRE_RATE;
     }
 
     public double calculateKDR()
@@ -53,6 +57,7 @@ public class PlayerInfo {
         p += "  fire: " + fire + "\n";
         p += "  position: (" + x + "," + y + "," + z  + ")\n";
         p += "  angle: " + angle + "\n";
+        p += "  cooldown: " + cooldown + "\n";
 
         return p;
     }

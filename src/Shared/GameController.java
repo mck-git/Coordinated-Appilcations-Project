@@ -85,6 +85,7 @@ public class GameController
                     if (p_inf.fire)
                     {
                         checkBulletCollision(p_inf,player_infos, players);
+                        p_inf.fire = false;
                     }
 
                     continue cmdloop;
@@ -117,8 +118,6 @@ public class GameController
                 findPlayer(p_inf).update(p_inf);
             }
         }
-
-
 
         return gs;
     }
@@ -212,22 +211,15 @@ public class GameController
         }
 
         // Update fire
-        if (c.isFire())
+        if (new_p_inf.cooldown > 0)
         {
-            if (!new_p_inf.fire)
-            {
-                System.out.println(new_p_inf.username + " is now firing!");
-            }
-            new_p_inf.fire = true;
-        } else
-        {
-            if (new_p_inf.fire)
-            {
-                System.out.println(new_p_inf.username + " stopped firing...");
-            }
-            new_p_inf.fire = false;
+            new_p_inf.cooldown -= 1;
         }
-
+        if (c.isFire() && new_p_inf.cooldown <= 0)
+        {
+             new_p_inf.fire = true;
+             new_p_inf.cooldown = Constants.FIRE_RATE;
+        }
 
     }
 
