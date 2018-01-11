@@ -20,19 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
-package org.jspace.protocol;
 
-/**
- * This class represents a generic message 
- */
-public class pSpaceMessage {
+package org.jspace;
+
+public class StackSpace extends QueueSpace {
 	
-	private ClientMessageType messageType;
-	
-	private String sessionId;
-	
-	public pSpaceMessage( ClientMessageType messageType ) {
-		
+	/**
+	 * Create an unbounded space based on stack.
+	 */
+	public StackSpace() {
+		this(-1);
+	}
+
+	/**
+	 * Create a space based on stack of max size <code>bound</code>.
+	 * @param bound
+	 */
+	public StackSpace(int bound) {
+		super(bound);
+	}
+
+	@Override
+	protected void addTuple(Tuple tuple) {
+		tuples.push(tuple);
 	}
 
 }

@@ -240,7 +240,7 @@ public class Server {
             }
 
             return users_string;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
 
         return null;
     }
@@ -277,7 +277,7 @@ public class Server {
                 }
             }
             System.out.println("Sending ack to " + user);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     private static void nack(String room, String user)
@@ -298,7 +298,7 @@ public class Server {
                 }
             }
             System.out.println("Sending nack to " + user);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
     }
 }
 

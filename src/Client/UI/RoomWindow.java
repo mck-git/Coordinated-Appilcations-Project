@@ -50,7 +50,7 @@ public class RoomWindow extends TScene {
         RoomConnector.update();
         fps.update();
         chat.update();
-        world.update();
+        world.update(RoomConnector.getGamestate());
 
         // world.update(RoomConnector.update());
     }
@@ -61,8 +61,7 @@ public class RoomWindow extends TScene {
             MainConnector.leaveRoom();
             MainConnector.quit();
             MainConnector.exitApplication();
-        } catch (Exception ignored) {
-        }
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     @Override
@@ -70,8 +69,7 @@ public class RoomWindow extends TScene {
         try {
             MainConnector.leaveRoom();
             ClientApp.setScene(new Lobby());
-        } catch (Exception ignored) {
-        }
+        } catch (Exception e) {e.printStackTrace();}
     }
 }
 

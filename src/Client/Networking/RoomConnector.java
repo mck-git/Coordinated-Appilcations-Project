@@ -1,5 +1,6 @@
 package Client.Networking;
 
+import javafx.scene.input.KeyCode;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -24,6 +25,7 @@ public class RoomConnector
     {
         userName = user;
         inRoom = false;
+        System.out.println("Initialized the RoomConnector");
     }
 
     // Connect to the room when joining a new room
@@ -38,7 +40,7 @@ public class RoomConnector
         room.put("command", userName, c);
 
         update();
-        System.out.println("Initialized the RoomConnector");
+        System.out.println("Connected the RoomConnector");
     }
 
     public static void update()
@@ -54,15 +56,16 @@ public class RoomConnector
     }
 
 
-    // Update the local gamestate to be the newest gamestate in the touplespace
+    // Update the local gamestate to be the newest gamestate in the tuplespace
     public static void updateGamestate() throws InterruptedException
     {
-        Object[] newState = room.query(new ActualField("gamestate"), new FormalField(GameState.class));
+        Object[] newState = room.queryp(new ActualField("gamestate"), new FormalField(GameState.class));
 
-        gameState = (GameState) newState[1];
+        if(newState != null && newState.length == 2)
+            gameState = (GameState) newState[1];
     }
 
-    // Update the player command in the touplespace
+    // Update the player command in the tuplespace
     public static void updateCommand() throws InterruptedException
     {
         Object[] cmd = room.getp(
@@ -71,33 +74,32 @@ public class RoomConnector
                 new FormalField(Command.class));
 
         Command c = new Command(keysPressed,userName);
-
         room.put("command", userName, c);
     }
 
 
-    public static void setKeyPress(String key, boolean state)
+    public static void setKeyPress(KeyCode key, boolean state)
     {
         switch (key) {
-            case "forward":
+            case W:
                 keysPressed[0] = state;
                 break;
-            case "left":
+            case A:
                 keysPressed[1] = state;
                 break;
-            case "back":
+            case S:
                 keysPressed[2] = state;
                 break;
-            case "right":
+            case D:
                 keysPressed[3] = state;
                 break;
-            case "rotateLeft":
+            case LEFT:
                 keysPressed[4] = state;
                 break;
-            case "rotateRight":
+            case RIGHT:
                 keysPressed[5] = state;
                 break;
-            case "fire":
+            case SPACE:
                 keysPressed[6] = state;
         }
     }

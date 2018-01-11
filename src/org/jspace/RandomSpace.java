@@ -20,19 +20,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
-package org.jspace.protocol;
 
-/**
- * This class represents a generic message 
- */
-public class pSpaceMessage {
+package org.jspace;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+
+public class RandomSpace extends SequentialSpace {
 	
-	private ClientMessageType messageType;
-	
-	private String sessionId;
-	
-	public pSpaceMessage( ClientMessageType messageType ) {
-		
+	private Random random;
+
+	public RandomSpace() {
+		this(-1,new Random());
 	}
-
+	
+	public RandomSpace(int bound) {
+		this(bound,new Random());
+	}
+	
+	public RandomSpace(long seed) {
+		this(-1,new Random(seed));
+	}
+	
+	public RandomSpace(int bound, long seed) {
+		this(bound,new Random(seed));
+	}
+	
+	public RandomSpace(int bound, Random r) {
+		super(bound);
+		this.random = r;
+	}
+	
+	protected Tuple findTuple(Template template,boolean toRemove) {
+		ArrayList<Tuple> data = new ArrayList<>();
+		Iterator<Tuple> tuplesIterator = tuples.iterator();
+		while (tuplesIterator.hasNext()) {
+			Tuple t = tuplesIterator.next();
+			if (template.match(t)) {
+				data.add(t);
+			}
+		}
+		if (data.isEmpty()) {
+			return null;
+		}
+		Tuple t = data.get(random.nextInt(data.size()));
+		if (toRemove) {
+			tuples.remove(t);
+		}
+		return t;
+	}
+	
 }

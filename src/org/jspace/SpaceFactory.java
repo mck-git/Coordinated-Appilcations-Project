@@ -20,19 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
-package org.jspace.protocol;
+package org.jspace;
 
 /**
- * This class represents a generic message 
+ * Factory used to build spaces.
+ * 
+ * @author loreti
+ *
  */
-public class pSpaceMessage {
+public interface SpaceFactory {
 	
-	private ClientMessageType messageType;
-	
-	private String sessionId;
-	
-	public pSpaceMessage( ClientMessageType messageType ) {
-		
-	}
+	/**
+	 * Create a new space with a given max number of elements inside. If <code>bound</code> 
+	 * is <=0 then the space is unbounded.
+	 *  
+	 * @param bound a limit on the number of elements in the space.
+	 * @return a new space. 
+	 */
+	public Space newSpace( int bound );
 
 }

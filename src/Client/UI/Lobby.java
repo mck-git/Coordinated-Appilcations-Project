@@ -196,8 +196,7 @@ public class Lobby extends TScene {
         try {
             MainConnector.quit();
             MainConnector.exitApplication();
-        } catch (Exception ignored) {
-        }
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     @Override
@@ -206,8 +205,7 @@ public class Lobby extends TScene {
         try {
             MainConnector.quit();
             ClientApp.setScene(new WelcomeMenu());
-        } catch (Exception ignored) {
-        }
+        } catch (Exception e) {e.printStackTrace();}
     }
 
 }

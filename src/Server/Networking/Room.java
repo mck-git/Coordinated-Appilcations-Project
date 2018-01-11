@@ -7,9 +7,8 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 enum Status {OPEN, LOCKED}
 
@@ -23,7 +22,7 @@ public class Room extends SequentialSpace implements Runnable
     private GameController g_controller;
 
 
-    public Room (String name, String owner)
+    public Room (String name, String owner) throws InterruptedException
     {
         this.name = name;
         this.owner = owner;
@@ -36,14 +35,12 @@ public class Room extends SequentialSpace implements Runnable
 
     public void run ()
     {
-        while(true)
-        {
-            try {
+        try {
+            while (true) {
                 updateGamestate();
                 Thread.sleep(17);
-
-            } catch (Exception e) {e.printStackTrace();}
-        }
+            }
+        } catch (Exception e){e.printStackTrace();}
     }
 
     private void updateGamestate() throws Exception
@@ -58,15 +55,15 @@ public class Room extends SequentialSpace implements Runnable
 
     private List<Command> getCommands()
     {
-        List<Command> commands = new ArrayList<Command>();
+        List<Command> commands = new ArrayList<>();
         List<Object[]> tuple_commands = this.queryAll(new ActualField("command"),
                                                       new FormalField(String.class),
                                                       new FormalField(Command.class));
 //        System.out.println("Got following " + tuple_commands.size() + " commands:");
-        for (Object[] o : tuple_commands)
+        for (int i = 0; i < tuple_commands.size(); i++)
         {
 //            System.out.println(((Command) o[2]).toString());
-            commands.add((Command) o[2]);
+            commands.add((Command) tuple_commands.get(i)[2]);
         }
 
         return commands;
@@ -92,12 +89,11 @@ public class Room extends SequentialSpace implements Runnable
 
     public String[] getUsers()
     {
-        LinkedList<Object[]> users = this.queryAll(new FormalField(String.class));
-        String[] users_string = new String[users.size()];
-        int index = 0;
-        for (Object[] o : users)
+        Object[] users = this.queryAll(new FormalField(String.class)).toArray();
+        String[] users_string = new String[users.length];
+        for (int i = 0; i < users.length; i++)
         {
-            users_string[index++] = (String) o[0];
+            users_string[i] = (String) ((Object[])(users[i]))[0];
         }
 
         return users_string;

@@ -20,19 +20,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
-package org.jspace.protocol;
 
-/**
- * This class represents a generic message 
- */
-public class pSpaceMessage {
+package org.jspace;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+
+public class QueueSpace extends SequentialSpace {
 	
-	private ClientMessageType messageType;
+	public QueueSpace() {
+		this(-1);
+	}
 	
-	private String sessionId;
+	public QueueSpace(int bound) {
+		super(bound);
+	}
+
+	@Override
+	protected void addTuple(Tuple tuple) {
+		tuples.add(tuple);
+	}
 	
-	public pSpaceMessage( ClientMessageType messageType ) {
-		
+	@Override
+	protected Tuple findTuple(Template template,boolean toRemove) {
+		Tuple t = tuples.peek();
+		if ((t!=null)&&(template.match(t))) {
+			if (toRemove) {
+				tuples.poll();
+			}
+			return t;
+		} else {
+			return null;
+		}		
+	}
+
+	@Override
+	protected LinkedList<Object[]> findAllTuples(Template template,boolean toRemove) {
+		LinkedList<Object[]> result = new LinkedList<Object[]>();
+		Iterator<Tuple> tuplesIterator = tuples.iterator();
+		Tuple t;
+		while (tuplesIterator.hasNext()){
+			t = tuplesIterator.next();
+			if (template.match(t)) {
+				result.add(t.getTuple());
+				if (toRemove)
+					tuplesIterator.remove();
+			} else {
+				break ;
+			}
+		}
+		return result;
 	}
 
 }

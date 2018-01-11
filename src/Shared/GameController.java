@@ -1,5 +1,8 @@
 package Shared;
 
+import javafx.geometry.Point3D;
+import javafx.scene.shape.Line;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +47,7 @@ public class GameController
             }
             gs.setPlayers(players);
 
-        } catch (Exception ignored) {};
+        } catch (Exception e) {e.printStackTrace();}
         return gs;
     }
 
@@ -60,6 +63,14 @@ public class GameController
                 {
                     updatePlayerInfo(p,c);
 
+                    // KILLEM ALL
+                    if (p.fire)
+                    {
+                        players.remove(p);
+                        checkBulletCollision(p, players);
+                        players.add(p);
+                    }
+
                     continue cmdloop;
                 }
             }
@@ -67,42 +78,55 @@ public class GameController
 
         gs.setPlayers(players);
 
-        System.out.println(gs.toString());
+//        System.out.println(gs.toString());
 
         return gs;
     }
 
     private void updatePlayerInfo(PlayerInfo p, Command c)
     {
-        // Update position
+        // Update direction
         if(c.isRotateLeft())
-        {
-            p.angle -= Constants.PLAYER_TURN_SPEED % 360;
-        }
-        if(c.isRotateRight())
         {
             p.angle += Constants.PLAYER_TURN_SPEED % 360;
         }
-        if (c.isForward() || c.isBackward() || c.isLeft() || c.isRight())
+        if(c.isRotateRight())
         {
-               double direction = Math.toRadians(p.angle);
+            p.angle -= Constants.PLAYER_TURN_SPEED % 360;
+        }
+
+        // Update position
+        if (c.isForward() || c.isBackward() || c.isStrafeLeft() || c.isStrafeRight())
+        {
+               double angle_radians = Math.toRadians(p.angle);
+               double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
+               double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
 
                if (c.isForward())
                {
-                 p.x = (int) (p.x + Math.sin(direction) * Constants.PLAYER_SPEED);
-                 p.z = (int) (p.z + Math.cos(direction) * Constants.PLAYER_SPEED);
+                 p.x += xspeed;
+                 p.z += zspeed;
                }
 
                if (c.isBackward())
                {
-                   p.x = (int) (p.x - Math.sin(direction) * Constants.PLAYER_SPEED);
-                   p.z = (int) (p.z - Math.cos(direction) * Constants.PLAYER_SPEED);
+                   p.x -= xspeed;
+                   p.z -= zspeed;
+               }
+
+               if (c.isStrafeLeft())
+               {
+                   p.x -= zspeed;
+                   p.z += xspeed;
+               }
+               if (c.isStrafeRight())
+               {
+                   p.x += zspeed;
+                   p.z -= xspeed;
                }
         }
 
-
-
-
+        // Update fire
         if (c.isFire())
         {
             if (!p.fire)
@@ -117,6 +141,18 @@ public class GameController
                 System.out.println(p.username + " stopped firing...");
             }
             p.fire = false;
+        }
+    }
+
+    private void checkBulletCollision(PlayerInfo player, List<PlayerInfo> enemies)
+    {
+        for (PlayerInfo enemy : enemies)
+        {
+            Line raycast = new Line();
+            raycast.setRotationAxis(new Point3D(1,0,0));
+            raycast.setRotate(90);
+
+
         }
     }
 }
