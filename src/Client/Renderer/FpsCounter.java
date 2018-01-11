@@ -1,6 +1,7 @@
 package Client.Renderer;
 
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 public class FpsCounter extends Label {
 
@@ -9,15 +10,11 @@ public class FpsCounter extends Label {
     private final double[] fpsArray;
     private int fpsArrayIndex = 0;
 
-    public FpsCounter(int size)
-    {
-        fpsArraySize = size;
-        fpsArray = new double[fpsArraySize];
-    }
     public FpsCounter()
     {
         fpsArraySize = 20;
         fpsArray = new double[fpsArraySize];
+        this.setTextFill(Color.WHITE);
     }
 
     public void update()

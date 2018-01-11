@@ -6,6 +6,7 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ public class MainConnector {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "10.16.172.151";
+    static private String ip = "10.16.164.65";
 
     static private Scanner sc;
 
@@ -327,7 +328,12 @@ public class MainConnector {
 
     public static void exitApplication()
     {
-        System.exit(0);
+        try {
+            lobby.closeConnection();
+            System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Creates a URI address from a given room name

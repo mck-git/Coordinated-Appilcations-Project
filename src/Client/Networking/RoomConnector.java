@@ -8,7 +8,6 @@ import org.jspace.RemoteSpace;
 import Shared.Command;
 import Shared.GameState;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RoomConnector
@@ -18,7 +17,7 @@ public class RoomConnector
     private static RemoteSpace room;
     private static String userName = "";
     private static boolean inRoom = false;
-    private static PlayerInfo p_i;
+    private static PlayerInfo clientPlayerInfo;
 
     private static boolean[] keysPressed = new boolean[7];
 
@@ -26,7 +25,7 @@ public class RoomConnector
     public static void initialize(String user)
     {
         userName = user;
-        p_i = new PlayerInfo(userName);
+        clientPlayerInfo = new PlayerInfo(userName);
         inRoom = false;
         System.out.println("Initialized the RoomConnector");
     }
@@ -67,7 +66,7 @@ public class RoomConnector
         if(newState != null && newState.length == 2)
             gameState = (GameState) newState[1];
 
-        p_i = gameState.getPlayer_info(userName);
+        clientPlayerInfo = gameState.getPlayer_info(userName);
     }
 
     // Update the player command in the tuplespace
@@ -160,14 +159,14 @@ public class RoomConnector
         return gameState;
     }
 
-    public static PlayerInfo getPlayerInfo()
+    public static PlayerInfo getClientPlayerInfo()
     {
-        return p_i;
+        return clientPlayerInfo;
     }
 
     public static PlayerInfo getHighestKDRPlayerInfo()
     {
-        PlayerInfo topP_I = getPlayerInfo();
+        PlayerInfo topP_I = getClientPlayerInfo();
         double topKDR = topP_I.calculateKDR();
 
         for( PlayerInfo pi : gameState.getPlayer_infos())
