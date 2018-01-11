@@ -1,11 +1,11 @@
 package Shared;
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
+        import javafx.scene.image.Image;
+        import javafx.scene.paint.Color;
+        import javafx.scene.paint.PhongMaterial;
+        import javafx.scene.shape.Box;
 
-import static Shared.Constants.PLAYER_HEIGHT;
+        import static Shared.Constants.PLAYER_HEIGHT;
 
 public class Player extends Box {
 
