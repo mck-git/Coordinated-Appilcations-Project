@@ -10,6 +10,9 @@ public class PlayerInfo {
     public boolean fire;
     public boolean dead;
 
+    public int kills;
+    public int deaths;
+
     public PlayerInfo(String username)
     {
         this(username,
@@ -34,6 +37,14 @@ public class PlayerInfo {
         this.z = z;
         this.angle = angle;
         this.health = health;
+    }
+
+    public double calculateKDR()
+    {
+        if(deaths != 0)
+            return ((double) kills) / ((double) deaths);
+        else
+            return kills;
     }
 
     public String toString() {
