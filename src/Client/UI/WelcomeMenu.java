@@ -1,6 +1,7 @@
-package Client.View;
+package Client.UI;
 
-import Client.Client;
+import Client.ClientApp;
+import Client.Networking.MainConnector;
 import Templates.TScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,20 +18,20 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static Fields.Constants.HEIGHT;
-import static Fields.Constants.WIDTH;
+import static Shared.Constants.HEIGHT;
+import static Shared.Constants.WIDTH;
 
 public class WelcomeMenu extends TScene {
 
 
-    WelcomeMenu() {
+    public WelcomeMenu() {
         super(new BorderPane());
     }
 
     @Override
     public void setup() {
         BorderPane root = (BorderPane) getRoot();
-        root.setStyle("-fx-background-image: url(\"Images/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
+        root.setStyle("-fx-background-image: url(\"Shared/Resources/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
         root.setPadding(new Insets(10,10,50,10));
 
@@ -40,7 +41,7 @@ public class WelcomeMenu extends TScene {
         exit.setFocusTraversable(false);
         quitPane.getChildren().add(exit);
         topPane.getChildren().add(quitPane);
-        exit.setOnAction(event -> Client.exitApplication());
+        exit.setOnAction(event -> MainConnector.exitApplication());
 
         HBox hb = new HBox();
         topPane.getChildren().add(hb);
@@ -96,9 +97,9 @@ public class WelcomeMenu extends TScene {
         });
 
         btnLogin.setOnAction(event -> {
-            if (Client.initialize(txtUserName.getText()))
+            if (MainConnector.initialize(txtUserName.getText()))
             {
-                ClientDisplay.setScene(new Lobby());
+                ClientApp.setScene(new Lobby());
             }
             else
             {
@@ -126,7 +127,7 @@ public class WelcomeMenu extends TScene {
 
     @Override
     public void closingProtocol() {
-        Client.exitApplication();
+        MainConnector.exitApplication();
     }
 
     @Override

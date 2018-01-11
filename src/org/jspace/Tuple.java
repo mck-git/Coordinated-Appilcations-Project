@@ -41,7 +41,8 @@ public final class Tuple implements Iterable<Object>, Serializable {
 	/**
 	 * Tuple fields.
 	 */
-	private Object[] fields;
+	private final Object[] fields;
+	private final int length;
 
 	/**
 	 * Creates a new tuple.
@@ -51,6 +52,7 @@ public final class Tuple implements Iterable<Object>, Serializable {
 	 */
 	public Tuple(Object... fields) {
 		this.fields = fields;
+		this.length = fields == null ? 0 : fields.length;
 	}
 
 	/**
@@ -59,7 +61,7 @@ public final class Tuple implements Iterable<Object>, Serializable {
 	 * @return the tuple length.
 	 */
 	public int length() {
-		return fields.length;
+		return length;
 	}
 
 	/**
@@ -70,6 +72,7 @@ public final class Tuple implements Iterable<Object>, Serializable {
 	 * @return the element at index <code>i</code>.
 	 */
 	public Object getElementAt(int i) {
+		if(i<0 || i>=length) return null;
 		return fields[i];
 	}
 
@@ -83,6 +86,7 @@ public final class Tuple implements Iterable<Object>, Serializable {
 	 *         .
 	 */
 	public Class<?> getTypeAt(int i) {
+		if(i<0 || i>=length) return null;
 		return fields[i].getClass();
 	}
 
@@ -117,6 +121,7 @@ public final class Tuple implements Iterable<Object>, Serializable {
 	 * @return true if element at <code>i</code> is instance of <code>c</code>.
 	 */
 	public boolean isInstance(Class<?> c, int i) {
+		if(i<0 || i>=length) return false;
 		return c.isInstance(fields[i]);
 	}
 
@@ -146,23 +151,22 @@ public final class Tuple implements Iterable<Object>, Serializable {
 
 			@Override
 			public boolean hasNext() {
-				return current < fields.length;
+				return current < length;
 			}
 
 			@Override
 			public Object next() {
-				return fields[current++];
+				return current >= length? null : fields[current++];
 			}
 
 			@Override
 			public void remove() {
 			}
-
-		}; 
+		};
 	}
 
 	public Object[] getTuple() {
-		return Arrays.copyOf(this.fields,this.fields.length);
+		return Arrays.copyOf(this.fields,this.length);
 	}
 
 }

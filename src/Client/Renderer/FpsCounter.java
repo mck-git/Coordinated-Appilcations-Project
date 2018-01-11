@@ -1,4 +1,4 @@
-package Client.GameEngine;
+package Client.Renderer;
 
 import javafx.scene.control.Label;
 

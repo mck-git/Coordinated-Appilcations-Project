@@ -1,4 +1,5 @@
-package Server;
+package Server.Networking;
+
 
 import org.jspace.*;
 
@@ -20,6 +21,10 @@ import java.util.List;
 // joinRoom template: ("joinRoom", string name, string user)
 // leaveRoom template: ("leaveRoom", string user)
 // quit template:       ("quit", string name, string user)
+
+// Game templates
+// command template: ("command", string user, command command)
+// gamestate template: ("gamestate", GameState gs)
 
 public class Server {
     private static Space lobby;
@@ -235,7 +240,7 @@ public class Server {
             }
 
             return users_string;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
 
         return null;
     }
@@ -272,7 +277,7 @@ public class Server {
                 }
             }
             System.out.println("Sending ack to " + user);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     private static void nack(String room, String user)
@@ -293,7 +298,7 @@ public class Server {
                 }
             }
             System.out.println("Sending nack to " + user);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {e.printStackTrace();}
     }
 }
 

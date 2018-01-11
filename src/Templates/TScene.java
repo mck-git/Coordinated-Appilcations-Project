@@ -3,8 +3,8 @@ package Templates;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-import static Fields.Constants.HEIGHT;
-import static Fields.Constants.WIDTH;
+import static Shared.Constants.HEIGHT;
+import static Shared.Constants.WIDTH;
 
 public abstract class TScene extends Scene {
     public TScene(Parent root) {

@@ -1,5 +1,6 @@
-package Server.View;
-import Server.Server;
+package Server.UI;
+import Server.ServerApp;
+import Server.Networking.Server;
 import Templates.TScene;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,11 +14,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 
-import static Fields.Constants.WIDTH;
+import static Shared.Constants.WIDTH;
 
-public class HighGround extends TScene{
+public class ServerMonitor extends TScene{
 
-    HighGround(){
+    public ServerMonitor(){
         super(new BorderPane());
     }
 
@@ -105,7 +106,7 @@ public class HighGround extends TScene{
 
         Button stopServerBtn = new Button("Stop Server");
         stopServerBtn.setFocusTraversable(false);
-        stopServerBtn.setOnAction(event -> popup.show(ServerDisplay.getStage()));
+        stopServerBtn.setOnAction(event -> popup.show(ServerApp.getStage()));
 
         HBox top = new HBox();
         top.setAlignment(Pos.CENTER_LEFT);

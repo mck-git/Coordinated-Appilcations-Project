@@ -1,6 +1,7 @@
-package Client.View;
+package Client.UI;
 
-import Client.Client;
+import Client.ClientApp;
+import Client.Networking.MainConnector;
 import Templates.TScene;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -78,14 +79,14 @@ public class Lobby extends TScene {
         updateBtn.setOnAction( event -> {
             users.clear();
             rooms.clear();
-            users.addAll(Client.getUsers());
-            rooms.addAll(Client.getRooms());
+            users.addAll(MainConnector.getUsers());
+            rooms.addAll(MainConnector.getRooms());
         });
 
         joinRoomBtn.setOnAction(event -> {
             if(roomListView.getSelectionModel().getSelectedItem() != null) {
-                Client.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
-                ClientDisplay.setScene(new RoomWindow());
+                MainConnector.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
+                ClientApp.setScene(new RoomWindow());
             }
         });
 
@@ -109,7 +110,7 @@ public class Lobby extends TScene {
 
         createRoomBtn.setOnAction(event -> {
             if(!popup.isShowing())
-                popup.show(ClientDisplay.getStage());
+                popup.show(ClientApp.getStage());
         });
 
         createRoomtxt.setOnKeyPressed(key -> {
@@ -120,10 +121,10 @@ public class Lobby extends TScene {
         });
 
         createRoomTextBtn.setOnAction(event -> {
-            Client.createRoom(createRoomtxt.getText());
+            MainConnector.createRoom(createRoomtxt.getText());
             createRoomtxt.clear();
             popup.hide();
-            ClientDisplay.setScene(new RoomWindow());
+            ClientApp.setScene(new RoomWindow());
         });
 
         roomListView.setOnKeyPressed(key -> {
@@ -193,20 +194,18 @@ public class Lobby extends TScene {
     @Override
     public void closingProtocol() {
         try {
-            Client.quit();
-            Client.exitApplication();
-        } catch (Exception ignored) {
-        }
+            MainConnector.quit();
+            MainConnector.exitApplication();
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     @Override
     public void leavingProtocol()
     {
         try {
-            Client.quit();
-            ClientDisplay.setScene(new WelcomeMenu());
-        } catch (Exception ignored) {
-        }
+            MainConnector.quit();
+            ClientApp.setScene(new WelcomeMenu());
+        } catch (Exception e) {e.printStackTrace();}
     }
 
 }

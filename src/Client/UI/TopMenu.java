@@ -1,6 +1,7 @@
-package Client.View;
+package Client.UI;
 
-import Client.Client;
+import Client.ClientApp;
+import Client.Networking.MainConnector;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,14 +13,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
 
-import static Fields.Constants.WIDTH;
-
 public class TopMenu extends HBox {
 
     private Button leaveRoom;
 
     TopMenu()
     {
+        this.prefWidthProperty().bind(ClientApp.getStage().widthProperty());
+
         Popup popup = new Popup();
         popup.setAutoFix(false);
         popup.setHideOnEscape(true);
@@ -29,13 +30,13 @@ public class TopMenu extends HBox {
         popupButtonRow.setSpacing(20);
         popupButtonRow.setAlignment(Pos.CENTER);
 
-        Label exitMessage = new Label("Are you sure you want to leave '" + Client.getCurrentRoomName() + "'?");
+        Label exitMessage = new Label("Are you sure you want to leave '" + MainConnector.getCurrentRoomName() + "'?");
         Button confirmLeaveBtn = new Button("Leave");
         confirmLeaveBtn.setTextFill(Color.RED);
         confirmLeaveBtn.setOnAction(event -> {
             try {
                 popup.hide();
-                ClientDisplay.getScene().leavingProtocol();
+                ClientApp.getScene().leavingProtocol();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -60,31 +61,29 @@ public class TopMenu extends HBox {
         leaveRoom = new Button("Leave Room");
         leaveRoom.setFocusTraversable(false);
         leaveRoom.setOnAction(event -> {
-            popup.show(ClientDisplay.getStage());
+            popup.show(ClientApp.getStage());
             popup.requestFocus();
         });
 
         this.setMaxWidth(Double.MAX_VALUE);
 
         HBox topleft = new HBox();
-        Label roomlbl = new Label("Room: " + Client.getCurrentRoomName());
+        Label roomlbl = new Label("Room: " + MainConnector.getCurrentRoomName());
         roomlbl.setFont(Font.font("Courier", FontWeight.EXTRA_BOLD, 20));
         topleft.setAlignment(Pos.CENTER_LEFT);
         topleft.getChildren().add(leaveRoom);
-        topleft.setMaxWidth(Double.MAX_VALUE);
-        topleft.setPrefWidth(0.2*WIDTH);
+        topleft.prefWidthProperty().bind(this.widthProperty().multiply(0.2));
+
 
         HBox topcenter = new HBox();
         topcenter.setAlignment(Pos.CENTER);
         topcenter.getChildren().add(roomlbl);
-        topcenter.setMaxWidth(Double.MAX_VALUE);
-        topcenter.setPrefWidth(0.6*WIDTH);
+        topcenter.prefWidthProperty().bind(this.widthProperty().multiply(0.6));
 
         HBox topright = new HBox();
-        Label username = new Label("Username: " + Client.getUserName());
+        Label username = new Label("Username: " + MainConnector.getUserName());
         topright.getChildren().add(username);
-        topright.setMaxWidth(Double.MAX_VALUE);
-        topright.setPrefWidth(0.2*WIDTH);
+        topright.prefWidthProperty().bind(this.widthProperty().multiply(0.2));
 
         this.getChildren().add(topleft);
         this.getChildren().add(topcenter);

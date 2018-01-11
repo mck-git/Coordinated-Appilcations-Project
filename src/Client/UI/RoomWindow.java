@@ -1,8 +1,10 @@
-package Client.View;
+package Client.UI;
 
-import Client.Client;
-import Client.GameEngine.FpsCounter;
-import Client.GameEngine.World;
+import Client.ClientApp;
+import Client.Networking.MainConnector;
+import Client.Networking.RoomConnector;
+import Client.Renderer.FpsCounter;
+import Client.Renderer.World;
 import Templates.TScene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -45,28 +47,29 @@ public class RoomWindow extends TScene {
 
     @Override
     public void refresh() {
+        RoomConnector.update();
         fps.update();
         chat.update();
-        world.update();
+        world.update(RoomConnector.getGamestate());
+
+        // world.update(RoomConnector.update());
     }
 
     @Override
     public void closingProtocol() {
         try {
-            Client.leaveRoom();
-            Client.quit();
-            Client.exitApplication();
-        } catch (Exception ignored) {
-        }
+            MainConnector.leaveRoom();
+            MainConnector.quit();
+            MainConnector.exitApplication();
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     @Override
     public void leavingProtocol() {
         try {
-            Client.leaveRoom();
-            ClientDisplay.setScene(new Lobby());
-        } catch (Exception ignored) {
-        }
+            MainConnector.leaveRoom();
+            ClientApp.setScene(new Lobby());
+        } catch (Exception e) {e.printStackTrace();}
     }
 }
 

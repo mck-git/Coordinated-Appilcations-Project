@@ -1,5 +1,5 @@
 #!/bin/bash
-#Compiles Client and Server projects independently and creates executable jars
+#Compiles Exceptions and Server projects independently and creates executable jars
 
 function mark {
     export $1="`pwd`";
@@ -18,12 +18,12 @@ cd tmp
 
 touch ClientManifest.txt
 echo "Manifest-Version: 1.0
-Main-Class: Client.View.ClientDisplay
+Main-Class: MainConnector.UI.Exceptions
 " | cat > ClientManifest.txt
 
 touch ServerManifest.txt
 echo "Manifest-Version: 1.0
-Main-Class: Server.View.ServerDisplay
+Main-Class: Server.ServerApp
 " | cat > ServerManifest.txt
 
 
