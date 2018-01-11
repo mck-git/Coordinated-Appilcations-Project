@@ -47,8 +47,7 @@ public class PlayerInfo {
     {
         if(deaths != 0)
         {
-            double kdr = ((double) kills) / ((double) deaths);
-            return Math.round(kdr*10) / 10;
+            return ((double) kills) / ((double) deaths);
         }
         else
             return kills;

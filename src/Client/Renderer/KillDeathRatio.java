@@ -42,13 +42,13 @@ public class KillDeathRatio extends Label {
 
         if (this.type.equals("user"))
         {
-            this.setText("KDR: " + currentRatio);
+            this.setText("KDR: " + String.format("%.2f",currentRatio));
             this.setTextFill(Color.RED);
         }
 
         if (this.type.equals("top"))
         {
-            this.setText("Top KDR: " + currentRatio + "\n"
+            this.setText("Top KDR: " + String.format("%.2f",currentRatio) + "\n"
                     + "Top player: " + pname);
             this.setTextFill(Color.GOLD);
         }
