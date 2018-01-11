@@ -8,7 +8,6 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 enum Status {OPEN, LOCKED}
 
@@ -45,7 +44,7 @@ public class Room extends SequentialSpace implements Runnable
 
     private void updateGamestate() throws Exception
     {
-        master_gs = g_controller.updatePlayerList(getUsers());
+        master_gs = g_controller.updateActivePlayers(getUsers());
         master_gs = g_controller.applyCommands(getCommands());
 
         // getP?

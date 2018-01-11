@@ -10,7 +10,6 @@ import Shared.PlayerInfo;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -187,7 +186,7 @@ public class World extends SubScene {
                 ((Player) p).active = false;
         }
 
-        for(PlayerInfo pi : gs.getPlayers())
+        for(PlayerInfo pi : gs.getPlayer_infos())
         {
 
             if(user.is(pi.username)){
