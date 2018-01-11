@@ -1,5 +1,6 @@
 package Client.Networking;
 
+import Shared.Action;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
@@ -76,28 +77,28 @@ public class RoomConnector
     }
 
 
-    public static void setKeyPress(String key, boolean state)
+    public static void setKeyPress(Action action, boolean state)
     {
-        switch (key) {
-            case "forward":
+        switch (action) {
+            case forward:
                 keysPressed[0] = state;
                 break;
-            case "left":
+            case strafeLeft:
                 keysPressed[1] = state;
                 break;
-            case "back":
+            case back:
                 keysPressed[2] = state;
                 break;
-            case "right":
+            case strafeRight:
                 keysPressed[3] = state;
                 break;
-            case "rotateLeft":
+            case rotateLeft:
                 keysPressed[4] = state;
                 break;
-            case "rotateRight":
+            case rotateRight:
                 keysPressed[5] = state;
                 break;
-            case "fire":
+            case fire:
                 keysPressed[6] = state;
         }
     }
