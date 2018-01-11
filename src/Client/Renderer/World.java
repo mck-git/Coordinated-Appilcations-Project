@@ -70,10 +70,10 @@ public class World extends SubScene {
         camera.setFieldOfView(40);
         camera.setRotationAxis(new Point3D(0, 1, 0));
 
-//        AmbientLight ambient = new AmbientLight(Color.color(0.1, 0.1, 0.1));
-//        root.getChildren().add(ambient);
+        AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
+        root.getChildren().add(ambient);
 
-        torch = new PointLight(Color.color(0.2, 0.2, 0.15));
+        torch = new PointLight(Color.color(0.5, 0.5, 0.3));
         torch.setTranslateY(camera.getTranslateY() * 2);
         root.getChildren().add(torch);
         torch.setRotationAxis(camera.getRotationAxis());
