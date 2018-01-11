@@ -4,6 +4,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,18 +73,16 @@ public class GameController
 
         cmdloop: for (Command c : commands)
         {
-            for (PlayerInfo p : player_infos)
+            for (PlayerInfo p_inf : player_infos)
             {
-                if (p.username.equals(c.getUsername()))
+                if (p_inf.username.equals(c.getUsername()))
                 {
-                    updatePlayerInfo(p,c);
+                    updatePlayerInfo(p_inf,c);
 
                     // KILLEM ALL
-                    if (p.fire)
+                    if (p_inf.fire)
                     {
-                        player_infos.remove(p);
-                        checkBulletCollision(p, player_infos);
-                        player_infos.add(p);
+                        checkBulletCollision(p_inf, player_infos);
                     }
 
                     continue cmdloop;
@@ -156,10 +155,20 @@ public class GameController
 
                  // Update player with new position
                  p.update(new_p_inf);
-                 Node collision = checkMapCollision(p);
-                 if (collision != null)
+                 ArrayList<Node> collisions = checkMapCollision(p);
+
+                 // Sort closests nodes first
+                 collisions.sort((Node a, Node b) ->
                  {
-                     new_p_inf = handleMapCollision(new_p_inf, old_p_inf, collision);
+                     double da = Math.pow((p.getTranslateX() - a.getTranslateX()),2)
+                             + Math.pow((p.getTranslateZ() - a.getTranslateZ()),2);
+                     double db = Math.pow((p.getTranslateX() - b.getTranslateX()),2)
+                             + Math.pow((p.getTranslateZ() - b.getTranslateZ()),2);
+                     return Double.compare(da, db);
+                 });
+                 for (Node n : collisions)
+                 {
+                     new_p_inf = handleMapCollision(new_p_inf, old_p_inf, n);
                      p.update(new_p_inf);
                  }
 
@@ -189,17 +198,20 @@ public class GameController
 
     private PlayerInfo handleMapCollision(PlayerInfo new_p_inf, PlayerInfo old_p_inf, Node collider)
     {
-        double dx = Math.abs(collider.getTranslateX() - new_p_inf.x);
-        double dz = Math.abs(collider.getTranslateZ() - new_p_inf.z);
-        if (dz > dx) {
+        double dx = Math.abs(collider.getTranslateX() - old_p_inf.x);
+        double dz = Math.abs(collider.getTranslateZ() - old_p_inf.z);
+
+        if (dz > dx)
+        {
             new_p_inf.z = collider.getTranslateZ()
-                    - Math.signum(collider.getTranslateZ() - old_p_inf.z)
-                    *0.5*(Constants.TILE_SIZE + Constants.PLAYER_SIZE + 0.01);
+                    - (Math.signum(collider.getTranslateZ() - old_p_inf.z)
+                    *0.5*(Constants.TILE_SIZE + Constants.PLAYER_SIZE + 0.01));
         }
-        if (dx > dz) {
+        if (dx > dz)
+        {
             new_p_inf.x = collider.getTranslateX()
-                    - Math.signum(collider.getTranslateX() - old_p_inf.x)
-                    *0.5*(Constants.TILE_SIZE + Constants.PLAYER_SIZE + 0.01);
+                    - (Math.signum(collider.getTranslateX() - old_p_inf.x)
+                    *0.5*(Constants.TILE_SIZE + Constants.PLAYER_SIZE + 0.01));
         }
 
         return new_p_inf;
@@ -219,26 +231,30 @@ public class GameController
         return null;
     }
 
-    private Node checkMapCollision(Player new_player)
+    private ArrayList<Node> checkMapCollision(Player new_player)
     {
+        ArrayList<Node> collisions = new ArrayList<>();
+
         for (Node n : map_nodes)
         {
             if (new_player.getBoundsInParent().intersects(n.getBoundsInParent()))
             {
-                return n;
+                collisions.add(n);
             }
         }
 
-        return null;
+        return collisions;
     }
 
     private void checkBulletCollision(PlayerInfo player_info, List<PlayerInfo> enemy_infos)
     {
-        for (PlayerInfo enemy : enemy_infos)
+        for (PlayerInfo enemy_inf : enemy_infos)
         {
-            Line raycast = new Line();
-            raycast.setRotationAxis(new Point3D(1,0,0));
-            raycast.setRotate(90);
+            if (enemy_inf != player_info) {
+                Line raycast = new Line();
+                raycast.setRotationAxis(new Point3D(1, 0, 0));
+                raycast.setRotate(90);
+            }
         }
     }
 }
