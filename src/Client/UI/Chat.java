@@ -24,14 +24,9 @@ public class Chat extends VBox {
         TextField messageField = new TextField();
         this.getChildren().add(messageField);
         this.setMaxWidth(150);
-        this.setOpacity(0.2);
+        this.setOpacity(0.7);
         this.prefHeightProperty().bind(ClientApp.getStage().heightProperty());
-        messageArea.prefHeightProperty().bind(this.heightProperty().subtract(100));
-
-        this.setSpacing(10);
-
-        this.setOnMouseEntered(mouse -> this.setOpacity(0.8));
-        this.setOnMouseExited(mouse -> this.setOpacity(0.2));
+        messageArea.prefHeightProperty().bind(this.heightProperty());
 
         messageField.setOnKeyPressed(key -> {
             if (key.getCode() == KeyCode.ENTER) {
