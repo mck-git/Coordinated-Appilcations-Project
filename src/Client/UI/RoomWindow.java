@@ -28,6 +28,7 @@ public class RoomWindow extends TScene {
 
     public long connectorTime = 0;
     public long renderTime = 0;
+    public long chatTime = 0;
 
     @Override
     public void setup() {
@@ -86,7 +87,10 @@ public class RoomWindow extends TScene {
         fps.update();
         u_kdr.update(RoomConnector.getClientPlayerInfo());
         top_kdr.update(RoomConnector.getHighestKDRPlayerInfo());
+
+        temp = System.nanoTime();
         chat.update();
+        chatTime = System.nanoTime() - temp;
 
         temp = System.nanoTime();
         world.update(RoomConnector.getGamestate());
@@ -95,10 +99,13 @@ public class RoomWindow extends TScene {
         temp = System.nanoTime();
         long time_for_everything = temp - start;
 
+        System.out.println("__Top level cpu time__");
         System.out.println("connection time: " +  (100 * connectorTime / time_for_everything) + "%"
-            + ". In mili seconds: " + connectorTime / 1000);
+            + ". In milli seconds: " + connectorTime / 1000000);
+        System.out.println("chat time: " + (100 * chatTime / time_for_everything) + "%"
+                + ". In milli seconds: " + chatTime / 1000000);
         System.out.println("render time: " + (100 * renderTime / time_for_everything) + "%"
-                + ". In mili seconds: " + renderTime / 1000);
+                + ". In milli seconds: " + renderTime / 1000000);
 
         healthBar.update(RoomConnector.getClientPlayerInfo().health);
 

@@ -52,8 +52,11 @@ public class RoomConnector
         {
             if (inRoom)
             {
+
                 updateGamestate();
+
                 updateCommand();
+
             }
         } catch (Exception e) {e.printStackTrace();}
     }
