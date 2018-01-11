@@ -1,5 +1,6 @@
 package Shared;
 
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
@@ -105,8 +106,10 @@ public class GameController
         {
             if (p_inf.dead)
             {
-                p_inf.x = Constants.SPAWN_X;
-                p_inf.z = Constants.SPAWN_Z;
+                Point2D respawn_pos = map.getNewRespawnLocation();
+
+                p_inf.x = respawn_pos.getX();
+                p_inf.z = respawn_pos.getY();
                 p_inf.dead = false;
                 p_inf.health = 100;
 

@@ -10,7 +10,4 @@ public interface Constants {
     int PLAYER_HEIGHT = 10;
     int SERVER_TICKRATE = 17;
     int SHOT_INTERVAL = 10;
-    int SPAWN_X = 0;
-    int SPAWN_Z = 0;
-
 }
