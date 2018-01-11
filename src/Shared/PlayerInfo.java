@@ -17,6 +17,14 @@ public class PlayerInfo {
                 100);
     }
 
+    public PlayerInfo(double x, double z)
+    {
+        this("old_position",
+                x, -0.5*Constants.PLAYER_HEIGHT,z,
+                0,
+                100);
+    }
+
     public PlayerInfo(String username, double x, double y, double z, int angle, int health)
     {
         this.username = username;

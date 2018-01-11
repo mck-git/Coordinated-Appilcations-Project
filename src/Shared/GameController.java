@@ -114,7 +114,7 @@ public class GameController
         if (c.isForward() || c.isBackward() || c.isStrafeLeft() || c.isStrafeRight())
         {
                 // possible pointer problem
-               PlayerInfo old_p_inf = new_p_inf;
+               PlayerInfo old_p_inf = new PlayerInfo(new_p_inf.x, new_p_inf.z);
 
                double angle_radians = Math.toRadians(new_p_inf.angle);
                double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
