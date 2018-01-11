@@ -85,7 +85,6 @@ public class GameController
                     if (p_inf.fire)
                     {
                         checkBulletCollision(p_inf,player_infos, players);
-                        p_inf.fire = false;
                     }
 
                     continue cmdloop;
@@ -211,6 +210,7 @@ public class GameController
         }
 
         // Update fire
+        new_p_inf.fire = false;
         if (new_p_inf.cooldown > 0)
         {
             new_p_inf.cooldown -= 1;

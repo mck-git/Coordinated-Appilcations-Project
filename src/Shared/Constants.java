@@ -12,5 +12,5 @@ public interface Constants {
     int SHOT_INTERPOLATION_INTERVAL = 10;
     double SHOT_RADIUS = 0.1;
     int SHOT_DAMAGE = 10;
-    int FIRE_RATE = 120;
+    int FIRE_RATE = 60;
 }
