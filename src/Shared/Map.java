@@ -49,7 +49,7 @@ public class Map {
 
     public ArrayList<Node> getNodes()
     {
-        ArrayList<Node> walls = new ArrayList();
+        ArrayList<Node> walls = new ArrayList<>();
 
         for(int z = 0; z < grid.length; z++)
             for(int x = 0; x < grid[z].length; x++)

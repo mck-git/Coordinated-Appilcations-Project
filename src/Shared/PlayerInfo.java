@@ -52,7 +52,7 @@ public class PlayerInfo {
     }
 
     public String toString() {
-        String p = username + " info: \n";
+        String p = username + ": KDR (" + kills + "/" + deaths + ". info: \n";
         p += "  health: " + health + "\n";
         p += "  fire: " + fire + "\n";
         p += "  position: (" + x + "," + y + "," + z  + ")\n";

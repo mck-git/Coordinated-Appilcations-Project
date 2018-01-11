@@ -350,6 +350,6 @@ public class World extends SubScene {
         shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()+1).getZ() - 0.2*direction.getX());
         shot.setMaterial(new PhongMaterial(Color.color(0.2, 0.4, 1, 0.9)));
         renderings.getChildren().add(shot);
-        System.out.println("Shot " + height + " (" + sx + ", " + sz + ")");
+//        System.out.println("Shot " + height + " (" + sx + ", " + sz + ")");
     }
 }

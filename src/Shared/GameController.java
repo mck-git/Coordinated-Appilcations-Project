@@ -1,14 +1,14 @@
 package Shared;
 
-import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
-import javafx.scene.Node;
-import javafx.scene.shape.Cylinder;
+        import javafx.geometry.Point2D;
+        import javafx.geometry.Point3D;
+        import javafx.scene.Node;
+        import javafx.scene.shape.Cylinder;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import static Shared.Constants.*;
+        import static Shared.Constants.*;
 
 public class GameController
 {
@@ -137,76 +137,76 @@ public class GameController
         // Update position
         if (c.isForward() || c.isBackward() || c.isStrafeLeft() || c.isStrafeRight())
         {
-                // possible pointer problem
-               PlayerInfo old_p_inf = new PlayerInfo(new_p_inf.x, new_p_inf.z);
+            // possible pointer problem
+            PlayerInfo old_p_inf = new PlayerInfo(new_p_inf.x, new_p_inf.z);
 
-               double angle_radians = Math.toRadians(new_p_inf.angle);
-               double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
-               double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
+            double angle_radians = Math.toRadians(new_p_inf.angle);
+            double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
+            double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
 
-               // Needs change since diagonal walk is faster
-               // check commented code in World.
-               if (c.isForward())
-               {
-                 new_p_inf.x += xspeed;
-                 new_p_inf.z += zspeed;
-               }
+            // Needs change since diagonal walk is faster
+            // check commented code in World.
+            if (c.isForward())
+            {
+                new_p_inf.x += xspeed;
+                new_p_inf.z += zspeed;
+            }
 
-               if (c.isBackward())
-               {
-                   new_p_inf.x -= xspeed;
-                   new_p_inf.z -= zspeed;
-               }
+            if (c.isBackward())
+            {
+                new_p_inf.x -= xspeed;
+                new_p_inf.z -= zspeed;
+            }
 
-               if (c.isStrafeLeft())
-               {
-                   new_p_inf.x -= zspeed;
-                   new_p_inf.z += xspeed;
-               }
-               if (c.isStrafeRight())
-               {
-                   new_p_inf.x += zspeed;
-                   new_p_inf.z -= xspeed;
-               }
+            if (c.isStrafeLeft())
+            {
+                new_p_inf.x -= zspeed;
+                new_p_inf.z += xspeed;
+            }
+            if (c.isStrafeRight())
+            {
+                new_p_inf.x += zspeed;
+                new_p_inf.z -= xspeed;
+            }
 
-               // Map collision
-               try
-               {
-                 Player p = findPlayer(new_p_inf);
-                 if (p == null)
-                 {
-                     throw new NullPointerException();
-                 }
+            // Map collision
+            try
+            {
+                Player p = findPlayer(new_p_inf);
+                if (p == null)
+                {
+                    throw new NullPointerException();
+                }
 
-                 // Update player with new position
-                 p.update(new_p_inf);
-                 ArrayList<Node> collisions = checkMapCollision(p);
+                // Update player with new position
+                p.update(new_p_inf);
+                ArrayList<Node> collisions = checkMapCollision(p);
 
-                 // Sort closests nodes first
+                // Sort closests nodes first
 
-                 collisions.sort((Node a, Node b) ->
-                 {
-                     double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
-                             + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
-                     double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
-                             + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
-                     return Double.compare(da, db);
-                 });
-                 PlayerInfo tempnew;
-                 PlayerInfo tempold = old_p_inf;
-                 for (Node n : collisions)
-                 {
-                     tempnew = handleMapCollision(new_p_inf, tempold, n);
-                     tempold = new_p_inf;
-                     new_p_inf = tempnew;
-                     p.update(new_p_inf);
+                collisions.sort((Node a, Node b) ->
+                {
+                    double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
+                            + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
+                    double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
+                            + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
+                    return Double.compare(da, db);
+                });
+                PlayerInfo tempnew;
+                PlayerInfo tempold = old_p_inf;
+                for (Node n : collisions)
+                {
+                    tempnew = handleMapCollision(new_p_inf, tempold, n);
+                    tempold = new_p_inf;
+                    new_p_inf = tempnew;
+                    p.update(new_p_inf);
 
-                 }
+                }
 
-               } catch (NullPointerException e)
-               {
-                   System.err.println("Player_info not found in player list!!");
-               }
+            } catch (NullPointerException e)
+            {
+                System.err.println("Player_info not found in player list!!");
+            }
         }
 
         // Update fire
@@ -316,6 +316,7 @@ public class GameController
                             enemy_inf.dead = true;
                             enemy_inf.deaths += 1;
                             shooter.kills += 1;
+                            System.out.println(shooter.username + " killed " + enemy_inf.username);
                         }
                     }
                 }
