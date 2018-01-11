@@ -8,10 +8,12 @@ import javafx.scene.paint.Color;
 
 public class KillDeathRatio extends Label {
 
-    double currentRatio;
+    private double currentRatio;
+    private String pname;
 
     public KillDeathRatio(String type)
     {
+        pname = "";
 
         if (type.equals("user"))
         {
@@ -21,7 +23,8 @@ public class KillDeathRatio extends Label {
 
         if (type.equals("top"))
         {
-            this.setText("Top KDR: " + currentRatio);
+            this.setText("Top KDR: " + currentRatio + "\n"
+            + "Top player: " + pname);
             this.setTextFill(Color.GOLD);
         }
 
@@ -32,7 +35,6 @@ public class KillDeathRatio extends Label {
     public void update(PlayerInfo p)
     {
         currentRatio = p.calculateKDR();
-
-
+        pname = p.username;
     }
 }
