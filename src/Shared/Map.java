@@ -43,7 +43,7 @@ public class Map {
 
         } while (grid[z][x] != 0);
 
-        return new Point2D(x,z);
+        return new Point2D(x * TILE_SIZE,z * TILE_SIZE);
     }
 
 
