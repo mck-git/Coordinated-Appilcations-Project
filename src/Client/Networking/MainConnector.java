@@ -328,12 +328,8 @@ public class MainConnector {
 
     public static void exitApplication()
     {
-        try {
-            lobby.closeConnection();
-            System.exit(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        lobby.getGate().close();
+        System.exit(0);
     }
 
     // Creates a URI address from a given room name

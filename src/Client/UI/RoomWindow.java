@@ -46,6 +46,7 @@ public class RoomWindow extends TScene {
 //        rightPanel.getChildren().add(fps);
         rightPanel.getChildren().add(chat);
 
+        bp.setRight(rightPanel);
         bp.setBottom(healthBar);
 //        bp.setRight(chat);
 

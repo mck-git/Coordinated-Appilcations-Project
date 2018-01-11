@@ -54,11 +54,6 @@ public class RemoteSpace implements Space {
 		this(URI.create(uri));
 	}
 
-	public void closeConnection() throws IOException
-	{
-		this.gate.close();
-	}
-
 
 	@Override
 	public int size() {

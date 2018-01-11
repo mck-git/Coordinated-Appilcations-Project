@@ -8,6 +8,7 @@ import org.jspace.RemoteSpace;
 import Shared.Command;
 import Shared.GameState;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RoomConnector
@@ -117,6 +118,7 @@ public class RoomConnector
                 new FormalField(Command.class));
 
         inRoom = false;
+//        room.getGate().close();
 
     }
 
