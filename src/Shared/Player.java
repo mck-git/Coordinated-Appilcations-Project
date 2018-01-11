@@ -17,6 +17,7 @@ public class Player extends Box {
         this.setHeight(PLAYER_HEIGHT);
         this.setWidth(Constants.PLAYER_SIZE);
         this.setDepth(Constants.PLAYER_SIZE);
+        this.setMaterial(new PhongMaterial(Color.color(1 - info.health / 100.0, info.health / 100.0, 0.1 )));
         ((PhongMaterial)this.getMaterial()).setSelfIlluminationMap(new Image("Shared/Resources/slim_creeper.png"));
         update(info);
     }
