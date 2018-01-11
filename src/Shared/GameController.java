@@ -1,12 +1,14 @@
 package Shared;
 
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Cylinder;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+
+import static Shared.Constants.*;
 
 public class GameController
 {
@@ -19,8 +21,8 @@ public class GameController
     {
         this.gs = new GameState();
         this.map = new Map();
-        this.map_nodes = Map.getNodes();
-        this.players = new ArrayList<Player>();
+        this.map_nodes = map.getNodes();
+        this.players = new ArrayList<>();
     }
 
     public GameState updateActivePlayers(String[] users)
@@ -82,7 +84,7 @@ public class GameController
                     // KILLEM ALL
                     if (p_inf.fire)
                     {
-                        checkBulletCollision(p_inf, player_infos);
+                        checkBulletCollision(p_inf,player_infos, players);
                     }
 
                     continue cmdloop;
@@ -96,6 +98,31 @@ public class GameController
 
         return gs;
     }
+
+    public GameState updateStatus()
+    {
+        // Update death -> respawn
+        ArrayList<PlayerInfo> playerInfos = gs.getPlayer_infos();
+        for (PlayerInfo p_inf : playerInfos)
+        {
+            if (p_inf.dead)
+            {
+                Point2D respawn_pos = map.getNewRespawnLocation();
+
+                p_inf.x = respawn_pos.getX();
+                p_inf.z = respawn_pos.getY();
+                p_inf.dead = false;
+                p_inf.health = 100;
+
+                findPlayer(p_inf).update(p_inf);
+            }
+        }
+
+
+
+        return gs;
+    }
+
 
     private void updatePlayerInfo(PlayerInfo new_p_inf, Command c)
     {
@@ -200,6 +227,8 @@ public class GameController
             }
             new_p_inf.fire = false;
         }
+
+
     }
 
     private PlayerInfo handleMapCollision(PlayerInfo new_p_inf, PlayerInfo old_p_inf, Node collider)
@@ -252,14 +281,52 @@ public class GameController
         return collisions;
     }
 
-    private void checkBulletCollision(PlayerInfo player_info, List<PlayerInfo> enemy_infos)
+    private void checkBulletCollision(PlayerInfo shooter, ArrayList<PlayerInfo> player_infos, ArrayList<Player> users)
     {
-        for (PlayerInfo enemy_inf : enemy_infos)
+        double radians = Math.toRadians(shooter.angle);
+        Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
+
+        double height = 0;
+        double sx = shooter.x+0.5*TILE_SIZE, sz = shooter.z+0.5*TILE_SIZE;
+        for(int i = 0; i < 10; i++)
         {
-            if (enemy_inf != player_info) {
-                Line raycast = new Line();
-                raycast.setRotationAxis(new Point3D(1, 0, 0));
-                raycast.setRotate(90);
+            if(sx < 0 || sz < 0)
+                continue;
+
+            if(map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
+            {
+                break;
+            }
+            sx += SHOT_INTERPOLATION_INTERVAL *direction.getX();
+            sz += SHOT_INTERPOLATION_INTERVAL *direction.getZ();
+            height += SHOT_INTERPOLATION_INTERVAL;
+        }
+
+        Cylinder shot = new Cylinder();
+        shot.setTranslateY(shooter.y);
+        shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
+        shot.setRotate(-90);
+        shot.setRadius(SHOT_RADIUS);
+        shot.setHeight(height);
+        shot.setTranslateX(shooter.x + direction.multiply(0.5*shot.getHeight()+10).getX() + 0.2*direction.getZ());
+        shot.setTranslateZ(shooter.z + direction.multiply(0.5*shot.getHeight()+10).getZ() - 0.2*direction.getX());
+
+        for(Player enemy : users)
+        {
+            if(enemy.getBoundsInParent().intersects(shot.getBoundsInParent()))
+            {
+                for(PlayerInfo enemy_inf : player_infos)
+                {
+                    if(enemy_inf.username.equals(enemy.username))
+                    {
+                        enemy_inf.health -= SHOT_DAMAGE;
+                        if(enemy_inf.health <= 0) {
+                            enemy_inf.dead = true;
+                            enemy_inf.deaths += 1;
+                            shooter.kills += 1;
+                        }
+                    }
+                }
             }
         }
     }

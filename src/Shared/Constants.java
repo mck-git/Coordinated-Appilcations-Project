@@ -8,6 +8,8 @@ public interface Constants {
     int TILE_SIZE = 20;
     int PLAYER_SIZE = 3;
     int PLAYER_HEIGHT = 10;
-    int SERVER_TICKRATE = 17;
-    int SHOT_INTERVAL = 10;
+    int SERVER_TICKRATE = 60;
+    int SHOT_INTERPOLATION_INTERVAL = 10;
+    double SHOT_RADIUS = 0.1;
+    int SHOT_DAMAGE = 10;
 }

@@ -16,8 +16,6 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
-
 import static Shared.Constants.*;
 
 public class World extends SubScene {
@@ -28,7 +26,7 @@ public class World extends SubScene {
     private Group root;
     private Group renderings;
     private Player user;
-    private int[][] mapGrid;
+    private Map map;
 
     public World() {
         super(new Group(), WIDTH, HEIGHT);
@@ -38,7 +36,7 @@ public class World extends SubScene {
 
     private void setup()
     {
-        this.mapGrid = Map.grid;
+        this.map = new Map();
 
         Rectangle floor = new Rectangle(1000, 1000, Color.grayRgb(30));
         floor.setTranslateY(-floor.getHeight()/2);
@@ -85,7 +83,7 @@ public class World extends SubScene {
 
         root.setFocusTraversable(true);
         root.requestFocus();
-        renderings.getChildren().addAll(Map.getNodes());
+        renderings.getChildren().addAll(map.getNodes());
 
         Box b1 = new Box(TILE_SIZE/3, TILE_SIZE, TILE_SIZE/3);
         b1.setMaterial(new PhongMaterial(Color.color(0.4, 0, 0.2, 0.5)));
@@ -239,7 +237,7 @@ public class World extends SubScene {
                 if(color.getOpacity() < 0.1)
                     renderings.getChildren().remove(i);
                 else
-                    ((PhongMaterial) shot.getMaterial()).setDiffuseColor(Color.color(color.getRed(), color.getGreen(), color.getBlue(), color.getOpacity() - 0.02));
+                    ((PhongMaterial) shot.getMaterial()).setDiffuseColor(Color.color(color.getRed(), color.getGreen(), color.getBlue(), color.getOpacity() - 0.05));
             }
         }
 
@@ -333,12 +331,12 @@ public class World extends SubScene {
             if(sx < 0 || sz < 0)
                 continue;
 
-            if(mapGrid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
+            if(map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
             {
                 break;
             }
-            sx += SHOT_INTERVAL*direction.getX();
-            sz += SHOT_INTERVAL*direction.getZ();
+            sx += SHOT_INTERPOLATION_INTERVAL *direction.getX();
+            sz += SHOT_INTERPOLATION_INTERVAL *direction.getZ();
             height += 10;
         }
 
@@ -346,7 +344,7 @@ public class World extends SubScene {
         shot.setTranslateY(camera.getTranslateY()*0.95);
         shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
         shot.setRotate(-90);
-        shot.setRadius(0.1);
+        shot.setRadius(SHOT_RADIUS);
         shot.setHeight(height);
         shot.setTranslateX(x + direction.multiply(0.5*shot.getHeight()+1).getX() + 0.2*direction.getZ());
         shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()+1).getZ() - 0.2*direction.getX());

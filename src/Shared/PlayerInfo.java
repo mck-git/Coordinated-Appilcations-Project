@@ -8,6 +8,7 @@ public class PlayerInfo {
     public int angle;
     public int health;
     public boolean fire;
+    public boolean dead;
 
     public int kills;
     public int deaths;
@@ -15,7 +16,7 @@ public class PlayerInfo {
     public PlayerInfo(String username)
     {
         this(username,
-                0, -0.5*Constants.PLAYER_HEIGHT,0,
+                100, -0.5*Constants.PLAYER_HEIGHT,100,
                 0,
                 100);
     }

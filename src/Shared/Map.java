@@ -1,18 +1,20 @@
 package Shared;
 
+import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static Shared.Constants.TILE_SIZE;
 
 public class Map {
-    public static final int[][] grid = {
+    Random random = new Random();
+    public final int[][] grid = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
@@ -30,7 +32,22 @@ public class Map {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
-    public static ArrayList<Node> getNodes()
+    public Point2D getNewRespawnLocation()
+    {
+        int x;
+        int z;
+        do
+        {
+            z = random.nextInt(grid.length - 2) + 1;
+            x = random.nextInt(grid[0].length - 2) + 1;
+
+        } while (grid[z][x] != 0);
+
+        return new Point2D(x,z);
+    }
+
+
+    public ArrayList<Node> getNodes()
     {
         ArrayList<Node> walls = new ArrayList();
 

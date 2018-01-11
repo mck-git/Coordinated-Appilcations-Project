@@ -47,6 +47,7 @@ public class Room extends SequentialSpace implements Runnable
     {
         master_gs = g_controller.updateActivePlayers(getUsers());
         master_gs = g_controller.applyCommands(getCommands());
+        master_gs = g_controller.updateStatus();
 
         // getP?
         this.get(new ActualField("gamestate"), new FormalField(GameState.class));
