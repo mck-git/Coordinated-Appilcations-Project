@@ -10,18 +10,20 @@ public class KillDeathRatio extends Label {
 
     private double currentRatio;
     private String pname;
+    String type;
 
     public KillDeathRatio(String type)
     {
         pname = "";
+        this.type = type;
 
-        if (type.equals("user"))
+        if (this.type.equals("user"))
         {
             this.setText("KDR: " + currentRatio);
             this.setTextFill(Color.RED);
         }
 
-        if (type.equals("top"))
+        if (this.type.equals("top"))
         {
             this.setText("Top KDR: " + currentRatio + "\n"
             + "Top player: " + pname);
@@ -36,5 +38,20 @@ public class KillDeathRatio extends Label {
     {
         currentRatio = p.calculateKDR();
         pname = p.username;
+
+
+        if (this.type.equals("user"))
+        {
+            this.setText("KDR: " + currentRatio);
+            this.setTextFill(Color.RED);
+        }
+
+        if (this.type.equals("top"))
+        {
+            this.setText("Top KDR: " + currentRatio + "\n"
+                    + "Top player: " + pname);
+            this.setTextFill(Color.GOLD);
+        }
+
     }
 }

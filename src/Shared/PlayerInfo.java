@@ -56,6 +56,7 @@ public class PlayerInfo {
         p += "  fire: " + fire + "\n";
         p += "  position: (" + x + "," + y + "," + z  + ")\n";
         p += "  angle: " + angle + "\n";
+        p += "  kdr: " + calculateKDR() + "\n";
 
         return p;
     }
