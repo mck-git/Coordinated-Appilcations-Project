@@ -13,7 +13,10 @@ import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
 
 import static Shared.Constants.*;
 
@@ -25,6 +28,7 @@ public class World extends SubScene {
     private Group root;
     private Group renderings;
     private Player user;
+    private int[][] mapGrid;
 
     public World() {
         super(new Group(), WIDTH, HEIGHT);
@@ -34,6 +38,8 @@ public class World extends SubScene {
 
     private void setup()
     {
+        this.mapGrid = Map.grid;
+
         Rectangle floor = new Rectangle(1000, 1000, Color.grayRgb(30));
         floor.setTranslateY(-floor.getHeight()/2);
         floor.setTranslateX(-floor.getWidth()/2);
@@ -192,6 +198,8 @@ public class World extends SubScene {
             if(user.is(pi.username)){
                 user.update(pi);
                 camera.setRotate(pi.angle);
+                if(pi.fire)
+                    addShot(pi.x, pi.z, pi.angle);
                 continue;
             }
 
@@ -210,6 +218,8 @@ public class World extends SubScene {
             {
                 //update
                 player.update(pi);
+                if(pi.fire)
+                    addShot(pi.x, pi.z, pi.angle);
             } else{
                 System.out.println("Found new player: " + pi.username);
                 renderings.getChildren().add(new Player(pi));
@@ -222,9 +232,18 @@ public class World extends SubScene {
                 System.out.println("Player left: " + ((Player)renderings.getChildren().get(i)).username);
                 renderings.getChildren().remove(i);
             }
+
+            if(renderings.getChildren().get(i) instanceof Cylinder){
+                Cylinder shot = (Cylinder) renderings.getChildren().get(i);
+                Color color = ((PhongMaterial) shot.getMaterial()).getDiffuseColor();
+                if(color.getOpacity() < 0.1)
+                    renderings.getChildren().remove(i);
+                else
+                    ((PhongMaterial) shot.getMaterial()).setDiffuseColor(Color.color(color.getRed(), color.getGreen(), color.getBlue(), color.getOpacity() - 0.02));
+            }
         }
 
-        sortShapesByEuclidianDistance();
+        sortRenderingsByEuclidianDistance();
     }
 
 //    private void keyPressedListeners(KeyEvent key)
@@ -294,11 +313,45 @@ public class World extends SubScene {
 //        }
 //    }
 
-    private void sortShapesByEuclidianDistance() {
+    private void sortRenderingsByEuclidianDistance() {
         FXCollections.sort(renderings.getChildren(), (Node a, Node b) -> {
             double da = Math.pow((user.getTranslateX() - a.getTranslateX()),2)+Math.pow((user.getTranslateZ() - a.getTranslateZ()),2);
             double db = Math.pow((user.getTranslateX() - b.getTranslateX()),2)+Math.pow((user.getTranslateZ() - b.getTranslateZ()),2);
             return Double.compare(db, da);
         });
+    }
+
+    private void addShot(double x, double z, int angle)
+    {
+        double radians = Math.toRadians(angle);
+        Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
+
+        double height = 0;
+        double sx = x+0.5*TILE_SIZE, sz = z+0.5*TILE_SIZE;
+        for(int i = 0; i < 10; i++)
+        {
+            if(sx < 0 || sz < 0)
+                continue;
+
+            if(mapGrid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
+            {
+                break;
+            }
+            sx += SHOT_INTERVAL*direction.getX();
+            sz += SHOT_INTERVAL*direction.getZ();
+            height += 10;
+        }
+
+        Cylinder shot = new Cylinder();
+        shot.setTranslateY(camera.getTranslateY()*0.95);
+        shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
+        shot.setRotate(-90);
+        shot.setRadius(0.1);
+        shot.setHeight(height);
+        shot.setTranslateX(x + direction.multiply(0.5*shot.getHeight()+1).getX() + 0.2*direction.getZ());
+        shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()+1).getZ() - 0.2*direction.getX());
+        shot.setMaterial(new PhongMaterial(Color.color(0.2, 0.4, 1, 0.9)));
+        renderings.getChildren().add(shot);
+        System.out.println("Shot " + height + " (" + sx + ", " + sz + ")");
     }
 }

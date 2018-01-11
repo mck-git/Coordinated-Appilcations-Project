@@ -33,20 +33,17 @@ public class Map {
     public static ArrayList<Node> getNodes()
     {
         ArrayList<Node> walls = new ArrayList();
-        int row, col;
 
-        for(int y = 0; y < grid.length; y++)
-            for(int x = 0; x < grid[y].length; x++)
+        for(int z = 0; z < grid.length; z++)
+            for(int x = 0; x < grid[z].length; x++)
             {
-                if(grid[y][x] == 1)
+                if(grid[z][x] == 1)
                 {
-                    row = y - grid.length/2;
-                    col = x - grid[y].length/2;
                     Box b = new Box(TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     b.setMaterial(new PhongMaterial());
                     ((PhongMaterial) b.getMaterial()).setDiffuseMap(new Image("Shared/Resources/concrete.png"));
-                    b.setTranslateX(row * TILE_SIZE);
-                    b.setTranslateZ(col * TILE_SIZE);
+                    b.setTranslateX(x * TILE_SIZE);
+                    b.setTranslateZ(z * TILE_SIZE);
                     b.setTranslateY(-0.5 * TILE_SIZE);
                     b.setCacheHint(CacheHint.SCALE_AND_ROTATE);
                     b.setCache(true);

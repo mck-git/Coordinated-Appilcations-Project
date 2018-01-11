@@ -9,4 +9,5 @@ public interface Constants {
     int PLAYER_SIZE = 3;
     int PLAYER_HEIGHT = 10;
     int SERVER_TICKRATE = 17;
+    int SHOT_INTERVAL = 10;
 }
