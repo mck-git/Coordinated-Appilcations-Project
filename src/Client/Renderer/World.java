@@ -58,7 +58,7 @@ public class World extends SubScene {
 
         camera = new PerspectiveCamera(true);
         this.setCamera(camera);
-        this.setFill(Color.MIDNIGHTBLUE);
+        this.setFill(Color.BLUE);
 //        camera.setTranslateX(user.getTranslateX());
         camera.setTranslateY(-0.9*user.getHeight());
 //        camera.setTranslateZ(user.getTranslateZ());

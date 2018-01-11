@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 
 public class Lobby extends TScene {
@@ -72,6 +73,7 @@ public class Lobby extends TScene {
         root.setBottom(bottom);
 
         TopMenu top = new TopMenu();
+        top.setFontColor(Color.BLACK);
         root.setTop(top);
 
         userListView.setFocusTraversable(false);

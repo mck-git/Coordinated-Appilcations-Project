@@ -16,6 +16,8 @@ import javafx.stage.Popup;
 public class TopMenu extends HBox {
 
     private Button leaveRoom;
+    private Label roomlbl;
+    private Label username;
 
     TopMenu()
     {
@@ -68,7 +70,7 @@ public class TopMenu extends HBox {
         this.setMaxWidth(Double.MAX_VALUE);
 
         HBox topleft = new HBox();
-        Label roomlbl = new Label("Room: " + MainConnector.getCurrentRoomName());
+        roomlbl = new Label("Room: " + MainConnector.getCurrentRoomName());
         roomlbl.setFont(Font.font("Courier", FontWeight.EXTRA_BOLD, 20));
         topleft.setAlignment(Pos.CENTER_LEFT);
         topleft.getChildren().add(leaveRoom);
@@ -81,7 +83,7 @@ public class TopMenu extends HBox {
         topcenter.prefWidthProperty().bind(this.widthProperty().multiply(0.6));
 
         HBox topright = new HBox();
-        Label username = new Label("Username: " + MainConnector.getUserName());
+        username = new Label("Username: " + MainConnector.getUserName());
         topright.getChildren().add(username);
         topright.prefWidthProperty().bind(this.widthProperty().multiply(0.2));
 
@@ -93,5 +95,11 @@ public class TopMenu extends HBox {
     public void leave()
     {
         leaveRoom.fire();
+    }
+
+    public void setFontColor(Color color)
+    {
+        this.roomlbl.setTextFill(color);
+        this.username.setTextFill(color);
     }
 }

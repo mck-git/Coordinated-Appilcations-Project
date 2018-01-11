@@ -11,6 +11,7 @@ import Templates.TScene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class RoomWindow extends TScene {
 
@@ -24,7 +25,6 @@ public class RoomWindow extends TScene {
     private HealthBar healthBar = new HealthBar();
     private KillDeathRatio u_kdr = new KillDeathRatio("user");
     private KillDeathRatio top_kdr = new KillDeathRatio("top");
-    private int number = 100;
 
     public long connectorTime = 0;
     public long renderTime = 0;
@@ -46,7 +46,7 @@ public class RoomWindow extends TScene {
 //        bottomPanel.getChildren().add(healthBar);
 
         VBox rightPanel = new VBox();
-//        rightPanel.getChildren().add(fps);
+        rightPanel.getChildren().add(fps);
         rightPanel.getChildren().add(chat);
 
         bp.setRight(rightPanel);
@@ -60,6 +60,7 @@ public class RoomWindow extends TScene {
         bp.setLeft(scores);
 
         TopMenu top = new TopMenu();
+        top.setFontColor(Color.WHITE);
         bp.setTop(top);
 
 
@@ -71,6 +72,7 @@ public class RoomWindow extends TScene {
             }
         });
     }
+
 
     @Override
     public void refresh() {
