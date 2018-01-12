@@ -3,25 +3,24 @@ package Shared;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Cylinder;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+
+import static Shared.Constants.*;
 
 public class GameController
 {
     private GameState gs;
     private Map map;
-    private ArrayList<Node> map_nodes;
     private ArrayList<Player> players;
 
     public GameController()
     {
         this.gs = new GameState();
         this.map = new Map();
-        this.map_nodes = Map.getNodes();
-        this.players = new ArrayList<Player>();
+        this.players = new ArrayList<>();
     }
 
     public GameState updateActivePlayers(String[] users)
@@ -83,7 +82,7 @@ public class GameController
                     // KILLEM ALL
                     if (p_inf.fire)
                     {
-                        checkBulletCollision(p_inf, player_infos);
+                        checkBulletCollision(p_inf,player_infos, players);
                     }
 
                     continue cmdloop;
@@ -117,8 +116,6 @@ public class GameController
             }
         }
 
-
-
         return gs;
     }
 
@@ -138,95 +135,119 @@ public class GameController
         // Update position
         if (c.isForward() || c.isBackward() || c.isStrafeLeft() || c.isStrafeRight())
         {
-                // possible pointer problem
-               PlayerInfo old_p_inf = new PlayerInfo(new_p_inf.x, new_p_inf.z);
+            // possible pointer problem
+            PlayerInfo old_p_inf = new PlayerInfo(new_p_inf.x, new_p_inf.z);
 
-               double angle_radians = Math.toRadians(new_p_inf.angle);
-               double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
-               double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
+            double angle_radians = Math.toRadians(new_p_inf.angle);
+            double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
+            double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
 
-               // Needs change since diagonal walk is faster
-               // check commented code in World.
-               if (c.isForward())
-               {
-                 new_p_inf.x += xspeed;
-                 new_p_inf.z += zspeed;
-               }
+            double stepx = 0;
+            double stepz = 0;
 
-               if (c.isBackward())
-               {
-                   new_p_inf.x -= xspeed;
-                   new_p_inf.z -= zspeed;
-               }
+            // Needs change since diagonal walk is faster
+            // check commented code in World.
+            if (c.isForward())
+            {
+                stepx += xspeed;
+                stepz += zspeed;
+            }
 
-               if (c.isStrafeLeft())
-               {
-                   new_p_inf.x -= zspeed;
-                   new_p_inf.z += xspeed;
-               }
-               if (c.isStrafeRight())
-               {
-                   new_p_inf.x += zspeed;
-                   new_p_inf.z -= xspeed;
-               }
+            if (c.isBackward())
+            {
+                stepx -= xspeed;
+                stepz -= zspeed;
+            }
 
-               // Map collision
-               try
-               {
-                 Player p = findPlayer(new_p_inf);
-                 if (p == null)
-                 {
-                     throw new NullPointerException();
-                 }
+            if (c.isStrafeLeft())
+            {
+                stepx -= zspeed;
+                stepz += xspeed;
+            }
+            if (c.isStrafeRight())
+            {
+                stepx += zspeed;
+                stepz -= xspeed;
+            }
 
-                 // Update player with new position
-                 p.update(new_p_inf);
-                 ArrayList<Node> collisions = checkMapCollision(p);
+            double stepMagnitude = Math.sqrt(stepx*stepx+stepz*stepz);
+            if(stepMagnitude > 0) {
+                new_p_inf.x += stepx / stepMagnitude;
+                new_p_inf.z += stepz / stepMagnitude;
+            }
 
-                 // Sort closests nodes first
+            // Map collision
+            try
+            {
+                Player p = findPlayer(new_p_inf);
+                if (p == null)
+                {
+                    throw new NullPointerException();
+                }
 
-                 collisions.sort((Node a, Node b) ->
-                 {
-                     double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
-                             + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
-                     double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
-                             + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
-                     return Double.compare(da, db);
-                 });
-                 PlayerInfo tempnew;
-                 PlayerInfo tempold = old_p_inf;
-                 for (Node n : collisions)
-                 {
-                     tempnew = handleMapCollision(new_p_inf, tempold, n);
-                     tempold = new_p_inf;
-                     new_p_inf = tempnew;
-                     p.update(new_p_inf);
+                // Update player with new position
+                p.update(new_p_inf);
+//                ArrayList<Node> collisions = checkMapCollision(p);
+                ArrayList<Node> nearNodes = map.getSurroundingNodes((int)(new_p_inf.x/TILE_SIZE), (int) (new_p_inf.z/TILE_SIZE));
 
-                 }
+                // Sort closests nodes first
 
-               } catch (NullPointerException e)
-               {
-                   System.err.println("Player_info not found in player list!!");
-               }
+//                collisions.sort((Node a, Node b) ->
+//                {
+//                    double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
+//                            + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
+//                    double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
+//                            + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
+//                    return Double.compare(da, db);
+//                });
+
+                nearNodes.sort((Node a, Node b) ->
+                {
+                    double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
+                            + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
+                    double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
+                            + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
+                    return Double.compare(da, db);
+                });
+
+//                PlayerInfo tempnew;
+//                PlayerInfo tempold = old_p_inf;
+//                for (Node n : collisions)
+//                {
+//                    tempnew = handleMapCollision(new_p_inf, tempold, n);
+//                    tempold = new_p_inf;
+//                    new_p_inf = tempnew;
+//                    p.update(new_p_inf);
+//
+//                }
+
+                for(Node n: nearNodes)
+                {
+                    if(p.getBoundsInParent().intersects(n.getBoundsInParent())) {
+                        new_p_inf = handleMapCollision(new_p_inf, old_p_inf, n);
+                        p.update(new_p_inf);
+                    }
+                }
+
+            } catch (NullPointerException e)
+            {
+                System.err.println("Player_info not found in player list!!");
+            }
         }
 
         // Update fire
-        if (c.isFire())
-        {
-            if (!new_p_inf.fire)
-            {
-                System.out.println(new_p_inf.username + " is now firing!");
-            }
-            new_p_inf.fire = true;
-        } else
-        {
-            if (new_p_inf.fire)
-            {
-                System.out.println(new_p_inf.username + " stopped firing...");
-            }
-            new_p_inf.fire = false;
-        }
+        new_p_inf.fireLastFrame = new_p_inf.fire;
+        new_p_inf.fire = false;
 
+        if (new_p_inf.cooldown > 0)
+        {
+            new_p_inf.cooldown -= 1;
+        }
+        if (c.isFire() && new_p_inf.cooldown <= 0)
+        {
+             new_p_inf.fire = true;
+             new_p_inf.cooldown = Constants.FIRE_RATE;
+        }
 
     }
 
@@ -265,32 +286,69 @@ public class GameController
         return null;
     }
 
-    private ArrayList<Node> checkMapCollision(Player new_player)
-    {
-        ArrayList<Node> collisions = new ArrayList<>();
+//    private ArrayList<Node> checkMapCollision(Player new_player)
+//    {
+//        ArrayList<Node> collisions = new ArrayList<>();
+//
+//        for (Node n : map.getSurroundingNodes())
+//        {
+//            if (new_player.getBoundsInParent().intersects(n.getBoundsInParent()))
+//            {
+//                collisions.add(n);
+//            }
+//        }
+//
+//        return collisions;
+//    }
 
-        for (Node n : map_nodes)
+    private void checkBulletCollision(PlayerInfo shooter, ArrayList<PlayerInfo> player_infos, ArrayList<Player> users)
+    {
+        double radians = Math.toRadians(shooter.angle);
+        Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
+
+        double height = 0;
+        double sx = shooter.x+0.5*TILE_SIZE, sz = shooter.z+0.5*TILE_SIZE;
+        for(int i = 0; i < 10; i++)
         {
-            if (new_player.getBoundsInParent().intersects(n.getBoundsInParent()))
+            if(sz >= 0 &&
+                    sx >= 0 &&
+                    sz < map.depth()*TILE_SIZE &&
+                    sx < map.width()*TILE_SIZE &&
+                    map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
+                break;
+
+            sx += SHOT_INTERPOLATION_INTERVAL *direction.getX();
+            sz += SHOT_INTERPOLATION_INTERVAL *direction.getZ();
+            height += SHOT_INTERPOLATION_INTERVAL;
+        }
+
+        Cylinder shot = new Cylinder();
+        shot.setTranslateY(shooter.y);
+        shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
+        shot.setRotate(-90);
+        shot.setRadius(SHOT_RADIUS);
+        shot.setHeight(height);
+        shot.setTranslateX(shooter.x + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getX());
+        shot.setTranslateZ(shooter.z + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getZ());
+
+        for(Player enemy : users)
+        {
+            if(enemy.getBoundsInParent().intersects(shot.getBoundsInParent()))
             {
-                collisions.add(n);
-            }
-        }
-
-        return collisions;
-    }
-
-    private void checkBulletCollision(PlayerInfo player_info, List<PlayerInfo> enemy_infos)
-    {
-        for (PlayerInfo enemy_inf : enemy_infos)
-        {
-            if (enemy_inf != player_info) {
-                Line raycast = new Line();
-                raycast.setRotationAxis(new Point3D(1, 0, 0));
-                raycast.setRotate(90);
+                for(PlayerInfo enemy_inf : player_infos)
+                {
+                    if(!shooter.equals(enemy_inf) && enemy_inf.username.equals(enemy.username))
+                    {
+                        enemy_inf.health -= SHOT_DAMAGE;
+                        if(enemy_inf.health <= 0) {
+                            enemy_inf.dead = true;
+                            enemy_inf.deaths += 1;
+                            shooter.kills += 1;
+                            System.out.println(shooter.username + " killed " + enemy_inf.username);
+                        }
+                    }
+                }
             }
         }
     }
-
-
 }

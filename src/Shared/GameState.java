@@ -7,11 +7,22 @@ public class GameState {
 
     public GameState()
     {
-        this.player_infos = new ArrayList<PlayerInfo>();
+        this.player_infos = new ArrayList<>();
     }
 
     public ArrayList<PlayerInfo> getPlayer_infos() {
         return player_infos;
+    }
+
+    public PlayerInfo getPlayer_info(String name)
+    {
+        for (PlayerInfo p_i : this.player_infos)
+        {
+            if (p_i.username.equals(name))
+                return p_i;
+        }
+
+        return null;
     }
 
     public void setPlayer_infos(ArrayList<PlayerInfo> player_infos)

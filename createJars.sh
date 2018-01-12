@@ -6,7 +6,6 @@ function mark {
 }
 
 mark rootDir
-
 rm -rf gamejars
 mkdir gamejars
 
@@ -18,7 +17,7 @@ cd tmp
 
 touch ClientManifest.txt
 echo "Manifest-Version: 1.0
-Main-Class: MainConnector.UI.Exceptions
+Main-Class: Client.ClientApp
 " | cat > ClientManifest.txt
 
 touch ServerManifest.txt
@@ -27,8 +26,8 @@ Main-Class: Server.ServerApp
 " | cat > ServerManifest.txt
 
 
-jar cfm "$rootDir"/gamejars/Client.jar ClientManifest.txt Client com Exceptions Fields Images org Templates
-jar cfm "$rootDir"/gamejars/Server.jar ServerManifest.txt Server com Exceptions Fields Images org Templates
+jar cfm "$rootDir"/gamejars/Client.jar ClientManifest.txt Client com org Shared
+jar cfm "$rootDir"/gamejars/Server.jar ServerManifest.txt Server com org Shared
 
 cd "$rootDir"
 

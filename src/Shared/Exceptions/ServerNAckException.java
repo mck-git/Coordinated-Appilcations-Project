@@ -1,8 +1,8 @@
 package Shared.Exceptions;
 
-public class ServerNACKException extends Exception {
+public class ServerNAckException extends Exception {
 
-    public ServerNACKException(String operation)
+    public ServerNAckException(String operation)
     {
         super("Server denied the " + operation + " operation.");
     }

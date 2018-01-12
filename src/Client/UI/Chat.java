@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 public class Chat extends VBox {
     private TextArea messageArea;
     private String[] messages = new String[]{};
+    private long lastCheck = 0;
 
     Chat()
     {
@@ -24,18 +25,12 @@ public class Chat extends VBox {
         TextField messageField = new TextField();
         this.getChildren().add(messageField);
         this.setMaxWidth(150);
-        this.setOpacity(0.2);
+        this.setOpacity(0.7);
         this.prefHeightProperty().bind(ClientApp.getStage().heightProperty());
-        messageArea.prefHeightProperty().bind(this.heightProperty().subtract(100));
-
-        this.setSpacing(10);
-
-        this.setOnMouseEntered(mouse -> this.setOpacity(0.8));
-        this.setOnMouseExited(mouse -> this.setOpacity(0.2));
+        messageArea.prefHeightProperty().bind(this.heightProperty());
 
         messageField.setOnKeyPressed(key -> {
             if (key.getCode() == KeyCode.ENTER) {
-                //MainConnector.sendMessage(messageField.getText());
                 RoomConnector.sendMessage(messageField.getText());
                 messageField.clear();
             }
@@ -43,6 +38,9 @@ public class Chat extends VBox {
     }
 
     public void update() {
+        if(System.currentTimeMillis() - lastCheck < 1000) return;
+        lastCheck = System.currentTimeMillis();
+
         String[] newMessages = RoomConnector.getMessages();
         boolean refreshNeeded = newMessages.length != messages.length;
 
@@ -71,5 +69,4 @@ public class Chat extends VBox {
             messageArea.setScrollTop(Double.MAX_VALUE);
         }
     }
-
 }

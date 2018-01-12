@@ -1,7 +1,6 @@
 package Server.Networking;
 
 import Shared.Command;
-import Shared.Constants;
 import Shared.GameController;
 import Shared.GameState;
 import org.jspace.ActualField;
@@ -10,6 +9,8 @@ import org.jspace.SequentialSpace;
 
 import java.util.*;
 
+import static Shared.Constants.*;
+
 enum Status {OPEN, LOCKED}
 
 public class Room extends SequentialSpace implements Runnable
@@ -17,17 +18,14 @@ public class Room extends SequentialSpace implements Runnable
     private String name;
     private String owner;
     private Status status;
-
     private GameState master_gs;
     private GameController g_controller;
-
 
     public Room (String name, String owner) throws InterruptedException
     {
         this.name = name;
         this.owner = owner;
         this.status = Status.OPEN;
-
         this.master_gs = new GameState();
         this.g_controller = new GameController();
         this.put("gamestate", master_gs);
@@ -38,7 +36,7 @@ public class Room extends SequentialSpace implements Runnable
         try {
             while (true) {
                 updateGamestate();
-                Thread.sleep(1000 / Constants.SERVER_TICKRATE );
+                Thread.sleep(1000 / SERVER_TICKRATE );
             }
         } catch (Exception e){e.printStackTrace();}
     }
@@ -49,8 +47,7 @@ public class Room extends SequentialSpace implements Runnable
         master_gs = g_controller.applyCommands(getCommands());
         master_gs = g_controller.updateStatus();
 
-        // getP?
-        this.get(new ActualField("gamestate"), new FormalField(GameState.class));
+        this.getp(new ActualField("gamestate"), new FormalField(GameState.class));
         this.put("gamestate", master_gs);
     }
 
@@ -60,13 +57,9 @@ public class Room extends SequentialSpace implements Runnable
         List<Object[]> tuple_commands = this.queryAll(new ActualField("command"),
                                                       new FormalField(String.class),
                                                       new FormalField(Command.class));
-//        System.out.println("Got following " + tuple_commands.size() + " commands:");
-        for (int i = 0; i < tuple_commands.size(); i++)
-        {
-//            System.out.println(((Command) o[2]).toString());
-            commands.add((Command) tuple_commands.get(i)[2]);
+        for (Object[] tuple_command : tuple_commands) {
+            commands.add((Command) tuple_command[2]);
         }
-
         return commands;
     }
 
@@ -81,8 +74,7 @@ public class Room extends SequentialSpace implements Runnable
         int i = 0;
         for (Object[] o : messages)
         {
-            messages_string[i] = "[" + name + "]" + o[1] + ": " + o[2];
-            i++;
+            messages_string[i++] = "[" + name + "]" + o[1] + ": " + o[2];
         }
 
         return messages_string;
@@ -100,29 +92,8 @@ public class Room extends SequentialSpace implements Runnable
         return users_string;
     }
 
-    private void displayMessages(String[] messages)
-    {
-        for (String s : messages)
-        {
-            System.out.println(s);
-        }
-    }
-
-    private void displayUsers(String[] users)
-    {
-        System.out.println("Users in room " +name+ ":");
-        for (String s : users)
-        {
-            System.out.print(" " + s);
-        }
-        System.out.println();
-    }
-
-
-
     public void lock(String name, String user)
     {
-        boolean ack = false;
         if (this.name.equals(name))
         {
             if (this.owner.equals(user))

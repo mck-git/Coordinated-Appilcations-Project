@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Shared.Constants.Game_Port;
+
 // Templates
 // client template: (string name)
 // room template: ("room", string name, string owner)
@@ -47,7 +49,7 @@ public class Server {
         }
         System.out.println("Host IP is: " + localhostAddress);
 
-        repository.addGate("tcp://"+localhostAddress+":9002/?keep");
+        repository.addGate("tcp://"+localhostAddress+":" + Game_Port + "/?keep");
         repository.add("lobby", lobby);
 
         // Setup registration_lock
@@ -58,6 +60,7 @@ public class Server {
         }
 
         new RequestHandler().start();
+        new BroadCast().start();
     }
 
     static void handleRequests()
@@ -271,7 +274,7 @@ public class Server {
                 {
                     if (r.getName().equals(room))
                     {
-                        System.out.println("Ack to room '" + r.getName() + "' with format: " + "'response', '" + user + "', true");
+                        System.out.println("Ack to room '" + r.getName() + "' with format: 'response', '" + user + "', true");
                         r.put("response", user, true);
                     }
                 }
@@ -309,7 +312,7 @@ class RequestHandler extends Thread{
         {
             try {
                 Server.handleRequests();
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
