@@ -6,7 +6,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static Shared.Constants.BroadCastPort;
+import static Shared.Constants.BROADCAST_PORT;
 
 public class ServerFinder extends Thread{
     private ArrayList<String> foundServers = null;
@@ -59,7 +59,7 @@ public class ServerFinder extends Thread{
             while(sc.hasNextLine()) {
                 try {
                     String ip = sc.nextLine().trim();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ip), BroadCastPort);
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ip), BROADCAST_PORT);
                     c.send(sendPacket);
                 } catch (Exception ignored) {}
             }

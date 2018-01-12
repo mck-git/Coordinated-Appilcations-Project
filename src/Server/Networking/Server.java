@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Shared.Constants.Game_Port;
+import static Shared.Constants.GAME_PORT;
 
 // Templates
 // client template: (string name)
@@ -49,7 +49,7 @@ public class Server {
         }
         System.out.println("Host IP is: " + localhostAddress);
 
-        repository.addGate("tcp://"+localhostAddress+":" + Game_Port + "/?keep");
+        repository.addGate("tcp://"+localhostAddress+":" + GAME_PORT + "/?keep");
         repository.add("lobby", lobby);
 
         // Setup registration_lock

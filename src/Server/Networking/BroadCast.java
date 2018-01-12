@@ -5,14 +5,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import static Shared.Constants.BroadCastPort;
+import static Shared.Constants.BROADCAST_PORT;
 
 public class BroadCast extends Thread{
     private DatagramSocket socket;
     @Override
     public void run() {
         try {
-            socket = new DatagramSocket(BroadCastPort, InetAddress.getByName("0.0.0.0"));
+            socket = new DatagramSocket(BROADCAST_PORT, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
 
             while (true) {

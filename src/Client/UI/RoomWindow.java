@@ -3,15 +3,14 @@ package Client.UI;
 import Client.ClientApp;
 import Client.Networking.MainConnector;
 import Client.Networking.RoomConnector;
-import Client.Renderer.FpsCounter;
-import Client.Renderer.HealthBar;
-import Client.Renderer.KillDeathRatio;
-import Client.Renderer.World;
+import Client.Renderer.*;
 import Templates.TScene;
+import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 public class RoomWindow extends TScene {
 
@@ -43,6 +42,9 @@ public class RoomWindow extends TScene {
 
         bp.setRight(rightPanel);
         bp.setBottom(healthBar);
+
+        Crosshair crossAir = new Crosshair();
+        root.getChildren().add(crossAir);
 
         VBox scores = new VBox();
 

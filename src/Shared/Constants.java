@@ -13,6 +13,7 @@ public interface Constants {
     double SHOT_RADIUS = 1;
     int SHOT_DAMAGE = 49;
     int FIRE_RATE = 90;
-    int Game_Port = 9002;
-    int BroadCastPort = 9003;
+    int GAME_PORT = 9002;
+    int BROADCAST_PORT = 9003;
+    int SHOT_OFFSET = 2;
 }

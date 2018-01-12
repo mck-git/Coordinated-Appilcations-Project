@@ -186,7 +186,7 @@ public class World extends SubScene {
         }
 
         Cylinder shot = new Cylinder();
-        shot.setTranslateY(camera.getTranslateY()*0.5);
+        shot.setTranslateY(camera.getTranslateY() + SHOT_OFFSET);
         shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
         shot.setRotate(-90);
         shot.setRadius(SHOT_RADIUS);

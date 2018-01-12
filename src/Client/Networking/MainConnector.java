@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Shared.Constants.Game_Port;
+import static Shared.Constants.GAME_PORT;
 
 public class MainConnector {
     static private RemoteSpace lobby;
@@ -261,6 +261,6 @@ public class MainConnector {
     // Creates a URI address from a given room name
     public static String createURI(String roomName)
     {
-        return "tcp://" + ip + ":" + Game_Port + "/" + roomName + "?keep";
+        return "tcp://" + ip + ":" + GAME_PORT + "/" + roomName + "?keep";
     }
 }
