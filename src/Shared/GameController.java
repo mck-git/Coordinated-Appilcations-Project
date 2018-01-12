@@ -307,9 +307,10 @@ public class GameController
         double radians = Math.toRadians(shooter.angle);
         Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
         Point3D shotStart = new Point3D(shooter.x, shooter.y, shooter.z);
-        double range = 0;
         double sx = shooter.x+0.5*TILE_SIZE, sz = shooter.z+0.5*TILE_SIZE;
-        for(int i = 0; i < 10; i++)
+        double range = 0;
+        int steps = (map.depth()*TILE_SIZE + map.width()*TILE_SIZE)/SHOT_INTERPOLATION_INTERVAL;
+        for(int i = 0; i < steps; i++)
         {
             if(sz >= 0 &&
                     sx >= 0 &&

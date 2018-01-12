@@ -10,7 +10,6 @@ import Shared.PlayerInfo;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -169,20 +168,21 @@ public class World extends SubScene {
         double radians = Math.toRadians(angle);
         Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
 
-        double height = 0;
         double sx = x+0.5*TILE_SIZE, sz = z+0.5*TILE_SIZE;
-        for(int i = 0; i < 10; i++)
+        double range = 0;
+        int steps = (map.depth()*TILE_SIZE + map.width()*TILE_SIZE)/SHOT_INTERPOLATION_INTERVAL;
+        for(int i = 0; i < steps; i++)
         {
             if(sz >= 0 &&
-                sx >= 0 &&
-                sz < map.depth()*TILE_SIZE &&
-                sx < map.width()*TILE_SIZE &&
-                map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
+                    sx >= 0 &&
+                    sz < map.depth()*TILE_SIZE &&
+                    sx < map.width()*TILE_SIZE &&
+                    map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
                 break;
 
             sx += SHOT_INTERPOLATION_INTERVAL *direction.getX();
             sz += SHOT_INTERPOLATION_INTERVAL *direction.getZ();
-            height += SHOT_INTERPOLATION_INTERVAL;
+            range += SHOT_INTERPOLATION_INTERVAL;
         }
 
         Cylinder shot = new Cylinder();
@@ -190,9 +190,9 @@ public class World extends SubScene {
         shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
         shot.setRotate(-90);
         shot.setRadius(SHOT_RADIUS);
-        shot.setHeight(height);
-        shot.setTranslateX(x + direction.multiply(0.5*shot.getHeight()+1).getX() + 0.2*direction.getZ());
-        shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()+1).getZ() - 0.2*direction.getX());
+        shot.setHeight(range);
+        shot.setTranslateX(x + direction.multiply(0.5*shot.getHeight()+1).getX());
+        shot.setTranslateZ(z + direction.multiply(0.5*shot.getHeight()+1).getZ());
         shot.setMaterial(new PhongMaterial(Color.color(0.2, 0.4, 1, 0.9)));
         renderings.getChildren().add(shot);
     }
