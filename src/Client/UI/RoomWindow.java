@@ -5,12 +5,10 @@ import Client.Networking.MainConnector;
 import Client.Networking.RoomConnector;
 import Client.Renderer.*;
 import Templates.TScene;
-import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 
 public class RoomWindow extends TScene {
 
@@ -22,8 +20,7 @@ public class RoomWindow extends TScene {
     private World world = new World();
     private FpsCounter fps = new FpsCounter();
     private HealthBar healthBar = new HealthBar();
-    private KillDeathRatio u_kdr = new KillDeathRatio("user");
-    private KillDeathRatio top_kdr = new KillDeathRatio("top");
+    private KillDeathRatio kdr = new KillDeathRatio();
 
     @Override
     public void setup() {
@@ -43,14 +40,9 @@ public class RoomWindow extends TScene {
         bp.setRight(rightPanel);
         bp.setBottom(healthBar);
 
+        bp.setLeft(kdr);
         Crosshair crossAir = new Crosshair();
         root.getChildren().add(crossAir);
-
-        VBox scores = new VBox();
-
-        scores.getChildren().addAll(u_kdr,top_kdr);
-
-        bp.setLeft(scores);
 
         TopMenu top = new TopMenu();
         top.setFontColor(Color.WHITE);
@@ -72,8 +64,9 @@ public class RoomWindow extends TScene {
         RoomConnector.update();
 
         fps.update();
-        u_kdr.update(RoomConnector.getClientPlayerInfo());
-        top_kdr.update(RoomConnector.getHighestKDRPlayerInfo());
+        kdr.update(
+                RoomConnector.getClientPlayerInfo(),
+                RoomConnector.getHighestKDRPlayerInfo());
         chat.update();
 
         world.update(RoomConnector.getGamestate());

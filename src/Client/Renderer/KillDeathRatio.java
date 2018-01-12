@@ -9,49 +9,35 @@ import javafx.scene.paint.Color;
 public class KillDeathRatio extends Label {
 
     private double currentRatio;
+    private double currentTopRatio;
     private String pname;
-    String type;
 
-    public KillDeathRatio(String type)
+    public KillDeathRatio()
     {
         pname = "";
-        this.type = type;
 
-        if (this.type.equals("user"))
-        {
-            this.setText("KDR: " + currentRatio);
-            this.setTextFill(Color.RED);
-        }
-
-        if (this.type.equals("top"))
-        {
-            this.setText("Top KDR: " + currentRatio + "\n"
-            + "Top player: " + pname);
-            this.setTextFill(Color.GOLD);
-        }
+        this.setText("KDR: " + currentRatio + "\n");
+        this.setTextFill(Color.RED);
+        this.setText("Top KDR: " + currentTopRatio + "\n"
+        + "Top player: " + pname);
+        this.setTextFill(Color.GOLD);
 
 
         currentRatio = 0.0;
+        currentTopRatio = 0.0;
     }
 
-    public void update(PlayerInfo p)
+    public void update(PlayerInfo p, PlayerInfo top)
     {
         currentRatio = p.calculateKDR();
-        pname = p.username;
+        currentTopRatio = top.calculateKDR();
+        pname = top.username;
 
-
-        if (this.type.equals("user"))
-        {
-            this.setText("KDR: " + String.format("%.2f",currentRatio));
-            this.setTextFill(Color.RED);
-        }
-
-        if (this.type.equals("top"))
-        {
-            this.setText("Top KDR: " + String.format("%.2f",currentRatio) + "\n"
-                    + "Top player: " + pname);
-            this.setTextFill(Color.GOLD);
-        }
+        this.setText("KDR: " + String.format("%.2f",currentRatio) + "\n");
+        this.setTextFill(Color.RED);
+        this.setText("Top KDR: " + String.format("%.2f",currentTopRatio) + "\n"
+                + "Top player: " + pname);
+        this.setTextFill(Color.GOLD);
 
     }
 }
