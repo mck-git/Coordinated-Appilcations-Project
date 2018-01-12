@@ -23,8 +23,7 @@ public class RoomWindow extends TScene {
     private World world = new World();
     private FpsCounter fps = new FpsCounter();
     private HealthBar healthBar = new HealthBar();
-    private KillDeathRatio u_kdr = new KillDeathRatio("user");
-    private KillDeathRatio top_kdr = new KillDeathRatio("top");
+    private KillDeathRatio kdr = new KillDeathRatio();
 
     @Override
     public void setup() {
@@ -44,11 +43,7 @@ public class RoomWindow extends TScene {
         bp.setRight(rightPanel);
         bp.setBottom(healthBar);
 
-        VBox scores = new VBox();
-
-        scores.getChildren().addAll(u_kdr,top_kdr);
-
-        bp.setLeft(scores);
+        bp.setLeft(kdr);
 
         TopMenu top = new TopMenu();
         top.setFontColor(Color.WHITE);
@@ -70,8 +65,9 @@ public class RoomWindow extends TScene {
         RoomConnector.update();
 
         fps.update();
-        u_kdr.update(RoomConnector.getClientPlayerInfo());
-        top_kdr.update(RoomConnector.getHighestKDRPlayerInfo());
+        kdr.update(
+                RoomConnector.getClientPlayerInfo(),
+                RoomConnector.getHighestKDRPlayerInfo());
         chat.update();
 
         world.update(RoomConnector.getGamestate());
