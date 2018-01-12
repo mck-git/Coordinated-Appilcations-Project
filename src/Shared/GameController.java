@@ -3,6 +3,7 @@ package Shared;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 
 import java.util.ArrayList;
@@ -305,8 +306,8 @@ public class GameController
     {
         double radians = Math.toRadians(shooter.angle);
         Point3D direction = new Point3D(Math.sin(radians), 0, Math.cos(radians));
-
-        double height = 0;
+        Point3D shotStart = new Point3D(shooter.x, shooter.y, shooter.z);
+        double range = 0;
         double sx = shooter.x+0.5*TILE_SIZE, sz = shooter.z+0.5*TILE_SIZE;
         for(int i = 0; i < 10; i++)
         {
@@ -319,22 +320,36 @@ public class GameController
 
             sx += SHOT_INTERPOLATION_INTERVAL *direction.getX();
             sz += SHOT_INTERPOLATION_INTERVAL *direction.getZ();
-            height += SHOT_INTERPOLATION_INTERVAL;
+            range += SHOT_INTERPOLATION_INTERVAL;
         }
 
-        Cylinder shot = new Cylinder();
-        shot.setTranslateY(shooter.y);
-        shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
-        shot.setRotate(-90);
-        shot.setRadius(SHOT_RADIUS);
-        shot.setHeight(height);
-        shot.setTranslateX(shooter.x + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getX());
-        shot.setTranslateZ(shooter.z + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getZ());
+        Point3D shotEnd = new Point3D(shooter.x + direction.multiply(range).getX(), shooter.y, shooter.z + direction.multiply(range).getZ());
+
+
+
+//        Box shot = new Box();
+//        shot.setTranslateY(shooter.y);
+////        shot.setRotationAxis(new Point3D(direction.getZ(), 0, -direction.getX()));
+//        shot.setRotationAxis(new Point3D(0, 1, 0));
+////        shot.setRotate(-90);
+//        shot.setRotate(shooter.angle);
+//
+//        shot.setWidth(SHOT_RADIUS);
+//        shot.setHeight(SHOT_RADIUS);
+//        shot.setHeight(range);
+//        shot.setTranslateX(shooter.x + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getX());
+//        shot.setTranslateZ(shooter.z + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getZ());
 
         for(Player enemy : users)
         {
-            if(enemy.getBoundsInParent().intersects(shot.getBoundsInParent()))
+            Point3D enemyPosition = new Point3D(enemy.getTranslateX(), enemy.getTranslateY(), enemy.getTranslateZ());
+            double shot_player_how_far_away_is_he_from_the_shot = (enemyPosition.subtract(shotStart).crossProduct(enemyPosition.subtract(shotEnd))).magnitude()/(shotEnd.subtract(shotStart)).magnitude();
+            if(shot_player_how_far_away_is_he_from_the_shot < SHOT_RADIUS + 0.5*PLAYER_SIZE)
+//            if(enemy.getBoundsInParent().intersects(shot.getBoundsInParent()))
             {
+//                System.out.println(enemy.getBoundsInParent());
+//                System.out.println(shot.getBoundsInParent());
+//                System.out.println();
                 for(PlayerInfo enemy_inf : player_infos)
                 {
                     if(!shooter.equals(enemy_inf) && enemy_inf.username.equals(enemy.username))
