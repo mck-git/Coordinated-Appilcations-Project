@@ -126,6 +126,9 @@ public class WelcomeMenu extends TScene {
     public void refresh() {
         try {
             serverView.setItems(FXCollections.observableArrayList(MainConnector.foundServers));
+            if (!serverView.getItems().isEmpty() && serverView.getSelectionModel().getSelectedItem() == null)
+                serverView.getSelectionModel().select(0);
+
             if (serverView.getSelectionModel().getSelectedItem() == null)
                 btnLogin.setDisable(true);
             else if (btnLogin.isDisabled())
