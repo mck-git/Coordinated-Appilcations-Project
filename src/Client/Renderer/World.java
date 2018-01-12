@@ -107,7 +107,7 @@ public class World extends SubScene {
             if(user.is(pi.username)){
                 user.update(pi);
                 camera.setRotate(pi.angle);
-                if(pi.fire)
+                if(pi.fire || pi.fireLastFrame)
                     addShot(pi.x, pi.z, pi.angle);
                 continue;
             }
@@ -126,7 +126,7 @@ public class World extends SubScene {
             if(player != null)
             {
                 player.update(pi);
-                if(pi.fire)
+                if(pi.fire || pi.fireLastFrame)
                     addShot(pi.x, pi.z, pi.angle);
             } else{
                 System.out.println("Found new player: " + pi.username);

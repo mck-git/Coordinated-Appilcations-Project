@@ -8,6 +8,8 @@ public class PlayerInfo {
     public int angle;
     public int health;
     public boolean fire;
+    public boolean fireLastFrame;
+
     public boolean dead;
     public int cooldown;
 

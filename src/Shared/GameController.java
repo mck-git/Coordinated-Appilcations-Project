@@ -236,7 +236,9 @@ public class GameController
         }
 
         // Update fire
+        new_p_inf.fireLastFrame = new_p_inf.fire;
         new_p_inf.fire = false;
+
         if (new_p_inf.cooldown > 0)
         {
             new_p_inf.cooldown -= 1;
