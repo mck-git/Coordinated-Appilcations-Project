@@ -12,7 +12,7 @@ public interface Constants {
     int SHOT_INTERPOLATION_INTERVAL = 10;
     double SHOT_RADIUS = 0.5;
     int SHOT_DAMAGE = 30;
-    int FIRE_RATE = 20;
+    int FIRE_RATE = 6;
     int Game_Port = 9002;
     int BroadCastPort = 9003;
 }
