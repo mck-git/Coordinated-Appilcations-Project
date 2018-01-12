@@ -28,7 +28,8 @@ public class Player extends Box {
         this.setTranslateY(info.y);
         this.setTranslateZ(info.z);
         this.active = true;
-        ((PhongMaterial)this.getMaterial()).setDiffuseColor(Color.color(1 - info.health / 100.0, info.health / 100.0, 0 ));
+        double ratio = info.health < 0 ? 0 : info.health / 100.0;
+        ((PhongMaterial)this.getMaterial()).setDiffuseColor(Color.color(1 - ratio, ratio, 0 ));
     }
 
     public boolean is(String username) {
