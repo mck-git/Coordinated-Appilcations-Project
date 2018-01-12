@@ -1,6 +1,7 @@
 package Server.Networking;
 
 import Shared.Command;
+import Shared.Constants;
 import Shared.GameController;
 import Shared.GameState;
 import org.jspace.ActualField;
@@ -8,7 +9,6 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 enum Status {OPEN, LOCKED}
 
@@ -38,15 +38,16 @@ public class Room extends SequentialSpace implements Runnable
         try {
             while (true) {
                 updateGamestate();
-                Thread.sleep(17);
+                Thread.sleep(1000 / Constants.SERVER_TICKRATE );
             }
         } catch (Exception e){e.printStackTrace();}
     }
 
     private void updateGamestate() throws Exception
     {
-        master_gs = g_controller.updatePlayerList(getUsers());
+        master_gs = g_controller.updateActivePlayers(getUsers());
         master_gs = g_controller.applyCommands(getCommands());
+        master_gs = g_controller.updateStatus();
 
         // getP?
         this.get(new ActualField("gamestate"), new FormalField(GameState.class));

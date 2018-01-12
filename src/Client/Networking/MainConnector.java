@@ -15,7 +15,7 @@ public class MainConnector {
 
     static private String userName = "";
     static private String currentRoomName = "";
-    static private String ip = "192.168.0.100";
+    static private String ip = "10.16.172.151";
 
     static private Scanner sc;
 

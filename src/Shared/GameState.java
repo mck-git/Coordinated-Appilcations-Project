@@ -3,27 +3,27 @@ package Shared;
 import java.util.ArrayList;
 
 public class GameState {
-    private ArrayList<PlayerInfo> players;
+    private ArrayList<PlayerInfo> player_infos;
 
     public GameState()
     {
-        this.players = new ArrayList<PlayerInfo>();
+        this.player_infos = new ArrayList<PlayerInfo>();
     }
 
-    public ArrayList<PlayerInfo> getPlayers() {
-        return players;
+    public ArrayList<PlayerInfo> getPlayer_infos() {
+        return player_infos;
     }
 
-    public void setPlayers(ArrayList<PlayerInfo> players)
+    public void setPlayer_infos(ArrayList<PlayerInfo> player_infos)
     {
-        this.players = players;
+        this.player_infos = player_infos;
     }
 
     public String toString()
     {
         String gs = "Gamestate info: \n";
-        gs += "     players in game: \n";
-        for (PlayerInfo p : players)
+        gs += "     player_infos in game: \n";
+        for (PlayerInfo p : player_infos)
         {
             gs += "     " + p.toString();
         }

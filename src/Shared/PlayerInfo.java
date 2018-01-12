@@ -8,11 +8,20 @@ public class PlayerInfo {
     public int angle;
     public int health;
     public boolean fire;
+    public boolean dead;
 
     public PlayerInfo(String username)
     {
         this(username,
                 0, -0.5*Constants.PLAYER_HEIGHT,0,
+                0,
+                100);
+    }
+
+    public PlayerInfo(double x, double z)
+    {
+        this("old_position",
+                x, -0.5*Constants.PLAYER_HEIGHT,z,
                 0,
                 100);
     }
