@@ -1,7 +1,6 @@
 package Client;
 
 import Client.Networking.MainConnector;
-import Client.Networking.RoomConnector;
 import Client.UI.WelcomeMenu;
 import Templates.TScene;
 import javafx.animation.AnimationTimer;
@@ -22,21 +21,15 @@ public class ClientApp extends Application {
             scene.closingProtocol();
             event.consume();
         });
-        _stage.setTitle("Game MainConnector");
+        _stage.setTitle("TEAM 10 Shooting Game");
 
         MainConnector.setupServerFinder();
         MainConnector.activateServerFinder();
 
         new AnimationTimer() {
-//            long lastTime = 0;
             @Override
             public void handle(long now) {
-//                if(now-lastTime > 1e9)
-                {
-//                    lastTime = now;
-                    RoomConnector.update();
-                    scene.refresh();
-                }
+                scene.refresh();
             }
         }.start();
 

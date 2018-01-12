@@ -35,7 +35,7 @@ public class WelcomeMenu extends TScene {
     @Override
     public void setup() {
         BorderPane root = (BorderPane) getRoot();
-        root.setStyle("-fx-background-image: url(\"Shared/Resources/steam_train_blue_background_by_keno9988-d6gt3pk.png\");-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
+        root.setStyle("-fx-background-image: url(Shared/Resources/steam_train_blue_background_by_keno9988-d6gt3pk.png);-fx-background-size: "+WIDTH*2+", "+HEIGHT*2+";-fx-background-repeat: repeat;");
 
         root.setPadding(new Insets(10,10,50,10));
 
@@ -50,13 +50,11 @@ public class WelcomeMenu extends TScene {
         HBox hb = new HBox();
         topPane.getChildren().add(hb);
 
-        //Adding GridPane
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20,20,20,20));
         gridPane.setHgap(5);
         gridPane.setVgap(5);
 
-        //Implementing Nodes for GridPane
         Label lblUserName = new Label("Username");
         final TextField txtUserName = new TextField();
         Label lblErrorMessage = new Label();
@@ -65,7 +63,6 @@ public class WelcomeMenu extends TScene {
         Label lblChooseServer = new Label("Choose server: ");
         serverView.setMinWidth(100);
 
-        //Adding Nodes to GridPane layout
         gridPane.add(lblErrorMessage, 1, 0);
         gridPane.add(lblUserName, 0, 1);
         gridPane.add(txtUserName, 1, 1);
@@ -73,22 +70,18 @@ public class WelcomeMenu extends TScene {
         gridPane.add(lblChooseServer, 0, 3);
         gridPane.add(serverView, 1, 3);
 
-        //Reflection for gridPane
         Reflection r = new Reflection();
         r.setFraction(0.7f);
         gridPane.setEffect(r);
 
-        //DropShadow effect
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetX(2);
         dropShadow.setOffsetY(2);
 
-        //Adding text and DropShadow effect to it
         Text text = new Text("Welcome");
         text.setFont(Font.font("Courier New", FontWeight.BOLD, 36));
         text.setEffect(dropShadow);
 
-        //Adding text to HBox
         hb.getChildren().add(text);
         hb.setAlignment(Pos.CENTER);
         gridPane.setAlignment(Pos.CENTER);
@@ -106,7 +99,8 @@ public class WelcomeMenu extends TScene {
         });
 
         btnLogin.setOnAction(event -> {
-            if (serverView.getSelectionModel() != null && MainConnector.initialize(txtUserName.getText(), serverView.getSelectionModel().getSelectedItem()))
+            if (serverView.getSelectionModel() != null &&
+                    MainConnector.initialize(txtUserName.getText(), serverView.getSelectionModel().getSelectedItem()))
             {
                 ClientApp.setScene(new Lobby());
             }
@@ -124,7 +118,6 @@ public class WelcomeMenu extends TScene {
             }
         });
 
-        //Add HBox and GridPane layout to BorderPane Layout
         root.setTop(topPane);
         root.setCenter(gridPane);
     }

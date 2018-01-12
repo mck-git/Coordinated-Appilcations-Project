@@ -5,38 +5,31 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import static Shared.Constants.BroadCastPort;
+
 public class BroadCast extends Thread{
     private DatagramSocket socket;
-    private int port = 9002;
     @Override
     public void run() {
         try {
-            socket = new DatagramSocket(port, InetAddress.getByName("0.0.0.0"));
-//            socket = new DatagramSocket(port);
+            socket = new DatagramSocket(BroadCastPort, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
 
             while (true) {
-//                System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
+                byte[] requestBuffer = new byte[1000];
+                DatagramPacket request = new DatagramPacket(requestBuffer, requestBuffer.length);
+                socket.receive(request);
 
-                //Receive a packet
-                byte[] recvBuf = new byte[1000];
-                DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-                socket.receive(packet);
+//                System.out.println(getClass().getName() + "Got request received from: " + request.getAddress().getHostAddress());
+//                System.out.println(getClass().getName() + "Packet data: " + new String(request.getData()).trim());
 
-                //Packet received
-                System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()).trim());
-
-                //Check packet
-                String message = new String(packet.getData()).trim();
+                String message = new String(request.getData()).trim();
                 if (message.equals("02148_TEAM_10_SERVER_REQUEST")) {
                     byte[] sendData = "02148_TEAM_10_SERVER_RESPONSE".getBytes();
-
-                    //Send a response
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, request.getAddress(), request.getPort());
                     socket.send(sendPacket);
 
-//                    System.out.println(getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
+//                    System.out.println(getClass().getName() + ">>>Sent request to: " + sendPacket.getAddress().getHostAddress());
                 }
             }
         } catch (IOException ex) {

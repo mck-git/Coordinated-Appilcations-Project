@@ -1,14 +1,13 @@
 package Client.Networking;
 
+import Shared.Command;
+import Shared.GameState;
 import Shared.PlayerInfo;
 import javafx.scene.input.KeyCode;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
-import Shared.Command;
-import Shared.GameState;
 
-import java.io.IOException;
 import java.util.List;
 
 public class RoomConnector
@@ -19,9 +18,7 @@ public class RoomConnector
     private static String userName = "";
     private static boolean inRoom = false;
     private static PlayerInfo clientPlayerInfo;
-
     private static boolean[] keysPressed = new boolean[7];
-
 
     public static void initialize(String user)
     {
@@ -31,15 +28,11 @@ public class RoomConnector
         System.out.println("Initialized the RoomConnector");
     }
 
-    // Connect to the room when joining a new room
     public static void connect(RemoteSpace r)
     {
         room = r;
-
         inRoom = true;
-
         Command c = new Command(keysPressed,userName);
-
         room.put("command", userName, c);
 
         update();
@@ -58,8 +51,6 @@ public class RoomConnector
         } catch (Exception e) {e.printStackTrace();}
     }
 
-
-    // Update the local gamestate to be the newest gamestate in the tuplespace
     public static void updateGamestate() throws InterruptedException
     {
         Object[] newState = room.queryp(new ActualField("gamestate"), new FormalField(GameState.class));
@@ -70,7 +61,6 @@ public class RoomConnector
         clientPlayerInfo = gameState.getPlayer_info(userName);
     }
 
-    // Update the player command in the tuplespace
     public static void updateCommand() throws InterruptedException
     {
         room.getp(
@@ -111,7 +101,6 @@ public class RoomConnector
 
     public static void leaveRoom() throws InterruptedException
     {
-        // Remove command from touplespace
         room.getp(
                 new ActualField("command"),
                 new ActualField(userName),
@@ -122,25 +111,20 @@ public class RoomConnector
 
     }
 
-    // Send a message to the current room
     public static void sendMessage(String msg)
     {
         room.put("message", userName, msg);
     }
 
-
-    // Get all messages in the current room
     public static String[] getMessages()
     {
         try {
-            // Query the messages from the server touplespace for the current room
             List<Object[]> messages = room.queryAll(
                     new ActualField("message"),
                     new FormalField(String.class),
                     new FormalField(String.class)
             );
 
-            // Collect all messages in a string array
             String[] messages_string = new String[messages.size()];
             int i = 0;
             for (Object[] o : messages)
@@ -149,10 +133,8 @@ public class RoomConnector
                 i++;
             }
 
-            // Return the string array
             return messages_string;
-
-        } catch (Exception e) {e.printStackTrace(); return new String[] {};}
+        } catch (InterruptedException e) {e.printStackTrace(); return new String[] {};}
     }
 
 

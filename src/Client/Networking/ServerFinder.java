@@ -6,10 +6,10 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static Shared.Constants.BroadCastPort;
 
 public class ServerFinder extends Thread{
     private ArrayList<String> foundServers = null;
-    private final int port = 9002;
     private boolean active = false;
     private Scanner sc;
 
@@ -24,7 +24,8 @@ public class ServerFinder extends Thread{
         System.out.println("ServerFinder activating");
         this.active = true;
     }
-    public void deactive()
+
+    public void deactivate()
     {
         System.out.println("ServerFinder deactivating");
         this.active = false;
@@ -46,9 +47,7 @@ public class ServerFinder extends Thread{
     public void update()
     {
         foundServers.clear();
-        // Find the server using UDP broadcast
         try {
-            //Open a random port to send the package
             DatagramSocket c = new DatagramSocket();
             c.setBroadcast(true);
             c.setSoTimeout(1000);
@@ -60,33 +59,27 @@ public class ServerFinder extends Thread{
             while(sc.hasNextLine()) {
                 try {
                     String ip = sc.nextLine().trim();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ip), port);
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(ip), BroadCastPort);
                     c.send(sendPacket);
                 } catch (Exception ignored) {}
             }
 
             try {
                 while (true) {
-                    //Wait for a response
-                    byte[] recvBuf = new byte[1000];
-                    DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
-                    c.receive(receivePacket);
+                    byte[] responseBuffer = new byte[1000];
+                    DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
+                    c.receive(responsePacket);
 
-                    //We have a response
-//                    System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+//                    System.out.println(getClass().getName() + ">>> Broadcast response from server: " + responsePacket.getAddress().getHostAddress());
 
-                    //Check if the message is correct
-                    String message = new String(receivePacket.getData()).trim();
+                    String message = new String(responsePacket.getData()).trim();
                     if (message.equals("02148_TEAM_10_SERVER_RESPONSE")) {
-                        //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-//                        System.out.println("Found server:");
-//                        System.out.println(receivePacket.getAddress());
-                        if(!foundServers.contains(receivePacket.getAddress().toString()))
-                            foundServers.add(receivePacket.getAddress().toString());
+                        if(!foundServers.contains(responsePacket.getAddress().toString()))
+                            foundServers.add(responsePacket.getAddress().toString());
                     }
                 }
             } catch (SocketTimeoutException ignored) {}
-            //Close the port!
+
             c.close();
             sc.close();
         } catch (IOException ex) {

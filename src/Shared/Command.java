@@ -21,33 +21,27 @@ public class Command {
 
         this.username = user;
     }
-    public Command(boolean forward, boolean left, boolean backward, boolean right, boolean rotateLeft, boolean rotateRight, boolean fire) {
-        this.forward = forward;
-        this.strafeLeft = left;
-        this.backward = backward;
-        this.strafeRight = right;
-        this.rotateLeft = rotateLeft;
-        this.rotateRight = rotateRight;
-        this.fire = fire;
-    }
 
     public String toString()
     {
-        String cmd = username + " command: ";
-        if (forward)
-            cmd += ", forward";
-        if (strafeLeft)
-            cmd += ", strafeLeft";
-        if (strafeRight)
-            cmd += ", strafeRight";
-        if (rotateLeft)
-            cmd += ", rotateLeft";
-        if (rotateRight)
-            cmd += ", rotateRight";
-        if (fire)
-            cmd += ", fire";
+        StringBuilder cmd = new StringBuilder();
+        cmd.append(username);
+        cmd.append(" command: ");
 
-        return cmd;
+        if (forward)
+            cmd.append(", forward");
+        if (strafeLeft)
+            cmd.append(", strafeLeft");
+        if (strafeRight)
+            cmd.append(", strafeRight");
+        if (rotateLeft)
+            cmd.append(", rotateLeft");
+        if (rotateRight)
+            cmd.append(", rotateRight");
+        if (fire)
+            cmd.append(", fire");
+
+        return cmd.toString();
     }
 
     public boolean isForward() {

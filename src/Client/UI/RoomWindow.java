@@ -37,18 +37,12 @@ public class RoomWindow extends TScene {
         BorderPane bp = new BorderPane();
         root.getChildren().add(bp);
 
-//        HBox bottomPanel = new HBox();
-
-//        bottomPanel.getChildren().add(fps);
-//        bottomPanel.getChildren().add(healthBar);
-
         VBox rightPanel = new VBox();
         rightPanel.getChildren().add(fps);
         rightPanel.getChildren().add(chat);
 
         bp.setRight(rightPanel);
         bp.setBottom(healthBar);
-//        bp.setRight(chat);
 
         VBox scores = new VBox();
 
@@ -82,8 +76,6 @@ public class RoomWindow extends TScene {
 
         world.update(RoomConnector.getGamestate());
         healthBar.update(RoomConnector.getClientPlayerInfo().health);
-
-        // world.update(RoomConnector.update());
     }
 
     @Override

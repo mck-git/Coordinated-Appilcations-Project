@@ -1,11 +1,11 @@
 package Shared;
 
-        import javafx.scene.image.Image;
-        import javafx.scene.paint.Color;
-        import javafx.scene.paint.PhongMaterial;
-        import javafx.scene.shape.Box;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 
-        import static Shared.Constants.PLAYER_HEIGHT;
+import static Shared.Constants.PLAYER_HEIGHT;
 
 public class Player extends Box {
 
@@ -17,8 +17,8 @@ public class Player extends Box {
         this.setHeight(PLAYER_HEIGHT);
         this.setWidth(Constants.PLAYER_SIZE);
         this.setDepth(Constants.PLAYER_SIZE);
-        this.setMaterial(new PhongMaterial(Color.color(1 - info.health / 100.0, info.health / 100.0, 0.1 )));
-        ((PhongMaterial)this.getMaterial()).setSelfIlluminationMap(new Image("Shared/Resources/slim_creeper.png"));
+        this.setMaterial(new PhongMaterial(Color.color(1 - info.health / 100.0, info.health / 100.0, 0 )));
+        ((PhongMaterial)this.getMaterial()).setSelfIlluminationMap(new Image("Shared/Resources/slim_creeper_gray.png"));
         update(info);
     }
 
@@ -28,8 +28,7 @@ public class Player extends Box {
         this.setTranslateY(info.y);
         this.setTranslateZ(info.z);
         this.active = true;
-//        this.setMaterial(new PhongMaterial(Color.color(1 - info.health / 100.0, info.health / 100.0, 0.1 )));
-        ((PhongMaterial)this.getMaterial()).setDiffuseColor(Color.color(1 - info.health / 100.0, info.health / 200.0, 0.1 ));
+        ((PhongMaterial)this.getMaterial()).setDiffuseColor(Color.color(1 - info.health / 100.0, info.health / 100.0, 0 ));
     }
 
     public boolean is(String username) {

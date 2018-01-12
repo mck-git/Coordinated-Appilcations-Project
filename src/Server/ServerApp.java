@@ -23,7 +23,7 @@ public class ServerApp extends Application {
             scene.closingProtocol();
             event.consume();
         });
-        _stage.setTitle("Game Server");
+        _stage.setTitle("Server Monitor");
 
         Server.setup();
 

@@ -16,6 +16,7 @@ public class HealthBar extends StackPane {
         this.setPadding(new Insets(0,sidePadding,10,sidePadding));
         this.prefWidthProperty().bind(ClientApp.getStage().widthProperty().subtract(sidePadding * 2));
         this.setAlignment(Pos.CENTER_LEFT);
+
         background = new Rectangle();
         background.widthProperty().bind(this.prefWidthProperty());
         background.setHeight(20);

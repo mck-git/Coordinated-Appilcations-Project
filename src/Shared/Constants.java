@@ -10,7 +10,9 @@ public interface Constants {
     int PLAYER_HEIGHT = 10;
     int SERVER_TICKRATE = 60;
     int SHOT_INTERPOLATION_INTERVAL = 10;
-    double SHOT_RADIUS = 0.1;
-    int SHOT_DAMAGE = 5;
+    double SHOT_RADIUS = 0.5;
+    int SHOT_DAMAGE = 30;
     int FIRE_RATE = 20;
+    int Game_Port = 9002;
+    int BroadCastPort = 9003;
 }

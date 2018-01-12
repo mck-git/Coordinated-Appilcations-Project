@@ -31,7 +31,6 @@ public class Chat extends VBox {
 
         messageField.setOnKeyPressed(key -> {
             if (key.getCode() == KeyCode.ENTER) {
-                //MainConnector.sendMessage(messageField.getText());
                 RoomConnector.sendMessage(messageField.getText());
                 messageField.clear();
             }
@@ -40,6 +39,7 @@ public class Chat extends VBox {
 
     public void update() {
         if(System.currentTimeMillis() - lastCheck < 1000) return;
+        lastCheck = System.currentTimeMillis();
 
         String[] newMessages = RoomConnector.getMessages();
         boolean refreshNeeded = newMessages.length != messages.length;
@@ -68,7 +68,5 @@ public class Chat extends VBox {
             messageArea.setWrapText(true);
             messageArea.setScrollTop(Double.MAX_VALUE);
         }
-
-        lastCheck = System.currentTimeMillis();
     }
 }

@@ -2,6 +2,7 @@ package Client.UI;
 
 import Client.ClientApp;
 import Client.Networking.MainConnector;
+import Shared.Exceptions.ServerNAckException;
 import Templates.TScene;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Popup;
+
+import java.util.Arrays;
 
 public class Lobby extends TScene {
 
@@ -38,43 +41,39 @@ public class Lobby extends TScene {
 
         root.setPadding(new Insets(20,20,20,30));
 
-        Label userLable = new Label();
-        userLable.setText("Users in lobby");
-        userView.setAlignment(Pos.CENTER);
-        userView.getChildren().add(userLable);
         userView.getChildren().add(userListView);
-
-        Label roomLable = new Label();
-        roomLable.setText("Active Rooms");
-        roomView.setAlignment(Pos.CENTER);
-        roomView.getChildren().add(roomLable);
         roomView.getChildren().add(roomListView);
-
-
+        userView.setAlignment(Pos.CENTER);
+        roomView.setAlignment(Pos.CENTER);
         userListView.setItems(users);
         roomListView.setItems(rooms);
-
         root.setLeft(userView);
         root.setCenter(roomView);
 
+        Label userLabel = new Label("Users in lobby");
+        userView.getChildren().add(userLabel);
+
+        Label roomLabel = new Label("Active Rooms");
+        roomView.getChildren().add(roomLabel);
+
         HBox bottom = new HBox();
+        root.setBottom(bottom);
         bottom.setPadding(new Insets(10,30,10,30));
         bottom.setAlignment(Pos.CENTER);
         bottom.setSpacing(100);
 
         Button updateBtn = new Button("Update");
-        Button joinRoomBtn = new Button("Join Room");
-        Button createRoomBtn = new Button("Create Room");
-
         bottom.getChildren().add(updateBtn);
+
+        Button joinRoomBtn = new Button("Join Room");
         bottom.getChildren().add(joinRoomBtn);
+
+        Button createRoomBtn = new Button("Create Room");
         bottom.getChildren().add(createRoomBtn);
 
-        root.setBottom(bottom);
-
         TopMenu top = new TopMenu();
-        top.setFontColor(Color.BLACK);
         root.setTop(top);
+        top.setFontColor(Color.BLACK);
 
         userListView.setFocusTraversable(false);
 
@@ -87,8 +86,10 @@ public class Lobby extends TScene {
 
         joinRoomBtn.setOnAction(event -> {
             if(roomListView.getSelectionModel().getSelectedItem() != null) {
-                MainConnector.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
-                ClientApp.setScene(new RoomWindow());
+                try {
+                    MainConnector.joinRoom(roomListView.getSelectionModel().getSelectedItem().toString());
+                    ClientApp.setScene(new RoomWindow());
+                } catch (ServerNAckException ignored) {}
             }
         });
 
@@ -123,10 +124,12 @@ public class Lobby extends TScene {
         });
 
         createRoomTextBtn.setOnAction(event -> {
-            MainConnector.createRoom(createRoomtxt.getText());
-            createRoomtxt.clear();
-            popup.hide();
-            ClientApp.setScene(new RoomWindow());
+            try {
+                MainConnector.createRoom(createRoomtxt.getText());
+                createRoomtxt.clear();
+                popup.hide();
+                ClientApp.setScene(new RoomWindow());
+            } catch (ServerNAckException ignored) {}
         });
 
         roomListView.setOnKeyPressed(key -> {

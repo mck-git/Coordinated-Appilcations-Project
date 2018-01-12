@@ -1,27 +1,25 @@
 package Shared;
 
-        import javafx.geometry.Point2D;
-        import javafx.geometry.Point3D;
-        import javafx.scene.Node;
-        import javafx.scene.shape.Cylinder;
+import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
+import javafx.scene.Node;
+import javafx.scene.shape.Cylinder;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-        import static Shared.Constants.*;
+import static Shared.Constants.*;
 
 public class GameController
 {
     private GameState gs;
     private Map map;
-    private ArrayList<Node> map_nodes;
     private ArrayList<Player> players;
 
     public GameController()
     {
         this.gs = new GameState();
         this.map = new Map();
-        this.map_nodes = map.getNodes();
         this.players = new ArrayList<>();
     }
 
@@ -144,29 +142,38 @@ public class GameController
             double xspeed = Math.sin(angle_radians) * Constants.PLAYER_SPEED;
             double zspeed = Math.cos(angle_radians) * Constants.PLAYER_SPEED;
 
+            double stepx = 0;
+            double stepz = 0;
+
             // Needs change since diagonal walk is faster
             // check commented code in World.
             if (c.isForward())
             {
-                new_p_inf.x += xspeed;
-                new_p_inf.z += zspeed;
+                stepx += xspeed;
+                stepz += zspeed;
             }
 
             if (c.isBackward())
             {
-                new_p_inf.x -= xspeed;
-                new_p_inf.z -= zspeed;
+                stepx -= xspeed;
+                stepz -= zspeed;
             }
 
             if (c.isStrafeLeft())
             {
-                new_p_inf.x -= zspeed;
-                new_p_inf.z += xspeed;
+                stepx -= zspeed;
+                stepz += xspeed;
             }
             if (c.isStrafeRight())
             {
-                new_p_inf.x += zspeed;
-                new_p_inf.z -= xspeed;
+                stepx += zspeed;
+                stepz -= xspeed;
+            }
+
+            double stepMagnitude = Math.sqrt(stepx*stepx+stepz*stepz);
+            if(stepMagnitude > 0) {
+                new_p_inf.x += stepx / stepMagnitude;
+                new_p_inf.z += stepz / stepMagnitude;
             }
 
             // Map collision
@@ -180,11 +187,21 @@ public class GameController
 
                 // Update player with new position
                 p.update(new_p_inf);
-                ArrayList<Node> collisions = checkMapCollision(p);
+//                ArrayList<Node> collisions = checkMapCollision(p);
+                ArrayList<Node> nearNodes = map.getSurroundingNodes((int)(new_p_inf.x/TILE_SIZE), (int) (new_p_inf.z/TILE_SIZE));
 
                 // Sort closests nodes first
 
-                collisions.sort((Node a, Node b) ->
+//                collisions.sort((Node a, Node b) ->
+//                {
+//                    double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
+//                            + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
+//                    double db = Math.pow((old_p_inf.x - b.getTranslateX()),2)
+//                            + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
+//                    return Double.compare(da, db);
+//                });
+
+                nearNodes.sort((Node a, Node b) ->
                 {
                     double da = Math.pow((old_p_inf.x - a.getTranslateX()),2)
                             + Math.pow((old_p_inf.z - a.getTranslateZ()),2);
@@ -192,15 +209,24 @@ public class GameController
                             + Math.pow((old_p_inf.z - b.getTranslateZ()),2);
                     return Double.compare(da, db);
                 });
-                PlayerInfo tempnew;
-                PlayerInfo tempold = old_p_inf;
-                for (Node n : collisions)
-                {
-                    tempnew = handleMapCollision(new_p_inf, tempold, n);
-                    tempold = new_p_inf;
-                    new_p_inf = tempnew;
-                    p.update(new_p_inf);
 
+//                PlayerInfo tempnew;
+//                PlayerInfo tempold = old_p_inf;
+//                for (Node n : collisions)
+//                {
+//                    tempnew = handleMapCollision(new_p_inf, tempold, n);
+//                    tempold = new_p_inf;
+//                    new_p_inf = tempnew;
+//                    p.update(new_p_inf);
+//
+//                }
+
+                for(Node n: nearNodes)
+                {
+                    if(p.getBoundsInParent().intersects(n.getBoundsInParent())) {
+                        new_p_inf = handleMapCollision(new_p_inf, old_p_inf, n);
+                        p.update(new_p_inf);
+                    }
                 }
 
             } catch (NullPointerException e)
@@ -258,20 +284,20 @@ public class GameController
         return null;
     }
 
-    private ArrayList<Node> checkMapCollision(Player new_player)
-    {
-        ArrayList<Node> collisions = new ArrayList<>();
-
-        for (Node n : map_nodes)
-        {
-            if (new_player.getBoundsInParent().intersects(n.getBoundsInParent()))
-            {
-                collisions.add(n);
-            }
-        }
-
-        return collisions;
-    }
+//    private ArrayList<Node> checkMapCollision(Player new_player)
+//    {
+//        ArrayList<Node> collisions = new ArrayList<>();
+//
+//        for (Node n : map.getSurroundingNodes())
+//        {
+//            if (new_player.getBoundsInParent().intersects(n.getBoundsInParent()))
+//            {
+//                collisions.add(n);
+//            }
+//        }
+//
+//        return collisions;
+//    }
 
     private void checkBulletCollision(PlayerInfo shooter, ArrayList<PlayerInfo> player_infos, ArrayList<Player> users)
     {
@@ -282,13 +308,13 @@ public class GameController
         double sx = shooter.x+0.5*TILE_SIZE, sz = shooter.z+0.5*TILE_SIZE;
         for(int i = 0; i < 10; i++)
         {
-            if(sx < 0 || sz < 0)
-                continue;
-
-            if(map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
-            {
+            if(sz >= 0 &&
+                    sx >= 0 &&
+                    sz < map.depth()*TILE_SIZE &&
+                    sx < map.width()*TILE_SIZE &&
+                    map.grid[(int) (sz/TILE_SIZE)][(int)(sx/TILE_SIZE)] == 1)
                 break;
-            }
+
             sx += SHOT_INTERPOLATION_INTERVAL *direction.getX();
             sz += SHOT_INTERPOLATION_INTERVAL *direction.getZ();
             height += SHOT_INTERPOLATION_INTERVAL;
@@ -300,8 +326,8 @@ public class GameController
         shot.setRotate(-90);
         shot.setRadius(SHOT_RADIUS);
         shot.setHeight(height);
-        shot.setTranslateX(shooter.x + direction.multiply(0.5*shot.getHeight()+10).getX() + 0.2*direction.getZ());
-        shot.setTranslateZ(shooter.z + direction.multiply(0.5*shot.getHeight()+10).getZ() - 0.2*direction.getX());
+        shot.setTranslateX(shooter.x + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getX());
+        shot.setTranslateZ(shooter.z + direction.multiply(0.5*shot.getHeight()+PLAYER_SIZE).getZ());
 
         for(Player enemy : users)
         {
@@ -309,7 +335,7 @@ public class GameController
             {
                 for(PlayerInfo enemy_inf : player_infos)
                 {
-                    if(enemy_inf.username.equals(enemy.username))
+                    if(!shooter.equals(enemy_inf) && enemy_inf.username.equals(enemy.username))
                     {
                         enemy_inf.health -= SHOT_DAMAGE;
                         if(enemy_inf.health <= 0) {
