@@ -334,8 +334,10 @@ public class GameController
                                             (shotEnd.subtract(shotStart)).magnitude();
 
             double distance = enemyPosition.subtract(shotStart).magnitude();
+            double anglediff = enemyPosition.subtract(shotStart).angle(shotEnd.subtract(shotStart));
+            anglediff = Double.isNaN(anglediff) ? 180 : anglediff;
 
-            if(distance <= range && player_offset < SHOT_RADIUS + 0.5*PLAYER_SIZE)
+            if(anglediff < 90 && distance <= range && player_offset < SHOT_RADIUS + 0.5*PLAYER_SIZE)
             {
                 for(PlayerInfo enemy_inf : player_infos)
                 {
