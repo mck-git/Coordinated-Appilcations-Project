@@ -33,9 +33,8 @@ public class KillDeathRatio extends Label {
         currentTopRatio = top.calculateKDR();
         pname = top.username;
 
-        this.setText("KDR: " + String.format("%.2f",currentRatio) + "\n");
         this.setTextFill(Color.RED);
-        this.setText("Top KDR: " + String.format("%.2f",currentTopRatio) + "\n"
+        this.setText("KDR: " + String.format("%.2f",currentRatio) + "\n" + "Top KDR: " + String.format("%.2f",currentTopRatio) + "\n"
                 + "Top player: " + pname);
         this.setTextFill(Color.GOLD);
 
